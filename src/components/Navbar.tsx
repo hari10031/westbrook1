@@ -7,10 +7,7 @@ type NavItem = { label: string; to: string };
 const NAV: NavItem[] = [
   { label: "Home", to: "/" },
   { label: "Services", to: "/services" },
-  { label: "Projects", to: "/projects" },
-
-  // ✅ FIXED PATH (must match AppRouter)
-  // { label: "Explore Homes", to: "/explore-homes" },
+  { label: "Explore Homes", to: "/explore-homes" },
 
   // ✅ ADDED in the middle section
   { label: "Partnerships", to: "/partnerships" },
