@@ -462,18 +462,18 @@ export default function ProjectsPage() {
           transition={{ duration: 0.55, ease: EASE }}
           className="text-[12px] font-extrabold tracking-[0.34em] text-[color:var(--wb-ink)]/80"
         >
-          PROJECTS
+          Explore Homes
         </motion.p>
 
         <motion.h1
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.85, ease: EASE, delay: 0.05 }}
-          className="wb-serif mt-3 text-[38px] leading-[1.05] sm:text-[56px] text-[color:var(--wb-ink)]"
+          className="wb-serif mt-3 text-[34px] leading-[1.05] sm:text-[56px] text-[color:var(--wb-ink)] "
         >
           Find a place that actually fits your life.
 
-          <span className="block">
+          <span className="block ">
             Homes you can visit, evaluate, and move into.{" "}
             <span className="relative inline-block">
               <span className="relative z-10">work</span>
