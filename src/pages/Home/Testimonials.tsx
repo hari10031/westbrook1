@@ -1,4 +1,5 @@
 // src/pages/home/Testimonials.tsx
+import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 
 type Review = {
@@ -17,6 +18,12 @@ function cx(...c: Array<string | false | null | undefined>) {
 function initials(name: string) {
   const p = name.trim().split(/\s+/);
   return ((p[0]?.[0] ?? "W") + (p[1]?.[0] ?? "")).toUpperCase();
+}
+
+// ✅ AI avatar generator (stable + unique per name)
+function avatarUrl(name: string) {
+  const seed = encodeURIComponent(name);
+  return `https://api.dicebear.com/7.x/initials/svg?seed=${seed}&backgroundType=gradientLinear&radius=16`;
 }
 
 function Stars({ rating }: { rating: number }) {
@@ -82,8 +89,8 @@ export default function Testimonials() {
         rating: 5,
         text: (
           <>
-            I’m not familiar with leases, so having the <b>key clauses</b> explained
-            clearly helped a lot. Negotiation felt fair and not rushed.
+            I’m not familiar with leases, so having the <b>key clauses</b>{" "}
+            explained clearly helped a lot. Negotiation felt fair and not rushed.
           </>
         ),
       },
@@ -95,8 +102,8 @@ export default function Testimonials() {
         rating: 4,
         text: (
           <>
-            The <b>inspection phase</b> was stressful, but they helped us understand
-            what mattered and handled <b>repair requests</b> smoothly.
+            The <b>inspection phase</b> was stressful, but they helped us
+            understand what mattered and handled <b>repair requests</b> smoothly.
           </>
         ),
       },
@@ -108,8 +115,8 @@ export default function Testimonials() {
         rating: 5,
         text: (
           <>
-            I liked the discussion around <b>resale</b> and <b>downside risk</b>, not
-            just upside. The advice felt practical, not sales-driven.
+            I liked the discussion around <b>resale</b> and <b>downside risk</b>,
+            not just upside. The advice felt practical, not sales-driven.
           </>
         ),
       },
@@ -121,8 +128,8 @@ export default function Testimonials() {
         rating: 4,
         text: (
           <>
-            Walkthroughs, <b>vendor access</b>, and paperwork were coordinated well.
-            Timelines stayed clear from start to finish.
+            Walkthroughs, <b>vendor access</b>, and paperwork were coordinated
+            well. Timelines stayed clear from start to finish.
           </>
         ),
       },
@@ -134,8 +141,8 @@ export default function Testimonials() {
         rating: 4,
         text: (
           <>
-            The <b>move-in process</b> was simple. Deposits, dates, and expectations
-            were explained upfront — no confusion later.
+            The <b>move-in process</b> was simple. Deposits, dates, and
+            expectations were explained upfront — no confusion later.
           </>
         ),
       },
@@ -160,8 +167,8 @@ export default function Testimonials() {
         rating: 4,
         text: (
           <>
-            Communication was solid — quick updates, clear next steps, and zero drama
-            around <b>documents</b> and <b>closing</b>.
+            Communication was solid — quick updates, clear next steps, and zero
+            drama around <b>documents</b> and <b>closing</b>.
           </>
         ),
       },
@@ -176,7 +183,6 @@ export default function Testimonials() {
   const [desktopPage, setDesktopPage] = useState(0);
 
   // ✅ Auto-scroll BOTH mobile + desktop
-  // Pause when user hovers (desktop) or taps dots/arrows (still works)
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
@@ -185,7 +191,7 @@ export default function Testimonials() {
     const id = window.setInterval(() => {
       setMobileIndex((i) => clamp(i + 1, REVIEWS.length));
       setDesktopPage((p) => clamp(p + 1, totalDesktopPages));
-    }, 2800); // 2.8s (you can change to 2500 / 3000)
+    }, 2800);
 
     return () => window.clearInterval(id);
   }, [paused, REVIEWS.length, totalDesktopPages]);
@@ -196,7 +202,10 @@ export default function Testimonials() {
   );
 
   return (
-    <section onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+    <section
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
       {/* Heading */}
       <div className="text-center max-w-2xl mx-auto">
         <p className="text-[12px] font-extrabold tracking-[0.26em] text-black/45">
@@ -210,7 +219,7 @@ export default function Testimonials() {
         </p>
       </div>
 
-      {/* ===== MOBILE: ONE CARD + DOTS (auto-scroll) ===== */}
+      {/* MOBILE */}
       <div className="mt-10 lg:hidden">
         <TestimonialCard t={REVIEWS[mobileIndex]} />
         <Dots
@@ -219,13 +228,12 @@ export default function Testimonials() {
           onClick={(i) => {
             setPaused(true);
             setMobileIndex(i);
-            // resume after a short delay so it doesn't feel "stuck"
             window.setTimeout(() => setPaused(false), 1800);
           }}
         />
       </div>
 
-      {/* ===== DESKTOP: MULTIPLE CARDS + DOTS (auto-scroll pages) ===== */}
+      {/* DESKTOP */}
       <div className="hidden lg:block mt-10">
         <div className="grid grid-cols-3 gap-6">
           {desktopSlice.map((t) => (
@@ -289,10 +297,23 @@ function TestimonialCard({ t }: { t: Review }) {
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-2xl grid place-items-center border border-[color:var(--wb-border)] bg-white/75">
-            <span className="font-extrabold tracking-[0.06em] text-[color:var(--wb-ink)]/85">
-              {initials(t.name)}
-            </span>
+          {/* ✅ AI avatar */}
+          <div className="h-12 w-12 rounded-2xl overflow-hidden border border-[color:var(--wb-border)] bg-white/75">
+            <img
+              src={avatarUrl(t.name)}
+              alt={t.name}
+              className="h-full w-full object-cover"
+              onError={(e) => {
+                // graceful fallback to initials
+                e.currentTarget.style.display = "none";
+                const parent = e.currentTarget.parentElement;
+                if (parent) {
+                  parent.innerHTML = `<span class="h-full w-full grid place-items-center font-extrabold tracking-[0.06em] text-[color:var(--wb-ink)]/85">${initials(
+                    t.name
+                  )}</span>`;
+                }
+              }}
+            />
           </div>
 
           <div className="leading-tight">

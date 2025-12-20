@@ -1,47 +1,142 @@
-// src/pages/home/PartnersSection.tsx
-function cx(...c: Array<string | false | null | undefined>) {
-  return c.filter(Boolean).join(" ");
-}
+// src/pages/Home/PartnersSection.tsx
+import { motion } from "framer-motion";
 
-const PARTNERS = [
-  "PrimeBuild",
-  "NorthStone",
-  "UrbanEdge",
-  "ClearTitle Co.",
-  "MetroFinance",
-  "VistaDesign",
+const EASE: [number, number, number, number] = [0.18, 0.82, 0.22, 1];
+
+type Partner = {
+  name: string;
+  logo: string; // image path or URL
+  href?: string; // optional link
+};
+
+const PARTNERS: Partner[] = [
+  {
+    name: "Chase",
+    logo: "/images/partners/chase.png",
+    href: "https://www.chase.com/",
+  },
+  {
+    name: "Builders Capital",
+    logo: "/images/partners/builders-capital.png",
+    href: "https://www.builderscapital.com/",
+  },
+  {
+    name: "Fidelity National Title",
+    logo: "/images/partners/fidelity-national-title.png",
+    href: "https://www.fntic.com/",
+  },
+  {
+    name: "Winston Properties",
+    logo: "/images/partners/winston-properties.png",
+  },
 ];
 
 export default function PartnersSection() {
   return (
-    <section>
-      <div className="text-center max-w-2xl mx-auto">
-        <p className="text-[12px] font-extrabold tracking-[0.26em] text-black/45">
-          PARTNERS
-        </p>
-        <h2 className="wb-serif mt-2 text-[30px] sm:text-[34px] text-[color:var(--wb-ink)]">
-          Trusted by teams we work with
-        </h2>
-        <p className="mt-2 text-sm sm:text-base text-black/55">
-          Builders, title partners, and finance teams we coordinate with.
-        </p>
+    <section className="relative">
+      {/* soft background glow */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute left-1/2 top-[-120px] h-[300px] w-[700px] -translate-x-1/2 rounded-full bg-[color:var(--wb-ink)]/8 blur-3xl" />
       </div>
 
-      <div
-        className={cx(
-          "mt-8 grid gap-4",
-          "grid-cols-2 sm:grid-cols-3 lg:grid-cols-6"
-        )}
-      >
-        {PARTNERS.map((p) => (
-          <div
-            key={p}
-            className="rounded-[22px] border border-[color:var(--wb-border)] bg-white/55 backdrop-blur p-4 text-center shadow-[0_12px_30px_rgba(11,18,32,0.06)]"
-          >
-            <p className="text-[13px] font-extrabold text-black/70">{p}</p>
-          </div>
-        ))}
+      {/* header */}
+      <div className="mx-auto max-w-[78ch] text-center">
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: EASE }}
+          className="text-[12px] font-extrabold tracking-[0.32em] text-[color:var(--wb-ink)]/80"
+        >
+          PARTNERS
+        </motion.p>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.75, ease: EASE, delay: 0.06 }}
+          className="wb-serif mt-3 text-[34px] sm:text-[44px] leading-[1.1] text-[color:var(--wb-ink)]"
+        >
+          Trusted collaborators
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.65, ease: EASE, delay: 0.14 }}
+          className="mt-4 text-[15.5px] leading-relaxed text-[color:var(--wb-ink)]/75"
+        >
+          Lenders, builders, and title partners we coordinate with to keep deals
+          compliant, efficient, and predictable.
+        </motion.p>
       </div>
+
+      {/* logos */}
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7, ease: EASE, delay: 0.18 }}
+        className="mt-10 rounded-[28px] border border-[color:var(--wb-ink)]/14
+          bg-white/55 backdrop-blur
+          shadow-[0_18px_55px_rgba(12,24,48,0.10)]"
+      >
+        <div
+          className="grid items-center divide-y divide-[color:var(--wb-ink)]/10
+          sm:grid-cols-2 sm:divide-y-0 sm:divide-x
+          lg:grid-cols-4"
+        >
+          {PARTNERS.map((p) => (
+            <div
+              key={p.name}
+              className="flex items-center justify-center px-6 py-8"
+            >
+              {p.href ? (
+                <a
+                  href={p.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={p.name}
+                  className="group relative w-full max-w-[220px] flex justify-center"
+                >
+                  <img
+                    src={p.logo}
+                    alt={p.name}
+                    className="max-h-14 w-auto object-contain opacity-70 grayscale
+                      transition duration-300
+                      group-hover:opacity-100 group-hover:grayscale-0"
+                    loading="lazy"
+                  />
+                  <span className="pointer-events-none absolute -bottom-3 left-1/2 h-[2px] w-10 -translate-x-1/2
+                    bg-[color:var(--wb-ink)]/25 opacity-0
+                    group-hover:opacity-100 group-hover:w-16 transition-all duration-300"
+                  />
+                </a>
+              ) : (
+                <div
+                  aria-label={p.name}
+                  className="group relative w-full max-w-[220px] flex justify-center"
+                >
+                  <img
+                    src={p.logo}
+                    alt={p.name}
+                    className="max-h-14 w-auto object-contain opacity-70 grayscale
+                      transition duration-300
+                      group-hover:opacity-100 group-hover:grayscale-0"
+                    loading="lazy"
+                  />
+                  <span className="pointer-events-none absolute -bottom-3 left-1/2 h-[2px] w-10 -translate-x-1/2
+                    bg-[color:var(--wb-ink)]/25 opacity-0
+                    group-hover:opacity-100 group-hover:w-16 transition-all duration-300"
+                  />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </motion.div>
     </section>
   );
 }

@@ -1,91 +1,166 @@
-// src/pages/home/CommercialSection.tsx
+// src/pages/Home/CommercialSection.tsx
+import type React from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+  RiGasStationLine,
+  RiRestaurantLine,
+  RiHospitalLine,
+  RiArrowRightUpLine,
+} from "react-icons/ri";
 
-function cx(...c: Array<string | false | null | undefined>) {
-  return c.filter(Boolean).join(" ");
-}
+const EASE: [number, number, number, number] = [0.18, 0.82, 0.22, 1];
 
-const CARDS = [
+type Card = {
+  title: string;
+  subtitle: string;
+  icon: React.ReactNode;
+  to: string;
+  image: string;
+};
+
+const CARDS: Card[] = [
   {
-    title: "Office Spaces",
-    desc: "Professional spaces with flexible terms.",
-    bullets: ["Location clarity", "Lease guidance", "Quick walkthroughs"],
-    to: "/services",
+    title: "Fuel & Convenience",
+    subtitle: "Gas stations • C-stores • Forecourt upgrades",
+    icon: <RiGasStationLine />,
+    to: "/services#fuel-convenience",
+    image:
+      "https://images.unsplash.com/photo-1603386329225-868f9b1ee6c9?auto=format&fit=crop&w=1400&q=80",
   },
   {
-    title: "Retail & Showrooms",
-    desc: "Footfall-focused options and visibility checks.",
-    bullets: ["Frontage review", "Signage context", "Lease negotiation"],
-    to: "/services",
+    title: "Restaurants & Retail",
+    subtitle: "Ground-up • Remodels • Tenant improvements",
+    icon: <RiRestaurantLine />,
+    to: "/services#restaurants-retail",
+    image:
+      "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1400&q=80",
   },
   {
-    title: "Warehousing",
-    desc: "Access, utilities, and operational suitability.",
-    bullets: ["Loading access", "Power availability", "Compliance checks"],
-    to: "/services",
+    title: "Medical & Urgent Care",
+    subtitle: "Hospitals • ER • Urgent cares • Imaging",
+    icon: <RiHospitalLine />,
+    to: "/services#medical-healthcare",
+    image:
+      "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1400&q=80",
   },
 ];
 
 export default function CommercialSection() {
   return (
-    <section>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-[12px] font-extrabold tracking-[0.26em] text-black/45">
-            COMMERCIAL
-          </p>
-          <h2 className="wb-serif mt-2 text-[30px] sm:text-[34px] text-[color:var(--wb-ink)]">
-            Spaces that work for business
-          </h2>
-          <p className="mt-2 text-sm sm:text-base text-black/55 max-w-xl">
-            Clear site notes, lease support, and fast coordination — so decisions
-            move forward without chaos.
-          </p>
-        </div>
-
-        <Link
-          to="/services"
-          className={cx(
-            "inline-flex items-center justify-center rounded-full px-4 py-2",
-            "text-[12px] font-extrabold tracking-[0.02em]",
-            "border border-[color:var(--wb-border)] bg-white/55 text-black/70",
-            "hover:bg-white/80 hover:text-[color:var(--wb-ink)] transition"
-          )}
-        >
-          View services →
-        </Link>
+    <section className="relative">
+      {/* background glow */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute left-1/2 top-[-140px] h-[340px] w-[640px] -translate-x-1/2 rounded-full bg-[color:var(--wb-ink)]/12 blur-3xl" />
       </div>
 
-      <div className="mt-8 grid gap-5 lg:grid-cols-3">
-        {CARDS.map((c) => (
-          <div
+      {/* header */}
+      <div className="mx-auto max-w-[78ch] text-center">
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.55, ease: EASE }}
+          className="text-[12px] font-extrabold tracking-[0.32em] text-[color:var(--wb-ink)]/80"
+        >
+          COMMERCIAL DEVELOPMENT
+        </motion.p>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: EASE, delay: 0.06 }}
+          className="wb-serif mt-3 text-[34px] leading-[1.1] sm:text-[44px] text-[color:var(--wb-ink)]"
+        >
+          Built for compliance.
+          <span className="block">
+            Designed for{" "}
+            <span className="relative inline-block">
+              <span className="relative z-10">real-world operations</span>
+              <span className="absolute left-0 bottom-[3px] h-[6px] w-full bg-[color:var(--wb-ink)]/22" />
+            </span>
+            .
+          </span>
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.65, ease: EASE, delay: 0.14 }}
+          className="mt-4 text-[15.5px] leading-relaxed text-[color:var(--wb-ink)]/78"
+        >
+          From fuel sites and restaurants to healthcare facilities — we execute
+          commercial projects with clear approvals, clean coordination, and fewer
+          surprises.
+        </motion.p>
+      </div>
+
+      {/* cards */}
+      <div className="mt-10 grid gap-6 md:grid-cols-3">
+        {CARDS.map((c, i) => (
+          <motion.div
             key={c.title}
-            className="rounded-[26px] border border-[color:var(--wb-border)] bg-white/60 backdrop-blur-xl p-6 shadow-[0_18px_48px_rgba(11,18,32,0.08)]"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.65, ease: EASE, delay: i * 0.07 }}
           >
-            <p className="wb-serif text-[22px] text-[color:var(--wb-ink)]">
-              {c.title}
-            </p>
-            <p className="mt-1 text-sm text-black/55">{c.desc}</p>
-
-            <ul className="mt-5 space-y-2">
-              {c.bullets.map((b) => (
-                <li key={b} className="flex items-start gap-2 text-sm text-black/60">
-                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[color:var(--wb-accent)]/60" />
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
-
             <Link
               to={c.to}
-              className="mt-6 inline-flex items-center gap-2 rounded-full px-3 py-2 text-[12px] font-extrabold tracking-[0.02em]
-              border border-[color:var(--wb-border)] bg-white/55 text-black/70 hover:bg-white/80 hover:text-[color:var(--wb-ink)] transition"
+              className="group relative block overflow-hidden rounded-[28px]
+              border border-[color:var(--wb-ink)]/18 bg-white/40 backdrop-blur
+              shadow-[0_18px_55px_rgba(12,24,48,0.12)]
+              hover:shadow-[0_34px_110px_rgba(12,24,48,0.22)]
+              transition"
             >
-              Learn more →
+              {/* image */}
+              <div className="relative h-[300px]">
+                <img
+                  src={c.image}
+                  alt={c.title}
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.05]"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[rgba(8,16,34,0.78)] via-[rgba(8,16,34,0.22)] to-transparent" />
+              </div>
+
+              {/* content */}
+              <div className="absolute inset-x-0 bottom-0 p-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-start gap-3">
+                    <span className="grid h-11 w-11 place-items-center rounded-2xl border border-white/20 bg-white/10 text-white">
+                      {c.icon}
+                    </span>
+
+                    <div>
+                      <p className="text-[16px] font-extrabold text-white">
+                        {c.title}
+                      </p>
+                      <p className="mt-1 text-[13.5px] text-white/80">
+                        {c.subtitle}
+                      </p>
+                      <div className="mt-4 h-[2px] w-10 bg-white/65 group-hover:w-20 transition-all duration-300" />
+                    </div>
+                  </div>
+
+                  <span className="grid h-10 w-10 place-items-center rounded-2xl border border-white/20 bg-white/10 text-white">
+                    <RiArrowRightUpLine />
+                  </span>
+                </div>
+              </div>
+
+              {/* hover ring */}
+              <div className="pointer-events-none absolute inset-0 rounded-[28px] ring-0 ring-[color:var(--wb-ink)]/0 group-hover:ring-2 group-hover:ring-[color:var(--wb-ink)]/10 transition" />
             </Link>
-          </div>
+          </motion.div>
         ))}
       </div>
+
+      <p className="mt-6 text-center text-[13px] text-[color:var(--wb-ink)]/65">
+        View full scope on Services.
+      </p>
     </section>
   );
 }
