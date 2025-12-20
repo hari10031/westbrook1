@@ -73,10 +73,10 @@ function Badge({
     tone === "ok"
       ? "bg-emerald-50 text-emerald-700 border-emerald-100"
       : tone === "warn"
-      ? "bg-amber-50 text-amber-700 border-amber-100"
-      : tone === "info"
-      ? "bg-indigo-50 text-indigo-700 border-indigo-100"
-      : "bg-slate-50 text-slate-700 border-slate-100";
+        ? "bg-amber-50 text-amber-700 border-amber-100"
+        : tone === "info"
+          ? "bg-indigo-50 text-indigo-700 border-indigo-100"
+          : "bg-slate-50 text-slate-700 border-slate-100";
   return (
     <span
       className={cx(
@@ -750,16 +750,16 @@ export default function ExploreHomes() {
             idx % 7 === 0
               ? "md:col-span-7 md:row-span-2"
               : idx % 7 === 1
-              ? "md:col-span-5"
-              : idx % 7 === 2
-              ? "md:col-span-5"
-              : idx % 7 === 3
-              ? "md:col-span-4"
-              : idx % 7 === 4
-              ? "md:col-span-4"
-              : idx % 7 === 5
-              ? "md:col-span-4"
-              : "md:col-span-6";
+                ? "md:col-span-5"
+                : idx % 7 === 2
+                  ? "md:col-span-5"
+                  : idx % 7 === 3
+                    ? "md:col-span-4"
+                    : idx % 7 === 4
+                      ? "md:col-span-4"
+                      : idx % 7 === 5
+                        ? "md:col-span-4"
+                        : "md:col-span-6";
 
           const tone = statusTone(h.status);
 
@@ -779,11 +779,11 @@ export default function ExploreHomes() {
               transition={{ duration: 0.22 }}
               whileHover={{ y: -2 }}
             >
-              <div className="relative h-52 w-full sm:h-60">
+              <div className="relative h-52 w-full sm:h-60 overflow-hidden">
                 <img
                   src={h.gallery[0]}
                   alt={h.title}
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                  className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
