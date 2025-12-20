@@ -1,104 +1,184 @@
-// src/components/Footer.tsx
 import { Link } from "react-router-dom";
 
-const quickLinks = [
-  { label: "Home", to: "/" },
-  { label: "About", to: "/about" },
-  { label: "Services", to: "/services" },
-  { label: "Projects", to: "/projects" },
-  { label: "Explore Homes", to: "/explore-homes" },
-  { label: "Land", to: "/land" },
-  { label: "Contact", to: "/contact" },
-];
-
-const services = [
-  "Property Buying Assistance",
-  "Property Selling",
-  "Land Consultation",
-  "Site Visits & Shortlisting",
-  "Documentation Support",
-];
+function cx(...c: Array<string | false | null | undefined>) {
+  return c.filter(Boolean).join(" ");
+}
 
 export default function Footer() {
-  const year = new Date().getFullYear();
-
   return (
-    <footer className="border-t border-white/10 bg-black/40">
-      <div className="mx-auto max-w-6xl px-4 py-12">
-        <div className="grid gap-10 md:grid-cols-3">
-          {/* Brand */}
+    <footer
+      className={cx(
+        "relative mt-24",
+        "border-t border-[color:var(--wb-border)]",
+        "bg-white/40 backdrop-blur-xl"
+      )}
+    >
+      {/* ambient glow */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -top-24 mx-auto h-[320px] max-w-4xl rounded-full blur-3xl opacity-40
+        bg-[radial-gradient(circle_at_50%_50%,rgba(27,79,214,0.18),transparent_65%)]"
+      />
+
+      <div className="wb-container relative">
+        {/* ================= TOP GRID ================= */}
+        <div className="grid gap-14 py-16 lg:grid-cols-[1.3fr_2fr]">
+          {/* BRAND / MANIFESTO */}
           <div>
-            <div className="flex items-center gap-2">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-white font-bold text-zinc-900">
-                W
-              </span>
+            <div className="flex items-center gap-3">
+              <div
+                className={cx(
+                  "grid h-12 w-12 place-items-center rounded-2xl",
+                  "border border-[color:var(--wb-border)]",
+                  "bg-white/70",
+                  "shadow-[0_16px_36px_rgba(11,18,32,0.12)]"
+                )}
+              >
+                <span className="wb-serif text-[20px] text-[color:var(--wb-accent)]">
+                  W
+                </span>
+              </div>
+
               <div className="leading-tight">
-                <div className="text-sm font-semibold">WestBrook</div>
-                <div className="text-[11px] text-white/60">Realty</div>
+                <p className="wb-serif text-[21px] text-[color:var(--wb-ink)]">
+                  WestBrook
+                </p>
+                <p className="text-[11px] font-extrabold tracking-[0.32em] text-black/45">
+                  ESTATES
+                </p>
               </div>
             </div>
 
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/70">
-              Helping you find the right home and land with clarity, trust, and
-              smooth end-to-end support.
+            <p className="mt-6 max-w-md text-[15px] leading-relaxed text-black/60">
+              WestBrook is a real estate advisory focused on clarity.
+              We help clients navigate homes, commercial spaces, and land
+              with a document-first approach and calm decision-making.
             </p>
 
-            <div className="mt-4 inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
-              Residential • Land • Consultation
-            </div>
+            <p className="mt-5 text-[13px] text-black/45">
+              Residential • Commercial • Land Advisory
+            </p>
           </div>
 
-          {/* Quick links */}
-          <div>
-            <div className="text-sm font-semibold">Quick links</div>
-            <ul className="mt-4 space-y-2">
-              {quickLinks.map((l) => (
-                <li key={l.to}>
-                  <Link
-                    to={l.to}
-                    className="text-sm text-white/70 transition hover:text-white"
-                  >
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* NAVIGATION */}
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            <FooterColumn
+              title="Explore"
+              links={[
+                { label: "Homes", to: "/explorehomes" },
+                { label: "Residential Projects", to: "/projects" },
+                { label: "Land & Plots", to: "/land" },
+                { label: "Commercial Spaces", to: "/services" },
+              ]}
+            />
 
-          {/* CTA */}
-          <div>
-            <div className="text-sm font-semibold">Services</div>
-            <ul className="mt-4 space-y-2">
-              {services.map((s) => (
-                <li key={s} className="text-sm text-white/70">
-                  {s}
-                </li>
-              ))}
-            </ul>
+            <FooterColumn
+              title="WestBrook"
+              links={[
+                { label: "About", to: "/about" },
+                { label: "Why WestBrook", to: "/#why-us" },
+                { label: "Client Feedback", to: "/#testimonials" },
+                { label: "Partners", to: "/#partners" },
+              ]}
+            />
 
-            <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
-              <div className="text-sm font-semibold">Need help choosing?</div>
-              <p className="mt-1 text-sm text-white/70">
-                Share budget & location — we’ll shortlist options.
-              </p>
-
-              <Link
-                to="/contact"
-                className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-zinc-900 transition hover:opacity-90"
-              >
-                Contact us
-              </Link>
-            </div>
+            <FooterColumn
+              title="Contact"
+              links={[
+                { label: "Get in touch", to: "/contact" },
+                { label: "Request a callback", to: "/contact" },
+                { label: "Email us", to: "/contact" },
+              ]}
+            />
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <div className="text-xs text-white/55">
-            © {year} WestBrook. All rights reserved.
+        {/* ================= EDITORIAL CTA ================= */}
+        <div
+          className={cx(
+            "rounded-[30px] border border-[color:var(--wb-border)]",
+            "bg-white/55 backdrop-blur-xl",
+            "px-8 py-10",
+            "shadow-[0_30px_90px_rgba(11,18,32,0.14)]"
+          )}
+        >
+          <div className="grid gap-6 sm:grid-cols-[1fr_auto] sm:items-center">
+            <div>
+              <p className="text-[12px] font-extrabold tracking-[0.30em] text-black/45">
+                START WITH CLARITY
+              </p>
+              <h3 className="wb-serif mt-3 text-[26px] text-[color:var(--wb-ink)]">
+                Looking for the right property — without the noise?
+              </h3>
+              <p className="mt-2 max-w-xl text-[15px] text-black/55">
+                Tell us what you’re evaluating. We’ll share verified options,
+                realistic context, and the next steps that matter.
+              </p>
+            </div>
+
+            <Link
+              to="/contact"
+              className={cx(
+                "inline-flex items-center justify-center",
+                "rounded-full px-6 py-3",
+                "text-[13px] font-extrabold tracking-[0.03em]",
+                "bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))]",
+                "text-white",
+                "shadow-[0_14px_32px_rgba(27,79,214,0.25)]",
+                "hover:brightness-110 transition-all duration-200",
+                "hover:-translate-y-[1px]"
+              )}
+            >
+              Request a callback →
+            </Link>
           </div>
-          <div className="text-xs text-white/55">Built with React + Tailwind</div>
+        </div>
+
+        {/* ================= BOTTOM BAR ================= */}
+        <div className="mt-14 border-t border-[color:var(--wb-border)] py-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-[12px] text-black/45">
+              © {new Date().getFullYear()} WestBrook Estates. All rights reserved.
+            </p>
+
+            <div className="flex gap-6 text-[12px] text-black/45">
+              <span>Privacy</span>
+              <span>Terms</span>
+              <span>Fair Housing</span>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
+  );
+}
+
+/* ================= SUB COMPONENT ================= */
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: { label: string; to: string }[];
+}) {
+  return (
+    <div>
+      <p className="text-[12px] font-extrabold tracking-[0.26em] text-black/45">
+        {title}
+      </p>
+      <ul className="mt-5 space-y-3">
+        {links.map((l) => (
+          <li key={l.label}>
+            <Link
+              to={l.to}
+              className="text-[14px] text-black/60 hover:text-[color:var(--wb-ink)] transition"
+            >
+              {l.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

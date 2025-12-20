@@ -30,21 +30,21 @@
 }
 
 /* ================================
-   GLOBAL BASE + SAFETY (NO CLIP)
+   GLOBAL BASE + SAFETY
    ================================ */
 
 html,
 body {
   height: 100%;
   width: 100%;
-  margin: 0; /* remove browser default margins */
+  margin: 0;
   padding: 0;
-  overflow-x: hidden; /* stop accidental horizontal scroll */
+  overflow-x: hidden; /* critical: prevents horizontal scroll */
 }
 
-/* Ensure flex/grid children can shrink and never force overflow */
 * {
-  min-width: 0;
+  box-sizing: border-box;
+  min-width: 0; /* flex/grid safety */
 }
 
 body {
@@ -60,8 +60,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Never let text clip on tiny screens */
-h1, h2, h3, h4, h5, h6, p, a, span, div {
+/* Text safety */
+h1, h2, h3, h4, h5, h6,
+p, a, span, div {
   overflow-wrap: anywhere;
   word-break: break-word;
 }
@@ -76,24 +77,50 @@ h1, h2, h3, h4, h5, h6, p, a, span, div {
 }
 
 /* ================================
-   CONTAINER (RESPONSIVE PADDING)
+   GLOBAL PAGE GUTTER (KEY FIX)
    ================================ */
 /*
-  ✅ Production container:
-  - Gives comfortable left/right padding on phones (prevents cramped UI)
-  - Scales smoothly using clamp()
-  - Slightly wider padding on desktop
+  Aligns Navbar, Hero content, Sections, Footer
+  Mobile untouched
 */
+
+.wb-page {
+  width: 100%;
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .wb-page {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+/* Ultra-wide (2K / 4K) */
+@media (min-width: 1536px) {
+  .wb-page {
+    padding-left: 3.5rem;
+    padding-right: 3.5rem;
+  }
+}
+
+/* ================================
+   CONTAINER (DO NOT SHRINK DESKTOP)
+   ================================ */
+
 .wb-container {
   width: 100%;
-  max-width: 78rem;
+  max-width: 78rem; /* original width preserved */
   margin-inline: auto;
+
+  /* Mobile perfect */
   padding-inline: clamp(1rem, 4vw, 1.75rem);
 }
 
+/* Desktop breathing */
 @media (min-width: 1024px) {
   .wb-container {
-    padding-inline: 2rem;
+    padding-inline: 2.75rem;
   }
 }
 
@@ -154,6 +181,7 @@ h1, h2, h3, h4, h5, h6, p, a, span, div {
 /* ================================
    FOCUS RING
    ================================ */
+
 :focus-visible {
   outline: none;
   box-shadow: 0 0 0 4px var(--wb-ring);
@@ -163,13 +191,16 @@ h1, h2, h3, h4, h5, h6, p, a, span, div {
 /* ================================
    LOCK SCROLL (MOBILE DRAWER)
    ================================ */
-html.wb-lock {
+
+html.wb-lock,
+.wb-lock {
   overflow: hidden;
 }
 
 /* ================================
-   HERO MARQUEE (Real-time reels)
+   HERO MARQUEE
    ================================ */
+
 .wb-marquee {
   width: 100%;
 }
@@ -191,7 +222,7 @@ html.wb-lock {
 
 @keyframes wb-marquee-left {
   from { transform: translateX(0); }
-  to   { transform: translateX(-33.333%); } /* list is tripled */
+  to   { transform: translateX(-33.333%); }
 }
 
 @keyframes wb-marquee-right {

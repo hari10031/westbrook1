@@ -1,3 +1,4 @@
+// src/components/Navbar.tsx
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
@@ -45,6 +46,7 @@ export default function Navbar() {
     const active = root.querySelector<HTMLAnchorElement>(
       'a[aria-current="page"]'
     );
+
     if (!active) {
       pill.style.opacity = "0";
       return;
@@ -60,25 +62,26 @@ export default function Navbar() {
     pill.style.width = `${width}px`;
   };
 
-  // close drawer on route change
+  // Close drawer on route change (simple + reliable)
   useEffect(() => {
-    if (!open) return;
-    const id = requestAnimationFrame(() => setOpen(false));
-    return () => cancelAnimationFrame(id);
-  }, [location.pathname, open]);
+    setOpen(false);
+  }, [location.pathname]);
 
   // ESC closes drawer
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   // lock scroll on open
   useEffect(() => {
-    if (open) document.documentElement.classList.add("wb-lock");
-    else document.documentElement.classList.remove("wb-lock");
-    return () => document.documentElement.classList.remove("wb-lock");
+    const root = document.documentElement;
+    if (open) root.classList.add("wb-lock");
+    else root.classList.remove("wb-lock");
+    return () => root.classList.remove("wb-lock");
   }, [open]);
 
   // move active pill on route change + resize + first paint
@@ -91,11 +94,11 @@ export default function Navbar() {
   }, [location.pathname]);
 
   return (
-    <header className="sticky top-0 z-50">
+    <header className="sticky top-0 z-40">
       {/* subtle top hairline */}
       <div className="h-px w-full bg-[linear-gradient(to_right,transparent,rgba(27,79,214,0.22),transparent)]" />
 
-      {/* ✅ Glass shell (not fully transparent) */}
+      {/* Glass shell */}
       <div
         className={cx(
           "transition-all duration-300",
@@ -229,9 +232,9 @@ export default function Navbar() {
                 "border border-[color:var(--wb-border)] bg-white/55 backdrop-blur hover:bg-white/70",
                 "transition"
               )}
-              aria-label="Open menu"
+              aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
-              onClick={() => setOpen(true)}
+              onClick={() => setOpen((v) => !v)}
             >
               <span className="relative block h-4 w-5">
                 <span className="absolute left-0 top-0 h-0.5 w-full rounded bg-[color:var(--wb-ink)]/70" />
@@ -243,20 +246,22 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* ✅ Mobile Drawer (ALWAYS ABOVE header) */}
       <div
         className={cx(
-          "fixed inset-0 z-50 lg:hidden",
+          "fixed inset-0 z-[999] lg:hidden",
           "transition-[opacity] duration-300",
           open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
       >
+        {/* Backdrop */}
         <div
           className={cx(
             "absolute inset-0 bg-black/20 backdrop-blur-[2px] transition-opacity duration-300",
             open ? "opacity-100" : "opacity-0"
           )}
           onClick={() => setOpen(false)}
+          aria-hidden="true"
         />
 
         <aside
@@ -292,6 +297,7 @@ export default function Navbar() {
             </Link>
 
             <button
+              type="button"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--wb-border)] bg-white/70 hover:bg-white transition"
               aria-label="Close menu"
               onClick={() => setOpen(false)}
@@ -313,10 +319,18 @@ export default function Navbar() {
               </p>
 
               <div className="mt-4 grid grid-cols-2 gap-2">
-                <Link to="/explorehomes" onClick={() => setOpen(false)} className="wb-btn-ghost w-full">
+                <Link
+                  to="/explorehomes"
+                  onClick={() => setOpen(false)}
+                  className="wb-btn-ghost w-full"
+                >
                   Explore
                 </Link>
-                <Link to="/contact" onClick={() => setOpen(false)} className="wb-btn-primary w-full">
+                <Link
+                  to="/contact"
+                  onClick={() => setOpen(false)}
+                  className="wb-btn-primary w-full"
+                >
                   Get Callback
                 </Link>
               </div>
