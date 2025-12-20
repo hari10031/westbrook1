@@ -10,7 +10,7 @@ const NAV: NavItem[] = [
   { label: "Projects", to: "/projects" },
 
   // ✅ FIXED PATH (must match AppRouter)
-  { label: "Explore Homes", to: "/explore-homes" },
+  // { label: "Explore Homes", to: "/explore-homes" },
 
   // ✅ ADDED in the middle section
   { label: "Partnerships", to: "/partnerships" },
@@ -111,15 +111,15 @@ export default function Navbar() {
           "supports-[backdrop-filter]:backdrop-blur-xl",
           scrolled
             ? [
-                "bg-white/70",
-                "border-b border-[color:var(--wb-border)]",
-                "shadow-[0_14px_38px_rgba(11,18,32,0.10)]",
-              ].join(" ")
+              "bg-white/70",
+              "border-b border-[color:var(--wb-border)]",
+              "shadow-[0_14px_38px_rgba(11,18,32,0.10)]",
+            ].join(" ")
             : [
-                "bg-white/35",
-                "border-b border-transparent",
-                "shadow-[0_10px_28px_rgba(11,18,32,0.06)]",
-              ].join(" ")
+              "bg-white/35",
+              "border-b border-transparent",
+              "shadow-[0_10px_28px_rgba(11,18,32,0.06)]",
+            ].join(" ")
         )}
       >
         <div className="wb-container">

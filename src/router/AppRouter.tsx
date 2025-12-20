@@ -19,8 +19,8 @@ export default function AppRouter() {
 
       <Route path="/about" element={<About />} />
       <Route path="/services" element={<Services />} />
-      <Route path="/projects" element={<Projects />} />
-      <Route path="/explore-homes" element={<ExploreHomes />} />
+      <Route path="/explore-homes" element={<Projects />} />
+      {/* <Route path="/explore-homes" element={<ExploreHomes />} /> */}
       <Route path="/land" element={<Land />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/partnerships" element={<Partnerships />} />
