@@ -57,7 +57,8 @@ export default function Navbar() {
 
     const r = root.getBoundingClientRect();
     const a = active.getBoundingClientRect();
-    const left = a.left - r.left;
+    // Subtract the container's padding (4px = 1 in tailwind) from left position
+    const left = a.left - r.left - 4;
     const width = a.width;
 
     pill.style.opacity = "1";
@@ -125,15 +126,17 @@ export default function Navbar() {
             <Link to="/" className="group inline-flex items-center gap-3">
               <span
                 className={cx(
-                  "grid h-10 w-10 place-items-center rounded-2xl border",
+                  "grid h-10 w-10 place-items-center rounded-2xl border overflow-hidden",
                   "border-[color:var(--wb-border)] bg-white/70 backdrop-blur",
                   "shadow-[0_14px_30px_rgba(11,18,32,0.08)]",
                   "transition-transform duration-300 group-hover:scale-[1.02]"
                 )}
               >
-                <span className="wb-serif text-[18px] leading-none text-[color:var(--wb-accent)]">
-                  W
-                </span>
+                <img
+                  src="/img/logo.jfif"
+                  alt="WestBrook Logo"
+                  className="h-full w-full object-cover"
+                />
               </span>
 
               <span className="leading-tight">
@@ -164,10 +167,10 @@ export default function Navbar() {
                   aria-hidden="true"
                   className={cx(
                     "absolute top-1 bottom-1 left-1 rounded-full",
-                    "bg-[linear-gradient(135deg,rgba(27,79,214,0.14),rgba(11,42,111,0.08))]",
-                    "border border-[rgba(27,79,214,0.18)]",
-                    "shadow-[0_16px_34px_rgba(27,79,214,0.16)]",
-                    "transition-[transform,width,opacity] duration-300 ease-[cubic-bezier(.2,.8,.2,1)]"
+                    "bg-[color:var(--wb-accent)]/12",
+                    "border border-[color:var(--wb-accent)]/25",
+                    "shadow-[0_4px_12px_rgba(27,79,214,0.15)]",
+                    "transition-all duration-300 ease-[cubic-bezier(.25,.8,.25,1)]"
                   )}
                   style={{ width: 0, opacity: 0 }}
                 />

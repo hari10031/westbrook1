@@ -8,17 +8,21 @@
 
 :root {
   /* Backgrounds */
-  --wb-bg: #f6f4ee; /* pearl */
+  --wb-bg: #f6f4ee;
+  /* pearl */
   --wb-surface: rgba(255, 255, 255, 0.78);
   --wb-surface-strong: #ffffff;
 
   /* Text */
-  --wb-ink: #0b1220; /* deep navy ink */
+  --wb-ink: #0b1220;
+  /* deep navy ink */
   --wb-muted: rgba(11, 18, 32, 0.55);
 
   /* Brand accent */
-  --wb-accent: #0b2a6f; /* navy */
-  --wb-accent-2: #1b4fd6; /* royal */
+  --wb-accent: #0b2a6f;
+  /* navy */
+  --wb-accent-2: #1b4fd6;
+  /* royal */
   --wb-accent-soft: rgba(27, 79, 214, 0.10);
 
   /* Lines / ring */
@@ -39,19 +43,22 @@ body {
   width: 100%;
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* critical: prevents horizontal scroll */
+  overflow-x: hidden;
+  /* critical: prevents horizontal scroll */
+  scroll-behavior: auto !important;
 }
 
 * {
   box-sizing: border-box;
-  min-width: 0; /* flex/grid safety */
+  min-width: 0;
+  /* flex/grid safety */
 }
 
 body {
   background:
     radial-gradient(1200px 520px at 18% -12%, rgba(27, 79, 214, 0.14), transparent 55%),
     radial-gradient(900px 440px at 92% 0%, rgba(11, 42, 111, 0.10), transparent 55%),
-    linear-gradient(to bottom, rgba(255,255,255,0.6), transparent 38%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.6), transparent 38%),
     var(--wb-bg);
 
   color: var(--wb-ink);
@@ -61,8 +68,16 @@ body {
 }
 
 /* Text safety */
-h1, h2, h3, h4, h5, h6,
-p, a, span, div {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+span,
+div {
   overflow-wrap: anywhere;
   word-break: break-word;
 }
@@ -110,7 +125,8 @@ p, a, span, div {
 
 .wb-container {
   width: 100%;
-  max-width: 78rem; /* original width preserved */
+  max-width: 78rem;
+  /* original width preserved */
   margin-inline: auto;
 
   /* Mobile perfect */
@@ -221,13 +237,23 @@ html.wb-lock,
 }
 
 @keyframes wb-marquee-left {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-33.333%); }
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-33.333%);
+  }
 }
 
 @keyframes wb-marquee-right {
-  from { transform: translateX(-33.333%); }
-  to   { transform: translateX(0); }
+  from {
+    transform: translateX(-33.333%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }
 
 .wb-marquee:hover .wb-marquee-left,
@@ -236,6 +262,7 @@ html.wb-lock,
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .wb-marquee-left,
   .wb-marquee-right {
     animation: none !important;
