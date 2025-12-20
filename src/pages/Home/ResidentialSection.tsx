@@ -35,8 +35,7 @@ const PROPERTIES: Property[] = [
     facts: ["4 Beds", "3 Baths", "2,480 Sq Ft", "2019 Build"],
     summary:
       "Bright open-plan interiors with a calm street presence and strong curb appeal.\nGreat for families who want space, comfort, and a clean long-term investment.",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=80",
+    image: "/img/jack.jpg",
   },
   {
     id: "f2",
@@ -49,8 +48,7 @@ const PROPERTIES: Property[] = [
     facts: ["3 Beds", "2 Baths", "2,050 Sq Ft", "Move-in Ready"],
     summary:
       "A polished exterior and a practical layout that’s easy to compare during tours.\nIdeal for buyers who want a dependable, low-risk upgrade in a prime suburb.",
-    image:
-      "https://images.unsplash.com/photo-1605276373954-0c4a0dac5b12?auto=format&fit=crop&w=2400&q=80",
+    image: "/img/wind-flower.jpeg",
   },
   {
     id: "f3",
@@ -63,8 +61,7 @@ const PROPERTIES: Property[] = [
     facts: ["0.42 Acres", "Road Access", "Utilities Nearby", "Clear Title"],
     summary:
       "Flat, accessible land with clean documentation and flexible build potential.\nA confident choice for custom home plans and long-term appreciation.",
-    image:
-      "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=80",
+    image: "/img/forest.jpg",
   },
 
   // Mosaic items
@@ -78,8 +75,7 @@ const PROPERTIES: Property[] = [
     facts: ["3 Beds", "2.5 Baths", "1,740 Sq Ft", "2021 Build"],
     summary:
       "Low-maintenance living with a modern facade and strong rental upside.\nGreat fit for professionals, first-time buyers, and long-term holds.",
-    image:
-      "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=2400&q=80",
+    image: "/img/wood.jpg",
   },
   {
     id: "m2",
@@ -91,8 +87,7 @@ const PROPERTIES: Property[] = [
     facts: ["4 Beds", "3 Baths", "2,260 Sq Ft", "Quiet Street"],
     summary:
       "Timeless exterior with a family-friendly layout and great curb appeal.\nA stable, comfortable option in a quiet street with steady demand.",
-    image:
-      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=2400&q=80",
+    image: "/img/vista.jpg",
   },
   {
     id: "m3",
@@ -104,8 +99,7 @@ const PROPERTIES: Property[] = [
     facts: ["0.75 Acres", "Residential Zone", "Survey Ready", "Clear Title"],
     summary:
       "Premium parcel with flexibility for custom plans and future resale value.\nCorner positioning offers better access, visibility, and layout options.",
-    image:
-      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=2400&q=80",
+    image: "/img/avalon-house-img.jpg",
   },
   {
     id: "m4",
@@ -117,8 +111,7 @@ const PROPERTIES: Property[] = [
     facts: ["4 Beds", "3 Baths", "2,410 Sq Ft", "2020 Build"],
     summary:
       "Refined exterior presence with a modern footprint and premium feel.\nPerfect if you want space and style without going over the top.",
-    image:
-      "https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=2400&q=80",
+    image: "/img/apollo-house-img.jpg",
   },
   {
     id: "m5",
@@ -130,8 +123,7 @@ const PROPERTIES: Property[] = [
     facts: ["0.55 Acres", "Level Terrain", "Road Access", "Utilities Nearby"],
     summary:
       "Quiet surroundings with simple access and nearby utilities for smoother builds.\nA clean entry into land ownership with solid upside potential.",
-    image:
-      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2400&q=80",
+    image: "/img/aura.webp",
   },
   {
     id: "m6",
@@ -143,8 +135,7 @@ const PROPERTIES: Property[] = [
     facts: ["3 Beds", "2 Baths", "1,920 Sq Ft", "Well-kept"],
     summary:
       "Simple, clean lines and a well-kept exterior—easy to personalize over time.\nGreat for smart upgrades and practical, everyday comfort.",
-    image:
-      "https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=2400&q=80",
+    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1800&q=80",
   },
 ];
 
