@@ -73,6 +73,8 @@ function PropertyStat({ icon, value }: { icon: React.ReactNode; value: string })
   );
 }
 
+
+
 function Tabs({
   value,
   onChange,
