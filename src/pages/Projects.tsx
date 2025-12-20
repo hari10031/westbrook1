@@ -12,7 +12,6 @@ import {
   RiRoadMapLine,
   RiSparkling2Line,
   RiArrowUpSLine,
-  RiHome4Line,
 } from "react-icons/ri";
 import { IoBedOutline, IoCarOutline } from "react-icons/io5";
 import { LuBath } from "react-icons/lu";
@@ -44,14 +43,6 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     <p className="text-[12px] font-extrabold tracking-[0.34em] text-[color:var(--wb-ink)]/80">
       {children}
     </p>
-  );
-}
-
-function Chip({ text }: { text: string }) {
-  return (
-    <span className="rounded-full border border-[color:var(--wb-accent)]/18 bg-[color:var(--wb-accent)]/10 px-3 py-1 text-[11.5px] font-extrabold text-[color:var(--wb-accent)]">
-      {text}
-    </span>
   );
 }
 
