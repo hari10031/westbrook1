@@ -11,8 +11,12 @@ import {
   RiArrowRightUpLine,
   RiRoadMapLine,
   RiSparkling2Line,
-  RiArrowUpSLine, // ✅ FIX (RiArrowUpLine doesn't exist in react-icons/ri)
+  RiArrowUpSLine,
+  RiHome4Line,
 } from "react-icons/ri";
+import { IoBedOutline, IoCarOutline } from "react-icons/io5";
+import { LuBath } from "react-icons/lu";
+import { TbRulerMeasure } from "react-icons/tb";
 
 const EASE: [number, number, number, number] = [0.18, 0.82, 0.22, 1];
 
@@ -22,14 +26,13 @@ type Project = {
   id: string;
   status: ProjectStatus;
   name: string;
-  type: string;
   location: string;
   eta: string;
-  headline: string;
-  summary: string;
   image: string;
-  highlights: string[];
-  tags: string[];
+  beds: number;
+  baths: number;
+  garage: number;
+  sqft: number;
 };
 
 function cx(...c: Array<string | false | null | undefined>) {
@@ -58,6 +61,15 @@ function StatPill({ icon, text }: { icon: React.ReactNode; text: string }) {
       <span className="text-[15px]">{icon}</span>
       {text}
     </span>
+  );
+}
+
+function PropertyStat({ icon, value }: { icon: React.ReactNode; value: string }) {
+  return (
+    <div className="flex items-center gap-1.5 text-[12px] text-[color:var(--wb-ink)]/70">
+      <span className="text-[14px] text-[color:var(--wb-accent)]">{icon}</span>
+      <span>{value}</span>
+    </div>
   );
 }
 
@@ -167,33 +179,19 @@ function ProjectCard({ p, onOpen }: { p: Project; onOpen: (id: string) => void }
             <p className="text-[15.5px] font-extrabold text-[color:var(--wb-ink)]">
               {p.name}
             </p>
-            <p className="mt-1 text-[12.5px] text-[color:var(--wb-ink)]/72">
-              {p.type}
-            </p>
+            <div className="mt-1 flex items-center gap-2 text-[12.5px] text-[color:var(--wb-ink)]/72">
+              <RiMapPin2Line className="text-[14px] text-[color:var(--wb-accent)]" />
+              <span className="truncate">{p.location}</span>
+            </div>
           </div>
-
-          <span className="rounded-full border border-[color:var(--wb-accent)]/18 bg-[color:var(--wb-accent)]/10 px-3 py-1 text-[11px] font-extrabold text-[color:var(--wb-accent)]">
-            {p.eta}
-          </span>
         </div>
 
-        <div className="mt-4 grid gap-2">
-          <div className="flex items-center gap-2 text-[12.5px] text-[color:var(--wb-ink)]/72">
-            <RiMapPin2Line className="text-[14px] text-[color:var(--wb-accent)]" />
-            <span className="truncate">{p.location}</span>
-          </div>
-          <p className="line-clamp-2 text-[13.5px] leading-relaxed text-[color:var(--wb-ink)]/74">
-            <span className="font-extrabold text-[color:var(--wb-ink)]/88">
-              {p.headline}
-            </span>{" "}
-            {p.summary}
-          </p>
-        </div>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {p.tags.slice(0, 3).map((t) => (
-            <Chip key={t} text={t} />
-          ))}
+        {/* Property Stats */}
+        <div className="mt-4 flex flex-wrap items-center gap-4">
+          <PropertyStat icon={<IoBedOutline />} value={`${p.beds}`} />
+          <PropertyStat icon={<LuBath />} value={`${p.baths}`} />
+          <PropertyStat icon={<IoCarOutline />} value={`${p.garage}`} />
+          <PropertyStat icon={<TbRulerMeasure />} value={`${p.sqft} Sq ft`} />
         </div>
 
         <div className="mt-4 h-[2px] w-10 bg-[color:var(--wb-accent)]/55 group-hover:w-16 transition-all duration-300" />
@@ -248,7 +246,7 @@ function Modal({
                     {p.status === "upcoming" ? <RiRoadMapLine /> : <RiCheckLine />}
                   </span>
                   <span className="text-[11px] font-extrabold tracking-[0.16em]">
-                    {p.status === "upcoming" ? "ROADMAP" : "DELIVERED"}
+                    {p.status === "upcoming" ? "UPCOMING" : "COMPLETED"}
                   </span>
                 </div>
               </div>
@@ -256,9 +254,6 @@ function Modal({
               <div className="p-7 sm:p-8">
                 <p className="text-[22px] font-extrabold text-[color:var(--wb-ink)]">
                   {p.name}
-                </p>
-                <p className="mt-1 text-[14px] text-[color:var(--wb-ink)]/70">
-                  {p.type}
                 </p>
 
                 <div className="mt-4 grid gap-2">
@@ -272,41 +267,34 @@ function Modal({
                   </div>
                 </div>
 
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {p.tags.map((t) => (
-                    <Chip key={t} text={t} />
-                  ))}
-                </div>
-
-                <p className="mt-5 text-[14.5px] leading-relaxed text-[color:var(--wb-ink)]/76">
-                  <span className="font-extrabold text-[color:var(--wb-ink)]/90">
-                    {p.headline}
-                  </span>{" "}
-                  {p.summary}
-                </p>
-
-                <div className="mt-6 rounded-[22px] border border-[color:var(--wb-ink)]/12 bg-white/70 p-5">
-                  <p className="text-[12px] font-extrabold tracking-[0.28em] text-[color:var(--wb-ink)]/70">
-                    HIGHLIGHTS
-                  </p>
-                  <div className="mt-3 grid gap-3">
-                    {p.highlights.map((h) => (
-                      <div key={h} className="flex items-start gap-2">
-                        <span className="mt-[2px] text-[color:var(--wb-accent)]">
-                          <RiCheckLine />
-                        </span>
-                        <p className="text-[14px] leading-snug text-[color:var(--wb-ink)]/76">
-                          {h}
-                        </p>
-                      </div>
-                    ))}
+                {/* Property Stats Grid */}
+                <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+                  <div className="rounded-2xl border border-[color:var(--wb-ink)]/12 bg-white/70 p-4 text-center">
+                    <IoBedOutline className="mx-auto text-[24px] text-[color:var(--wb-accent)]" />
+                    <p className="mt-2 text-[18px] font-extrabold text-[color:var(--wb-ink)]">{p.beds}</p>
+                    <p className="text-[11px] text-[color:var(--wb-ink)]/60">Bedrooms</p>
+                  </div>
+                  <div className="rounded-2xl border border-[color:var(--wb-ink)]/12 bg-white/70 p-4 text-center">
+                    <LuBath className="mx-auto text-[24px] text-[color:var(--wb-accent)]" />
+                    <p className="mt-2 text-[18px] font-extrabold text-[color:var(--wb-ink)]">{p.baths}</p>
+                    <p className="text-[11px] text-[color:var(--wb-ink)]/60">Bathrooms</p>
+                  </div>
+                  <div className="rounded-2xl border border-[color:var(--wb-ink)]/12 bg-white/70 p-4 text-center">
+                    <IoCarOutline className="mx-auto text-[24px] text-[color:var(--wb-accent)]" />
+                    <p className="mt-2 text-[18px] font-extrabold text-[color:var(--wb-ink)]">{p.garage}</p>
+                    <p className="text-[11px] text-[color:var(--wb-ink)]/60">Garage</p>
+                  </div>
+                  <div className="rounded-2xl border border-[color:var(--wb-ink)]/12 bg-white/70 p-4 text-center">
+                    <TbRulerMeasure className="mx-auto text-[24px] text-[color:var(--wb-accent)]" />
+                    <p className="mt-2 text-[18px] font-extrabold text-[color:var(--wb-ink)]">{p.sqft}</p>
+                    <p className="text-[11px] text-[color:var(--wb-ink)]/60">Sq ft</p>
                   </div>
                 </div>
 
                 <div className="mt-6 flex items-center justify-between gap-3">
                   <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--wb-accent)]/18 bg-[color:var(--wb-accent)]/10 px-3 py-1 text-[12px] font-extrabold text-[color:var(--wb-accent)]">
                     <RiSparkling2Line />
-                    Built with WestBrook standards
+                    Built with Webhook standards
                   </span>
 
                   <button
@@ -330,126 +318,115 @@ function Modal({
 export default function ProjectsPage() {
   const PROJECTS: Project[] = useMemo(
     () => [
+      // Upcoming Home
       {
-        id: "wb-uptown-fuel",
+        id: "wb-horizon",
         status: "upcoming",
-        name: "Uptown Fuel & Convenience",
-        type: "Gas Station + Convenience Store",
-        location: "Frisco, TX",
+        name: "Horizon",
+        location: "McKinney, TX",
         eta: "Q2 2026",
-        headline: "A compliance-first build with efficient site flow.",
-        summary:
-          "Designed for real-world operations: clean ingress/egress, pump layout, and phased execution to protect the schedule.",
-        image:
-          "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1800&q=80",
-        highlights: [
-          "Traffic flow and safety zones mapped early",
-          "Milestone-driven coordination across trades",
-          "Inspection readiness built into schedule planning",
-          "Close-out documentation prepared for handover",
-        ],
-        tags: ["Ground-up", "Permitting", "Site flow", "Schedule"],
+        image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1800&q=80",
+        beds: 4,
+        baths: 3,
+        garage: 2,
+        sqft: 2400,
       },
+      // Completed Homes
       {
-        id: "wb-urgent-care-parkway",
-        status: "upcoming",
-        name: "Parkway Urgent Care",
-        type: "Clinic Build-out",
-        location: "Plano, TX",
-        eta: "Q3 2026",
-        headline: "Fast-turn clinic optimized for patient flow.",
-        summary:
-          "Room readiness, clean sequencing, and close-out discipline so opening day doesn’t turn into a scramble.",
-        image:
-          "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1800&q=80",
-        highlights: [
-          "Flow-first planning for front desk → rooms",
-          "Tight scope control to prevent drift",
-          "Vendor coordination aligned to inspections",
-          "Punch list closed quickly and cleanly",
-        ],
-        tags: ["Urgent care", "Fast-turn", "Readiness", "Close-out"],
-      },
-      {
-        id: "wb-restaurant-ti-midtown",
-        status: "upcoming",
-        name: "Midtown Restaurant TI",
-        type: "Tenant Improvements",
-        location: "Austin, TX",
-        eta: "Q1 2026",
-        headline: "Built around service speed and back-of-house efficiency.",
-        summary:
-          "Clear milestone tracking and clean trade sequencing to reduce downtime and protect launch timelines.",
-        image:
-          "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?auto=format&fit=crop&w=1800&q=80",
-        highlights: [
-          "Operational zoning for service + prep",
-          "Early inspection alignment",
-          "Sequenced trades to protect critical path",
-          "Opening-ready close-out checklist",
-        ],
-        tags: ["Restaurants", "TI", "Operations", "Milestones"],
-      },
-
-      {
-        id: "wb-carwash-sunrise",
+        id: "wb-jacksonbend",
         status: "completed",
-        name: "Sunrise Car Wash",
-        type: "Ground-up Car Wash",
+        name: "Jacksonbend",
         location: "Dallas, TX",
-        eta: "Opened Sep 2025",
-        headline: "Throughput-focused layout and utilities planning.",
-        summary:
-          "Designed for workflow and safety — with drainage, power, and water routing planned upfront for smoother execution.",
-        image:
-          "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=1800&q=80",
-        highlights: [
-          "Utilities routed cleanly for long-term operations",
-          "Workflow designed for throughput and safety",
-          "Inspection-ready delivery",
-          "Close-out documentation completed at handover",
-        ],
-        tags: ["Car wash", "Utilities", "Drainage", "Workflow"],
+        eta: "Completed 2024",
+        image: "/img/jack.jpg",
+        beds: 4,
+        baths: 3,
+        garage: 2,
+        sqft: 3600,
       },
       {
-        id: "wb-medical-suite",
+        id: "wb-wind-flower",
         status: "completed",
-        name: "Medical Suite Expansion",
-        type: "Healthcare Remodel",
-        location: "Tampa, FL",
-        eta: "Completed Jul 2025",
-        headline: "Safety-first execution with clean coordination.",
-        summary:
-          "Coordinated vendor access and sequencing to protect timelines while keeping requirements and documentation clear.",
-        image:
-          "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1800&q=80",
-        highlights: [
-          "Access coordination and clean sequencing",
-          "Compliance-aware planning",
-          "Inspection alignment",
-          "Hand-over readiness with documentation",
-        ],
-        tags: ["Healthcare", "Remodel", "Compliance", "Close-out"],
+        name: "Wind Flower",
+        location: "Granbury, TX",
+        eta: "Completed 2024",
+        image: "/img/wind-flower.jpeg",
+        beds: 4,
+        baths: 3,
+        garage: 2,
+        sqft: 1927,
       },
       {
-        id: "wb-fuel-remodel",
+        id: "wb-forest-bend",
         status: "completed",
-        name: "Fuel Site Remodel",
-        type: "Forecourt Upgrade",
-        location: "Phoenix, AZ",
-        eta: "Completed Mar 2025",
-        headline: "Upgrade delivered with minimal disruption.",
-        summary:
-          "Scope controlled early, timelines kept visible, and close-out handled cleanly so operations stayed steady.",
-        image:
-          "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1800&q=80",
-        highlights: [
-          "Scope locked early to prevent drift",
-          "Milestones tracked and communicated",
-          "Vendor coordination across critical path",
-          "Punch list closed quickly",
-        ],
-        tags: ["Fuel", "Remodel", "Milestones", "Execution"],
+        name: "Forest Bend",
+        location: "Weatherford, TX",
+        eta: "Completed 2024",
+        image: "/img/forest.jpg",
+        beds: 3,
+        baths: 2,
+        garage: 2,
+        sqft: 1600,
+      },
+      {
+        id: "wb-wood-view",
+        status: "completed",
+        name: "Wood View",
+        location: "Granbury, TX",
+        eta: "Completed 2024",
+        image: "/img/wood.jpg",
+        beds: 3,
+        baths: 2,
+        garage: 2,
+        sqft: 1500,
+      },
+      {
+        id: "wb-vista",
+        status: "completed",
+        name: "Vista",
+        location: "Fort Worth, TX",
+        eta: "Completed 2024",
+        image: "/img/vista.jpg",
+        beds: 3,
+        baths: 2,
+        garage: 2,
+        sqft: 1600,
+      },
+      {
+        id: "wb-avalon",
+        status: "completed",
+        name: "Avalon",
+        location: "Weatherford, TX",
+        eta: "Completed 2024",
+        image: "/img/avalon-house-img.jpg",
+        beds: 3,
+        baths: 2,
+        garage: 2,
+        sqft: 1840,
+      },
+      {
+        id: "wb-apollo",
+        status: "completed",
+        name: "Apollo",
+        location: "Granbury, TX",
+        eta: "Completed 2024",
+        image: "/img/apollo-house-img.jpg",
+        beds: 3,
+        baths: 2,
+        garage: 0,
+        sqft: 1300,
+      },
+      {
+        id: "wb-aurora",
+        status: "completed",
+        name: "Aurora",
+        location: "Fort Worth, TX",
+        eta: "Completed 2024",
+        image: "/img/aura.webp",
+        beds: 3,
+        baths: 2,
+        garage: 2,
+        sqft: 1800,
       },
     ],
     []
@@ -575,10 +552,6 @@ export default function ProjectsPage() {
               </div>
 
               <div className="p-7 sm:p-8">
-                <p className="text-[12px] font-extrabold tracking-[0.34em] text-[color:var(--wb-ink)]/70">
-                  {featured.type.toUpperCase()}
-                </p>
-
                 <p className="mt-2 text-[26px] font-extrabold text-[color:var(--wb-ink)]">
                   {featured.name}
                 </p>
@@ -594,17 +567,28 @@ export default function ProjectsPage() {
                   </div>
                 </div>
 
-                <p className="mt-4 text-[14.5px] leading-relaxed text-[color:var(--wb-ink)]/76">
-                  <span className="font-extrabold text-[color:var(--wb-ink)]/90">
-                    {featured.headline}
-                  </span>{" "}
-                  {featured.summary}
-                </p>
-
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {featured.tags.map((t) => (
-                    <Chip key={t} text={t} />
-                  ))}
+                {/* Property Stats */}
+                <div className="mt-5 grid grid-cols-4 gap-3">
+                  <div className="rounded-xl border border-[color:var(--wb-ink)]/10 bg-white/70 p-3 text-center">
+                    <IoBedOutline className="mx-auto text-[20px] text-[color:var(--wb-accent)]" />
+                    <p className="mt-1 text-[16px] font-extrabold text-[color:var(--wb-ink)]">{featured.beds}</p>
+                    <p className="text-[10px] text-[color:var(--wb-ink)]/60">Beds</p>
+                  </div>
+                  <div className="rounded-xl border border-[color:var(--wb-ink)]/10 bg-white/70 p-3 text-center">
+                    <LuBath className="mx-auto text-[20px] text-[color:var(--wb-accent)]" />
+                    <p className="mt-1 text-[16px] font-extrabold text-[color:var(--wb-ink)]">{featured.baths}</p>
+                    <p className="text-[10px] text-[color:var(--wb-ink)]/60">Baths</p>
+                  </div>
+                  <div className="rounded-xl border border-[color:var(--wb-ink)]/10 bg-white/70 p-3 text-center">
+                    <IoCarOutline className="mx-auto text-[20px] text-[color:var(--wb-accent)]" />
+                    <p className="mt-1 text-[16px] font-extrabold text-[color:var(--wb-ink)]">{featured.garage}</p>
+                    <p className="text-[10px] text-[color:var(--wb-ink)]/60">Garage</p>
+                  </div>
+                  <div className="rounded-xl border border-[color:var(--wb-ink)]/10 bg-white/70 p-3 text-center">
+                    <TbRulerMeasure className="mx-auto text-[20px] text-[color:var(--wb-accent)]" />
+                    <p className="mt-1 text-[16px] font-extrabold text-[color:var(--wb-ink)]">{featured.sqft}</p>
+                    <p className="text-[10px] text-[color:var(--wb-ink)]/60">Sq ft</p>
+                  </div>
                 </div>
 
                 <div className="mt-6 flex items-center justify-between">
