@@ -621,7 +621,7 @@ export default function ProjectsPage() {
 
       <Modal open={!!openId} onClose={() => setOpenId(null)} p={openProject} />
 
-      {/* BACK TO TOP */}
+      /* {/* BACK TO TOP */}
       <div className="mt-12 flex justify-center">
         <button
           type="button"
@@ -633,7 +633,7 @@ export default function ProjectsPage() {
           <RiArrowUpSLine />
           Back to top
         </button>
-      </div>
+      </div> */
     </main>
   );
 }
