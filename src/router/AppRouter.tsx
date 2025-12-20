@@ -5,7 +5,6 @@ import Home from "../pages/Home";
 import About from "../pages/About";
 import Services from "../pages/Services";
 import Projects from "../pages/Projects";
-import ExploreHomes from "../pages/ExploreHomes";
 import Land from "../pages/Land";
 import Contact from "../pages/Contact";
 import Partnerships from "../pages/Partnerships";
@@ -20,7 +19,6 @@ export default function AppRouter() {
       <Route path="/about" element={<About />} />
       <Route path="/services" element={<Services />} />
       <Route path="/explore-homes" element={<Projects />} />
-      {/* <Route path="/explore-homes" element={<ExploreHomes />} /> */}
       <Route path="/land" element={<Land />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/partnerships" element={<Partnerships />} />
