@@ -471,9 +471,10 @@ export default function ProjectsPage() {
           transition={{ duration: 0.85, ease: EASE, delay: 0.05 }}
           className="wb-serif mt-3 text-[38px] leading-[1.05] sm:text-[56px] text-[color:var(--wb-ink)]"
         >
-          Proof, not promises.
+          Find a place that actually fits your life.
+
           <span className="block">
-            Upcoming and delivered{" "}
+            Homes you can visit, evaluate, and move into.{" "}
             <span className="relative inline-block">
               <span className="relative z-10">work</span>
               <span className="absolute left-0 bottom-[6px] h-[7px] w-full bg-[color:var(--wb-accent)]/20" />
@@ -488,8 +489,7 @@ export default function ProjectsPage() {
           transition={{ duration: 0.7, ease: EASE, delay: 0.14 }}
           className="mt-4 max-w-[92ch] text-[15.5px] leading-relaxed text-[color:var(--wb-ink)]/75"
         >
-          A curated view of what’s coming next and what’s already delivered — built
-          with disciplined scope, clean sequencing, and ready-to-operate handovers.
+          Browse a clear selection of upcoming projects and ready homes — planned with practical layouts, reliable construction, and well-connected locations. Every listing focuses on what matters: space, usability, and long-term value.
         </motion.p>
 
         <div className="mt-6 flex flex-wrap gap-2">
