@@ -4,69 +4,6 @@ import { useEffect, useState } from "react";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-// SVG path for "Westbrook" in a handwriting style
-// This is a simplified cursive-style path that simulates handwriting
-const WESTBROOK_PATH = `
-M 0 40 
-Q 5 20, 15 40 
-L 15 20 
-L 25 40 
-L 25 20
-
-M 35 25 
-Q 35 20, 45 20 
-Q 55 20, 50 30 
-Q 45 40, 55 40 
-Q 65 40, 60 30
-
-M 75 40 
-Q 65 30, 75 20 
-Q 85 20, 85 25 
-M 75 30 
-L 85 30
-
-M 95 20 
-L 95 40 
-M 90 20 
-L 100 20
-
-M 110 40 
-Q 100 30, 110 20 
-Q 120 20, 120 25 
-M 110 30 
-L 120 30
-
-M 130 20 
-Q 125 20, 125 30 
-Q 125 40, 135 40 
-Q 145 40, 145 30 
-Q 145 20, 135 20
-
-M 155 20 
-L 155 40 
-Q 155 35, 165 30 
-Q 175 25, 175 35 
-L 175 40
-
-M 185 20 
-Q 180 20, 180 30 
-Q 180 40, 190 40 
-Q 200 40, 200 30 
-Q 200 20, 190 20
-
-M 210 20 
-Q 205 20, 205 30 
-Q 205 40, 215 40 
-Q 225 40, 225 30 
-Q 225 20, 215 20
-
-M 235 20 
-L 235 40 
-M 235 20 
-Q 245 20, 250 30 
-L 250 40
-`;
-
 // Text letters for "Westbrook"
 const LETTERS = [
     { char: "W", x: 0 },
