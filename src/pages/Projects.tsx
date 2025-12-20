@@ -473,7 +473,7 @@ export default function ProjectsPage() {
         >
           Find a place that actually fits your life.
 
-          <span className="block ">
+          <span className="block text-[38px]">
             Homes you can visit, evaluate, and move into.{" "}
             <span className="relative inline-block">
               <span className="relative z-10">work</span>
