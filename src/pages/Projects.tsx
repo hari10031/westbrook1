@@ -1,10 +1,4 @@
 // src/pages/Projects.tsx
-// ✅ World-class Projects page (Upcoming + Previous)
-// ✅ Premium hero, animated tabs, featured project, compact grids, hover micro-interactions
-// ✅ Framer Motion animations (stagger + reveal + hover lift)
-// ✅ Uses your theme vars: --wb-ink, --wb-accent, --wb-border, wb-container, wb-serif
-// ✅ Eslint clean
-
 import type React from "react";
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,6 +11,7 @@ import {
   RiArrowRightUpLine,
   RiRoadMapLine,
   RiSparkling2Line,
+  RiArrowUpSLine, // ✅ FIX (RiArrowUpLine doesn't exist in react-icons/ri)
 } from "react-icons/ri";
 
 const EASE: [number, number, number, number] = [0.18, 0.82, 0.22, 1];
@@ -29,12 +24,12 @@ type Project = {
   name: string;
   type: string;
   location: string;
-  eta: string; // e.g., "Q2 2026" or "Opened Sep 2025"
+  eta: string;
   headline: string;
   summary: string;
   image: string;
-  highlights: string[]; // 3-5 bullets
-  tags: string[]; // chips
+  highlights: string[];
+  tags: string[];
 };
 
 function cx(...c: Array<string | false | null | undefined>) {
@@ -57,13 +52,7 @@ function Chip({ text }: { text: string }) {
   );
 }
 
-function StatPill({
-  icon,
-  text,
-}: {
-  icon: React.ReactNode;
-  text: string;
-}) {
+function StatPill({ icon, text }: { icon: React.ReactNode; text: string }) {
   return (
     <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--wb-ink)]/14 bg-white/65 px-4 py-2 text-[12px] font-extrabold text-[color:var(--wb-ink)]/72 backdrop-blur">
       <span className="text-[15px]">{icon}</span>
@@ -131,13 +120,7 @@ function Tabs({
   );
 }
 
-function ProjectCard({
-  p,
-  onOpen,
-}: {
-  p: Project;
-  onOpen: (id: string) => void;
-}) {
+function ProjectCard({ p, onOpen }: { p: Project; onOpen: (id: string) => void }) {
   return (
     <motion.button
       type="button"
@@ -175,7 +158,6 @@ function ProjectCard({
           <RiArrowRightUpLine />
         </div>
 
-        {/* blue shine */}
         <div className="pointer-events-none absolute -left-[35%] top-[-60%] h-[200%] w-[55%] rotate-[18deg] bg-[color:var(--wb-accent)]/10 opacity-0 blur-2xl group-hover:opacity-100 transition duration-500" />
       </div>
 
@@ -348,7 +330,6 @@ function Modal({
 export default function ProjectsPage() {
   const PROJECTS: Project[] = useMemo(
     () => [
-      // UPCOMING
       {
         id: "wb-uptown-fuel",
         status: "upcoming",
@@ -410,7 +391,6 @@ export default function ProjectsPage() {
         tags: ["Restaurants", "TI", "Operations", "Milestones"],
       },
 
-      // COMPLETED
       {
         id: "wb-carwash-sunrise",
         status: "completed",
@@ -488,12 +468,7 @@ export default function ProjectsPage() {
   }, [PROJECTS, filter]);
 
   const featured = useMemo(() => {
-    // Prefer upcoming; else first
-    return (
-      PROJECTS.find((p) => p.status === "upcoming") ??
-      PROJECTS[0] ??
-      null
-    );
+    return PROJECTS.find((p) => p.status === "upcoming") ?? PROJECTS[0] ?? null;
   }, [PROJECTS]);
 
   const [openId, setOpenId] = useState<string | null>(null);
@@ -543,8 +518,8 @@ export default function ProjectsPage() {
           transition={{ duration: 0.7, ease: EASE, delay: 0.14 }}
           className="mt-4 max-w-[92ch] text-[15.5px] leading-relaxed text-[color:var(--wb-ink)]/75"
         >
-          A curated view of what’s coming next and what’s already delivered — built with
-          disciplined scope, clean sequencing, and ready-to-operate handovers.
+          A curated view of what’s coming next and what’s already delivered — built
+          with disciplined scope, clean sequencing, and ready-to-operate handovers.
         </motion.p>
 
         <div className="mt-6 flex flex-wrap gap-2">
@@ -587,7 +562,6 @@ export default function ProjectsPage() {
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[rgba(8,16,34,0.80)] via-[rgba(8,16,34,0.14)] to-transparent" />
-
                 <div className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/10 px-3 py-2 text-white backdrop-blur">
                   <span className="text-[14px]">
                     {featured.status === "upcoming" ? <RiTimeLine /> : <RiCheckLine />}
@@ -648,19 +622,17 @@ export default function ProjectsPage() {
         </section>
       )}
 
-      {/* UPCOMING + PREVIOUS LISTS */}
+      {/* GRID */}
       <section className="mt-12">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <SectionLabel>COLLECTION</SectionLabel>
-            <p className="mt-2 text-[20px] font-extrabold text-[color:var(--wb-ink)]">
-              Upcoming & previous projects
-            </p>
-            <p className="mt-2 text-[13.5px] leading-relaxed text-[color:var(--wb-ink)]/72 max-w-[78ch]">
-              Explore what’s in the pipeline and what we’ve already delivered — with the same discipline
-              across scope, sequencing, and handover quality.
-            </p>
-          </div>
+        <div>
+          <SectionLabel>COLLECTION</SectionLabel>
+          <p className="mt-2 text-[20px] font-extrabold text-[color:var(--wb-ink)]">
+            Upcoming & previous projects
+          </p>
+          <p className="mt-2 text-[13.5px] leading-relaxed text-[color:var(--wb-ink)]/72 max-w-[78ch]">
+            Explore what’s in the pipeline and what we’ve already delivered — with the same discipline
+            across scope, sequencing, and handover quality.
+          </p>
         </div>
 
         <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -672,6 +644,7 @@ export default function ProjectsPage() {
 
       <Modal open={!!openId} onClose={() => setOpenId(null)} p={openProject} />
 
+      {/* BACK TO TOP */}
       <div className="mt-12 flex justify-center">
         <button
           type="button"
@@ -680,7 +653,7 @@ export default function ProjectsPage() {
             backdrop-blur px-5 py-3 text-[13px] font-extrabold text-[color:var(--wb-accent)]
             hover:bg-[color:var(--wb-accent)]/14 transition"
         >
-          <RiArrowUpLine />
+          <RiArrowUpSLine />
           Back to top
         </button>
       </div>
