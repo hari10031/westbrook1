@@ -1,0 +1,213 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+/* ================================
+   WestBrook — Pearl + Navy Luxury
+   Tailwind v4
+   ================================ */
+
+:root {
+  /* Backgrounds */
+  --wb-bg: #f6f4ee; /* pearl */
+  --wb-surface: rgba(255, 255, 255, 0.78);
+  --wb-surface-strong: #ffffff;
+
+  /* Text */
+  --wb-ink: #0b1220; /* deep navy ink */
+  --wb-muted: rgba(11, 18, 32, 0.55);
+
+  /* Brand accent */
+  --wb-accent: #0b2a6f; /* navy */
+  --wb-accent-2: #1b4fd6; /* royal */
+  --wb-accent-soft: rgba(27, 79, 214, 0.10);
+
+  /* Lines / ring */
+  --wb-border: rgba(11, 18, 32, 0.12);
+  --wb-ring: rgba(27, 79, 214, 0.22);
+
+  /* Shadow */
+  --wb-shadow: 0 20px 55px rgba(11, 18, 32, 0.12);
+}
+
+/* ================================
+   GLOBAL BASE + SAFETY (NO CLIP)
+   ================================ */
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0; /* remove browser default margins */
+  padding: 0;
+  overflow-x: hidden; /* stop accidental horizontal scroll */
+}
+
+/* Ensure flex/grid children can shrink and never force overflow */
+* {
+  min-width: 0;
+}
+
+body {
+  background:
+    radial-gradient(1200px 520px at 18% -12%, rgba(27, 79, 214, 0.14), transparent 55%),
+    radial-gradient(900px 440px at 92% 0%, rgba(11, 42, 111, 0.10), transparent 55%),
+    linear-gradient(to bottom, rgba(255,255,255,0.6), transparent 38%),
+    var(--wb-bg);
+
+  color: var(--wb-ink);
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Never let text clip on tiny screens */
+h1, h2, h3, h4, h5, h6, p, a, span, div {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.wb-serif {
+  font-family: "DM Serif Display", ui-serif, Georgia, serif;
+}
+
+/* Selection */
+::selection {
+  background: rgba(27, 79, 214, 0.16);
+}
+
+/* ================================
+   CONTAINER (RESPONSIVE PADDING)
+   ================================ */
+/*
+  ✅ Production container:
+  - Gives comfortable left/right padding on phones (prevents cramped UI)
+  - Scales smoothly using clamp()
+  - Slightly wider padding on desktop
+*/
+.wb-container {
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 1.75rem);
+}
+
+@media (min-width: 1024px) {
+  .wb-container {
+    padding-inline: 2rem;
+  }
+}
+
+/* ================================
+   BUTTONS
+   ================================ */
+
+.wb-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  padding: 0.72rem 1.05rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  color: #fff;
+
+  background: linear-gradient(135deg, var(--wb-accent), var(--wb-accent-2));
+  box-shadow: 0 18px 40px rgba(27, 79, 214, 0.20);
+
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease,
+    filter 200ms ease;
+}
+
+.wb-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 24px 55px rgba(27, 79, 214, 0.26);
+  filter: saturate(1.06);
+}
+
+.wb-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  padding: 0.72rem 1.05rem;
+  border-radius: 9999px;
+  font-weight: 700;
+
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--wb-border);
+  color: rgba(11, 18, 32, 0.88);
+
+  transition:
+    transform 200ms ease,
+    background 200ms ease;
+}
+
+.wb-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-1px);
+}
+
+/* ================================
+   FOCUS RING
+   ================================ */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--wb-ring);
+  border-radius: 14px;
+}
+
+/* ================================
+   LOCK SCROLL (MOBILE DRAWER)
+   ================================ */
+html.wb-lock {
+  overflow: hidden;
+}
+
+/* ================================
+   HERO MARQUEE (Real-time reels)
+   ================================ */
+.wb-marquee {
+  width: 100%;
+}
+
+.wb-marquee-track {
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  will-change: transform;
+}
+
+.wb-marquee-left {
+  animation: wb-marquee-left var(--wb-marquee-duration, 28s) linear infinite;
+}
+
+.wb-marquee-right {
+  animation: wb-marquee-right var(--wb-marquee-duration, 28s) linear infinite;
+}
+
+@keyframes wb-marquee-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-33.333%); } /* list is tripled */
+}
+
+@keyframes wb-marquee-right {
+  from { transform: translateX(-33.333%); }
+  to   { transform: translateX(0); }
+}
+
+.wb-marquee:hover .wb-marquee-left,
+.wb-marquee:hover .wb-marquee-right {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wb-marquee-left,
+  .wb-marquee-right {
+    animation: none !important;
+    transform: translateX(0) !important;
+  }
+}
