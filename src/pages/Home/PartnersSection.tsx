@@ -12,22 +12,22 @@ type Partner = {
 const PARTNERS: Partner[] = [
   {
     name: "Chase",
-    logo: "/images/partners/chase.png",
+    logo: "/img/chase1.svg",
     href: "https://www.chase.com/",
   },
   {
     name: "Builders Capital",
-    logo: "/images/partners/builders-capital.png",
+    logo: "/img/bulid1.svg",
     href: "https://www.builderscapital.com/",
   },
   {
     name: "Fidelity National Title",
-    logo: "/images/partners/fidelity-national-title.png",
+    logo: "/img/fidelity.svg",
     href: "https://www.fntic.com/",
   },
   {
     name: "Winston Properties",
-    logo: "/images/partners/winston-properties.png",
+    logo: "/img/winston.svg",
   },
 ];
 
