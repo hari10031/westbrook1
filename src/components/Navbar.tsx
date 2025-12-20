@@ -8,7 +8,13 @@ const NAV: NavItem[] = [
   { label: "Home", to: "/" },
   { label: "Services", to: "/services" },
   { label: "Projects", to: "/projects" },
-  { label: "Explore Homes", to: "/explorehomes" },
+
+  // ✅ FIXED PATH (must match AppRouter)
+  { label: "Explore Homes", to: "/explore-homes" },
+
+  // ✅ ADDED in the middle section
+  { label: "Partnerships", to: "/partnerships" },
+
   { label: "Land", to: "/land" },
   { label: "About", to: "/about" },
   { label: "Contact", to: "/contact" },
@@ -194,8 +200,9 @@ export default function Navbar() {
 
             {/* Actions (Desktop) */}
             <div className="hidden lg:flex items-center gap-2">
+              {/* Keep Explore as a small quick action */}
               <Link
-                to="/explorehomes"
+                to="/explore-homes"
                 className={cx(
                   "rounded-full px-3 py-1.5",
                   "text-[12px] font-extrabold tracking-[0.02em]",
@@ -246,7 +253,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ✅ Mobile Drawer (ALWAYS ABOVE header) */}
+      {/* ✅ Mobile Drawer */}
       <div
         className={cx(
           "fixed inset-0 z-[999] lg:hidden",
@@ -320,7 +327,7 @@ export default function Navbar() {
 
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <Link
-                  to="/explorehomes"
+                  to="/explore-homes"
                   onClick={() => setOpen(false)}
                   className="wb-btn-ghost w-full"
                 >

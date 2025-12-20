@@ -216,8 +216,42 @@ export default function Hero() {
       {/* ✅ IMPORTANT: remove extra padding duplication */}
       <div className="wb-container">
         <div className="grid items-center gap-8 py-8 sm:py-10 lg:grid-cols-2 lg:gap-12 lg:py-14">
-          {/* LEFT */}
-          <div className="min-w-0">
+          {/* RIGHT (shown first on mobile) */}
+          <div className="relative min-w-0 order-1 lg:order-2">
+            <div className="relative rounded-[28px] border border-[color:var(--wb-border)] bg-white/55 p-4 backdrop-blur shadow-[0_26px_70px_rgba(11,18,32,0.12)]">
+              <div className="flex items-end justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="text-[12px] font-extrabold tracking-[0.18em] text-black/45">
+                    IN DEMAND
+                  </div>
+                  <div className="wb-serif mt-1 text-[20px] text-[color:var(--wb-ink)] break-words">
+                    Trending homes
+                  </div>
+                </div>
+
+                <Link
+                  to="/explorehomes"
+                  className="inline-flex h-9 shrink-0 items-center rounded-full border border-[color:var(--wb-border)]
+                             bg-white/70 px-3 text-[12px] font-extrabold text-[color:var(--wb-accent)]
+                             hover:bg-white transition whitespace-nowrap"
+                >
+                  View all →
+                </Link>
+              </div>
+
+              <div className="mt-4 space-y-4">
+                <ReelRow items={REEL_A} direction="left" seconds={26} />
+                <ReelRow items={REEL_B} direction="right" seconds={30} />
+              </div>
+
+              <div className="mt-4 text-[12px] font-semibold text-black/50">
+                Updated regularly.
+              </div>
+            </div>
+          </div>
+
+          {/* LEFT (shown second on mobile) */}
+          <div className="min-w-0 order-2 lg:order-1">
             <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--wb-border)] bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.20em] text-black/55 backdrop-blur">
               <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--wb-accent-2)]/70" />
               WESTBROOK ESTATES
@@ -333,40 +367,6 @@ export default function Hero() {
                   <Pill>Clear timelines</Pill>
                   <Pill>No surprises</Pill>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* RIGHT */}
-          <div className="relative min-w-0">
-            <div className="relative rounded-[28px] border border-[color:var(--wb-border)] bg-white/55 p-4 backdrop-blur shadow-[0_26px_70px_rgba(11,18,32,0.12)]">
-              <div className="flex items-end justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="text-[12px] font-extrabold tracking-[0.18em] text-black/45">
-                    IN DEMAND
-                  </div>
-                  <div className="wb-serif mt-1 text-[20px] text-[color:var(--wb-ink)] break-words">
-                    Trending homes
-                  </div>
-                </div>
-
-                <Link
-                  to="/explorehomes"
-                  className="inline-flex h-9 shrink-0 items-center rounded-full border border-[color:var(--wb-border)]
-                             bg-white/70 px-3 text-[12px] font-extrabold text-[color:var(--wb-accent)]
-                             hover:bg-white transition whitespace-nowrap"
-                >
-                  View all →
-                </Link>
-              </div>
-
-              <div className="mt-4 space-y-4">
-                <ReelRow items={REEL_A} direction="left" seconds={26} />
-                <ReelRow items={REEL_B} direction="right" seconds={30} />
-              </div>
-
-              <div className="mt-4 text-[12px] font-semibold text-black/50">
-                Updated regularly.
               </div>
             </div>
           </div>
