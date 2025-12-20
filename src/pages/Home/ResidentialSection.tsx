@@ -285,7 +285,7 @@ function FeaturedCarousel({ items }: { items: Property[] }) {
             </p>
 
             <div className="mt-7 flex flex-wrap gap-2">
-              <Link to="/explorehomes" className="wb-btn-primary">
+              <Link to="/explore-homes" className="wb-btn-primary">
                 View details
               </Link>
               <Link to="/contact" className="wb-btn-ghost bg-white/60 backdrop-blur">
@@ -382,7 +382,7 @@ function ImageCard({ p, tall }: { p: Property; tall: boolean }) {
 
   return (
     <Link
-      to="/explorehomes"
+      to="/explore-homes"
       className={[
         "group relative block overflow-hidden rounded-[34px]",
         "border border-[color:var(--wb-border)] bg-white/60 backdrop-blur-xl",

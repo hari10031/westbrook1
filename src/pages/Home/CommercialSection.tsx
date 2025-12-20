@@ -25,8 +25,7 @@ const CARDS: Card[] = [
     subtitle: "Gas stations • C-stores • Forecourt upgrades",
     icon: <RiGasStationLine />,
     to: "/services#fuel-convenience",
-    image:
-      "https://images.unsplash.com/photo-1603386329225-868f9b1ee6c9?auto=format&fit=crop&w=1400&q=80",
+    image: "/img/wood.jpg",
   },
   {
     title: "Restaurants & Retail",

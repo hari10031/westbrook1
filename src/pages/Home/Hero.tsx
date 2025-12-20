@@ -230,7 +230,7 @@ export default function Hero() {
                 </div>
 
                 <Link
-                  to="/explorehomes"
+                  to="/explore-homes"
                   className="inline-flex h-9 shrink-0 items-center rounded-full border border-[color:var(--wb-border)]
                              bg-white/70 px-3 text-[12px] font-extrabold text-[color:var(--wb-accent)]
                              hover:bg-white transition whitespace-nowrap"
@@ -269,7 +269,7 @@ export default function Hero() {
             {/* CTAs */}
             <div className="mt-5 flex flex-wrap items-center gap-2">
               <Link
-                to="/explorehomes"
+                to="/explore-homes"
                 className="inline-flex h-10 items-center justify-center rounded-full px-4 text-[13px] font-extrabold tracking-[0.02em] text-white
                            bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))]
                            shadow-[0_16px_34px_rgba(27,79,214,0.18)]
