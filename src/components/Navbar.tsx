@@ -12,9 +12,9 @@ const NAV: NavItem[] = [
   // ✅ ADDED in the middle section
   { label: "Partnerships", to: "/partnerships" },
 
-  { label: "Land", to: "/land" },
+  // { label: "Land", to: "/land" },
   { label: "About", to: "/about" },
-  { label: "Contact", to: "/contact" },
+  // { label: "Contact", to: "/contact" },
 ];
 
 function cx(...classes: Array<string | false | null | undefined>) {

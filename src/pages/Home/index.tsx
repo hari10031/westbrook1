@@ -1,21 +1,21 @@
 // src/pages/Home/index.tsx
-import Hero from "./Hero";
-import ResidentialSection from "./ResidentialSection";
+
 import WhyWestBrookSection from "./WhyWestBrookSection";
 import CommercialSection from "./CommercialSection";
 import UpcomingProjects from "./UpcomingProjects";
 import Testimonials from "./Testimonials";
 import PartnersSection from "./PartnersSection";
 import ContactSection from "./ContactSection";
+import Hero from "./Hero";
 
 export default function HomePage() {
   return (
     <main>
       <Hero />
 
-      <section id="residential" className="wb-container py-14">
+      {/* <section id="residential" className="wb-container py-14">
         <ResidentialSection />
-      </section>
+      </section> */}
 
       <section id="why-us" className="wb-container py-12">
         <WhyWestBrookSection />

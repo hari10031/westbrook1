@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 type ReelItem = {
   title: string;
   meta: string;
-  price: string;
+  // price: string;
   img: string;
   tag?: string;
 };
@@ -13,35 +13,30 @@ const REEL_A: ReelItem[] = [
   {
     title: "Skyline Penthouse",
     meta: "SoHo, NYC • 2,980 sqft",
-    price: "$4.85M",
     img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1400&q=80",
     tag: "Featured",
   },
   {
     title: "Modern Villa",
     meta: "Beverly Hills • 3,420 sqft",
-    price: "$6.40M",
     img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80",
     tag: "Verified",
   },
   {
     title: "Luxury Apartment",
     meta: "Downtown Austin • 1,860 sqft",
-    price: "$1.25M",
     img: "https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&w=1400&q=80",
     tag: "Hot",
   },
   {
     title: "Calm Estate Home",
     meta: "Scottsdale • 4,900 sqft",
-    price: "$3.10M",
     img: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1400&q=80",
     tag: "New",
   },
   {
     title: "Minimal Townhome",
     meta: "Santa Monica • 2,220 sqft",
-    price: "$2.05M",
     img: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1400&q=80",
     tag: "Prime",
   },
@@ -51,35 +46,35 @@ const REEL_B: ReelItem[] = [
   {
     title: "Lakeview Duplex",
     meta: "Lake Union, Seattle • 2,450 sqft",
-    price: "$2.35M",
+    // price: "$2.35M",
     img: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=80",
     tag: "Tour",
   },
   {
     title: "Elegant Bungalow",
     meta: "Palo Alto • 3,120 sqft",
-    price: "$5.90M",
+    // price: "$5.90M",
     img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1400&q=80",
     tag: "Verified",
   },
   {
     title: "Studio Loft",
     meta: "Brooklyn • 940 sqft",
-    price: "$899K",
+    // price: "$899K",
     img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1400&q=80",
     tag: "Deal",
   },
   {
     title: "Garden Home",
     meta: "Naples, FL • 2,780 sqft",
-    price: "$1.95M",
+    // price: "$1.95M",
     img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1400&q=80",
     tag: "New",
   },
   {
     title: "Premium Land",
     meta: "Bozeman, MT • 2.1 acres",
-    price: "$720K",
+    // price: "$720K",
     img: "https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=1400&q=80",
     tag: "Land",
   },
@@ -144,9 +139,9 @@ function ReelCard({ item }: { item: ReelItem }) {
               {item.meta}
             </div>
           </div>
-          <div className="shrink-0 rounded-full border border-white/20 bg-white/15 px-3 py-2 text-[12px] font-extrabold text-white backdrop-blur whitespace-nowrap">
+          {/* <div className="shrink-0 rounded-full border border-white/20 bg-white/15 px-3 py-2 text-[12px] font-extrabold text-white backdrop-blur whitespace-nowrap">
             {item.price}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
@@ -221,16 +216,16 @@ export default function Hero() {
             <div className="relative rounded-[28px] border border-[color:var(--wb-border)] bg-white/55 p-4 backdrop-blur shadow-[0_26px_70px_rgba(11,18,32,0.12)]">
               <div className="flex items-end justify-between gap-3">
                 <div className="min-w-0">
-                  <div className="text-[12px] font-extrabold tracking-[0.18em] text-black/45">
+                  {/* <div className="text-[12px] font-extrabold tracking-[0.18em] text-black/45">
                     IN DEMAND
-                  </div>
+                  </div> */}
                   <div className="wb-serif mt-1 text-[20px] text-[color:var(--wb-ink)] break-words">
-                    Trending homes
+                    Featured Homes
                   </div>
                 </div>
 
                 <Link
-                  to="/explore-homes"
+                  to="/explorehomes"
                   className="inline-flex h-9 shrink-0 items-center rounded-full border border-[color:var(--wb-border)]
                              bg-white/70 px-3 text-[12px] font-extrabold text-[color:var(--wb-accent)]
                              hover:bg-white transition whitespace-nowrap"
@@ -269,7 +264,7 @@ export default function Hero() {
             {/* CTAs */}
             <div className="mt-5 flex flex-wrap items-center gap-2">
               <Link
-                to="/explore-homes"
+                to="/explorehomes"
                 className="inline-flex h-10 items-center justify-center rounded-full px-4 text-[13px] font-extrabold tracking-[0.02em] text-white
                            bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))]
                            shadow-[0_16px_34px_rgba(27,79,214,0.18)]
