@@ -144,7 +144,7 @@ export default function Navbar() {
                   WestBrook
                 </span>
                 <span className="block text-[11px] font-extrabold tracking-[0.26em] text-black/45">
-                  ESTATES
+                  HOMES
                 </span>
               </span>
             </Link>
@@ -298,7 +298,7 @@ export default function Navbar() {
                   WestBrook
                 </div>
                 <div className="text-[11px] font-extrabold tracking-[0.26em] text-black/45">
-                  ESTATES
+                  HOMES
                 </div>
               </div>
             </Link>
