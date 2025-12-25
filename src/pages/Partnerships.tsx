@@ -3,12 +3,10 @@ import { useMemo, useState, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   RiTeamLine,
-  RiLineChartLine,
   RiShieldCheckLine,
   RiEyeLine,
   RiLeafLine,
   RiArrowRightUpLine,
-  RiMapPin2Line,
   RiCheckLine,
   RiCalendarScheduleLine,
   RiPhoneLine,
@@ -16,15 +14,21 @@ import {
   RiSparklingLine,
   RiPulseLine,
   RiRoadMapLine,
-  RiBuilding4Line,
   RiFileTextLine,
-  RiGovernmentLine,
   RiHammerLine,
-  RiMoneyDollarCircleLine,
-  RiAddLine,
-  RiCloseLine,
   RiArrowLeftSLine,
   RiArrowRightSLine,
+  RiAddLine,
+  RiCloseLine,
+  RiMapPin2Line,
+  RiStackLine,
+  RiToolsLine,
+  RiDraftLine,
+  RiMedalLine,
+  RiHomeSmile2Line,
+  RiHandHeartLine,
+  RiTimeLine,
+  RiBarChart2Line,
 } from "react-icons/ri";
 
 function cx(...classes: Array<string | false | null | undefined>) {
@@ -36,7 +40,21 @@ const APPOINTMENT_URL =
   "https://calendar.google.com/calendar/appointments/schedules/ACZssZ0xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
 type Pill = { label: string; icon: ReactNode };
-type Benefit = { icon: ReactNode; title: string; desc: string; tags: string[] };
+type Stat = { value: string; label: string; hint: string };
+type Faq = { q: string; a: string };
+
+type TrackKey = "land" | "design" | "trade";
+
+type Track = {
+  key: TrackKey;
+  title: string;
+  sub: string;
+  icon: ReactNode;
+  highlight: string;
+  bullets: string[];
+  goodFit: string[];
+  whatWeBring: string[];
+};
 
 type Step = {
   key: string;
@@ -47,26 +65,27 @@ type Step = {
   outcomes: string[];
   deliverables: string[];
   icon: ReactNode;
-  accent: "a" | "b";
 };
-
-type Faq = { q: string; a: string };
 
 function clamp(n: number, a: number, b: number) {
   return Math.max(a, Math.min(b, n));
 }
 
-function SoftBg() {
+/* ─────────────────────────────────────────────────────────────
+   Background (no squares)
+   ───────────────────────────────────────────────────────────── */
+function PageBg() {
   return (
-    <>
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_340px_at_16%_0%,rgba(27,79,214,0.22),transparent_55%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(820px_320px_at_86%_10%,rgba(11,42,111,0.16),transparent_55%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_360px_at_50%_120%,rgba(27,79,214,0.10),transparent_60%)]" />
-    </>
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="absolute -top-28 -left-28 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.22),transparent_62%)] blur-[2px]" />
+      <div className="absolute -top-32 -right-32 h-[560px] w-[560px] rounded-full bg-[radial-gradient(circle_at_center,rgba(30,64,175,0.18),transparent_62%)] blur-[2px]" />
+      <div className="absolute -bottom-40 left-[20%] h-[640px] w-[640px] rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.12),transparent_66%)] blur-[2px]" />
+      <div className="absolute inset-0 bg-[radial-gradient(1200px_420px_at_50%_0%,rgba(255,255,255,0.60),transparent_60%)]" />
+    </div>
   );
 }
 
-function GlowCard({
+function GlassCard({
   children,
   className,
 }: {
@@ -76,13 +95,15 @@ function GlowCard({
   return (
     <div
       className={cx(
-        "relative overflow-hidden rounded-[26px] border border-[color:var(--wb-border)] bg-white/65 backdrop-blur",
-        "shadow-[0_18px_44px_rgba(11,18,32,0.10)]",
+        "relative overflow-hidden rounded-[26px] border border-black/10 bg-white/60 backdrop-blur-xl",
+        "shadow-[0_18px_60px_rgba(11,18,32,0.10)]",
         className
       )}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(420px_220px_at_12%_0%,rgba(27,79,214,0.12),transparent_55%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(460px_240px_at_95%_20%,rgba(11,42,111,0.10),transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 opacity-80">
+        <div className="absolute -left-24 -top-24 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.14),transparent_62%)]" />
+        <div className="absolute -right-28 -top-20 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(30,64,175,0.12),transparent_62%)]" />
+      </div>
       <div className="relative">{children}</div>
     </div>
   );
@@ -100,21 +121,17 @@ function SectionHead({
   align?: "center" | "left";
 }) {
   return (
-    <div className={cx("mb-7", align === "center" ? "text-center" : "text-left")}>
+    <div className={cx("mb-6", align === "center" ? "text-center" : "text-left")}>
       {kicker && (
-        <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--wb-border)] bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.26em] text-black/55">
-          <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--wb-accent)]" />
+        <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.26em] text-black/55">
+          <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
           {kicker}
         </div>
       )}
-      <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[color:var(--wb-ink)] sm:text-3xl">
+      <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
         {title}
       </h2>
-      {sub && (
-        <p className="mx-auto mt-2 max-w-3xl text-sm leading-6 text-black/55">
-          {sub}
-        </p>
-      )}
+      {sub && <p className="mx-auto mt-2 max-w-3xl text-sm leading-6 text-black/55">{sub}</p>}
     </div>
   );
 }
@@ -125,12 +142,9 @@ function MiniPills({ items }: { items: Pill[] }) {
       {items.map((p) => (
         <div
           key={p.label}
-          className={cx(
-            "inline-flex items-center gap-2 rounded-full border border-[color:var(--wb-border)]",
-            "bg-white/70 px-3 py-1.5 text-xs font-extrabold text-black/65"
-          )}
+          className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/60 px-3 py-1.5 text-xs font-extrabold text-black/65"
         >
-          <span className="text-[color:var(--wb-accent)]">{p.icon}</span>
+          <span className="text-blue-600">{p.icon}</span>
           {p.label}
         </div>
       ))}
@@ -138,127 +152,248 @@ function MiniPills({ items }: { items: Pill[] }) {
   );
 }
 
-function BenefitCard({ b }: { b: Benefit }) {
+/* ─────────────────────────────────────────────────────────────
+   Tracks
+   ───────────────────────────────────────────────────────────── */
+function TrackTabs({
+  active,
+  onChange,
+  tracks,
+}: {
+  active: TrackKey;
+  onChange: (k: TrackKey) => void;
+  tracks: Track[];
+}) {
   return (
-    <motion.div
-      className={cx(
-        "group relative overflow-hidden rounded-[22px] border border-[color:var(--wb-border)] bg-white/70 backdrop-blur",
-        "p-5 shadow-[0_14px_30px_rgba(11,18,32,0.08)]"
-      )}
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.22 }}
-      whileHover={{ y: -3 }}
-    >
-      <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-[radial-gradient(520px_220px_at_30%_0%,rgba(27,79,214,0.16),transparent_60%)]" />
-      <div className="relative flex items-start gap-4">
-        <div
-          className={cx(
-            "grid h-11 w-11 place-items-center rounded-2xl border border-[color:var(--wb-border)]",
-            "bg-white shadow-[0_12px_24px_rgba(11,18,32,0.08)]"
-          )}
-        >
-          <div className="text-[color:var(--wb-accent)]">{b.icon}</div>
-        </div>
-
-        <div className="min-w-0">
-          <div className="text-[15px] font-extrabold tracking-[0.01em] text-[color:var(--wb-ink)]">
-            {b.title}
-          </div>
-          <div className="mt-1 text-sm leading-6 text-black/55">{b.desc}</div>
-
-          <div className="mt-3 flex flex-wrap gap-2">
-            {b.tags.map((t) => (
-              <span
-                key={t}
-                className="inline-flex items-center rounded-full border border-[rgba(27,79,214,0.16)] bg-[linear-gradient(135deg,rgba(27,79,214,0.08),rgba(11,42,111,0.04))] px-2.5 py-1 text-[11px] font-extrabold text-black/60"
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-    </motion.div>
+    <div className="flex flex-wrap gap-2">
+      {tracks.map((t) => {
+        const is = t.key === active;
+        return (
+          <button
+            key={t.key}
+            type="button"
+            onClick={() => onChange(t.key)}
+            className={cx(
+              "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-extrabold transition",
+              "border border-black/10",
+              is
+                ? "bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-[0_14px_30px_rgba(59,130,246,0.20)]"
+                : "bg-white/60 text-black/70 hover:bg-white"
+            )}
+          >
+            <span className={cx("text-lg", is ? "text-white" : "text-blue-600")}>{t.icon}</span>
+            {t.title}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
+/** ✅ Premium Track panel */
+function TrackPanel({ track }: { track: Track }) {
+  return (
+    <GlassCard className="p-5 sm:p-6">
+      {/* Header */}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-black/10 bg-white/70 text-blue-600 shadow-[0_12px_24px_rgba(11,18,32,0.08)]">
+                {track.icon}
+              </div>
+
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h3 className="text-xl font-extrabold text-slate-950 break-words">
+                    {track.title}
+                  </h3>
+                  <span className="inline-flex items-center rounded-full border border-black/10 bg-white/60 px-2.5 py-1 text-[11px] font-extrabold tracking-[0.18em] text-black/55">
+                    PARTNERSHIP TRACK
+                  </span>
+                </div>
+                <p className="mt-1 text-sm leading-6 text-black/55 break-words">{track.sub}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Value strip */}
+        <div className="relative overflow-hidden rounded-2xl border border-black/10 bg-white/60 px-4 py-3">
+          <div className="pointer-events-none absolute -left-20 -top-24 h-[240px] w-[240px] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.22),transparent_64%)]" />
+          <div className="pointer-events-none absolute -right-24 -bottom-28 h-[260px] w-[260px] rounded-full bg-[radial-gradient(circle,rgba(30,64,175,0.18),transparent_64%)]" />
+          <div className="relative flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-sm font-extrabold text-slate-950">
+              <RiSparklingLine className="text-blue-600 text-lg" />
+              {track.highlight}
+            </div>
+            <span className="inline-flex items-center rounded-full border border-black/10 bg-white/70 px-3 py-1 text-[11px] font-extrabold text-black/60">
+              Premium + predictable delivery
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Content cards */}
+      <div className="mt-5 grid gap-3 lg:grid-cols-2">
+        {/* How it works */}
+        <div className="rounded-2xl border border-black/10 bg-white/60 p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="text-[12px] font-extrabold tracking-[0.22em] text-black/45">
+              HOW IT WORKS
+            </div>
+            <span className="inline-flex items-center gap-1 rounded-full border border-black/10 bg-white/70 px-2.5 py-1 text-[11px] font-extrabold text-black/55">
+              <RiRoadMapLine className="text-blue-600" />
+              Clear steps
+            </span>
+          </div>
+
+          <ul className="mt-3 space-y-2">
+            {track.bullets.map((x) => (
+              <li
+                key={x}
+                className="flex items-start gap-2 rounded-xl border border-black/10 bg-white/55 px-3 py-2 text-sm text-black/70"
+              >
+                <span className="mt-0.5 text-blue-600 shrink-0">
+                  <RiCheckLine />
+                </span>
+                <span className="break-words">{x}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* What we bring */}
+        <div className="rounded-2xl border border-black/10 bg-white/60 p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="text-[12px] font-extrabold tracking-[0.22em] text-black/45">
+              WHAT WESTBROOK BRINGS
+            </div>
+            <span className="inline-flex items-center gap-1 rounded-full border border-black/10 bg-white/70 px-2.5 py-1 text-[11px] font-extrabold text-black/55">
+              <RiShieldCheckLine className="text-blue-600" />
+              Quality control
+            </span>
+          </div>
+
+          <ul className="mt-3 space-y-2">
+            {track.whatWeBring.map((x) => (
+              <li
+                key={x}
+                className="flex items-start gap-2 rounded-xl border border-black/10 bg-white/55 px-3 py-2 text-sm text-black/70"
+              >
+                <span className="mt-0.5 text-indigo-700 shrink-0">
+                  <RiSparklingLine />
+                </span>
+                <span className="break-words">{x}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-4 rounded-2xl border border-black/10 bg-white/70 p-3 text-sm font-extrabold text-slate-950">
+            Premium rule:
+            <span className="ml-2 text-black/60 font-semibold">
+              scope locked → checkpoints → finish protected.
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Good fit footer */}
+      <div className="mt-5 rounded-2xl border border-black/10 bg-white/60 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2 text-[12px] font-extrabold tracking-[0.22em] text-black/45">
+            <RiMedalLine className="text-blue-600 text-lg" />
+            GOOD FIT
+          </div>
+          <span className="text-xs font-semibold text-black/50">
+            If this sounds like you, you’ll do well with us.
+          </span>
+        </div>
+
+        <div className="mt-3 flex flex-wrap gap-2">
+          {track.goodFit.map((t) => (
+            <span
+              key={t}
+              className="inline-flex items-center rounded-full border border-black/10 bg-white/70 px-3 py-1 text-[12px] font-extrabold text-black/60"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </GlassCard>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Roadmap
+   ───────────────────────────────────────────────────────────── */
 function DetailPanel({ step }: { step: Step }) {
   return (
-    <GlowCard className="p-6 sm:p-7">
+    <GlassCard className="p-5 sm:p-6">
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--wb-border)] bg-white/70 px-3 py-1 text-[11px] font-extrabold tracking-[0.22em] text-black/55">
-            <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--wb-accent)]" />
+        <div className="min-w-0">
+          <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.22em] text-black/55">
+            <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
             STEP {step.n} • {step.eta}
           </div>
 
           <div className="mt-3 flex items-center gap-3">
-            <div className="grid h-11 w-11 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-[color:var(--wb-accent)] shadow-[0_12px_24px_rgba(11,18,32,0.08)]">
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-black/10 bg-white/65 text-blue-600 shadow-[0_12px_26px_rgba(11,18,32,0.08)]">
               {step.icon}
             </div>
-            <div className="text-xl font-extrabold text-[color:var(--wb-ink)]">
-              {step.title}
-            </div>
+            <div className="text-xl font-extrabold text-slate-950 truncate">{step.title}</div>
           </div>
 
           <p className="mt-3 text-sm leading-6 text-black/55">{step.desc}</p>
         </div>
 
-        <div
-          className={cx(
-            "hidden md:flex shrink-0 h-12 w-12 items-center justify-center rounded-2xl",
-            "bg-[linear-gradient(135deg,rgba(27,79,214,0.12),rgba(11,42,111,0.06))]",
-            "border border-[rgba(27,79,214,0.16)]"
-          )}
-        >
-          <RiSparklingLine className="text-[color:var(--wb-accent)] text-xl" />
+        <div className="hidden md:grid shrink-0 h-12 w-12 place-items-center rounded-2xl border border-black/10 bg-white/60">
+          <RiSparklingLine className="text-blue-600 text-xl" />
         </div>
       </div>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-2xl border border-[color:var(--wb-border)] bg-white/70 p-4">
+      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-2xl border border-black/10 bg-white/60 p-4">
           <div className="text-[12px] font-extrabold tracking-[0.22em] text-black/45">
             DELIVERABLES
           </div>
           <ul className="mt-3 space-y-2">
             {step.deliverables.map((d) => (
               <li key={d} className="flex items-start gap-2 text-sm text-black/65">
-                <span className="mt-0.5 text-[color:var(--wb-accent)]">
+                <span className="mt-0.5 text-blue-600 shrink-0">
                   <RiCheckLine />
                 </span>
-                <span>{d}</span>
+                <span className="break-words">{d}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="rounded-2xl border border-[color:var(--wb-border)] bg-white/70 p-4">
+        <div className="rounded-2xl border border-black/10 bg-white/60 p-4">
           <div className="text-[12px] font-extrabold tracking-[0.22em] text-black/45">
             OUTCOMES
           </div>
           <ul className="mt-3 space-y-2">
             {step.outcomes.map((o) => (
               <li key={o} className="flex items-start gap-2 text-sm text-black/65">
-                <span className="mt-0.5 text-[color:var(--wb-accent)]">
+                <span className="mt-0.5 text-indigo-700 shrink-0">
                   <RiCheckLine />
                 </span>
-                <span>{o}</span>
+                <span className="break-words">{o}</span>
               </li>
             ))}
           </ul>
 
-          <div className="mt-4 rounded-2xl bg-[linear-gradient(135deg,rgba(27,79,214,0.10),rgba(11,42,111,0.05))] p-3 text-sm font-extrabold text-black/65">
-            Tip: We keep updates structured—so you always know what’s done and what’s next.
+          <div className="mt-4 rounded-2xl border border-black/10 bg-white/55 p-3 text-sm font-extrabold text-black/65">
+            Tip: written approvals prevent scope creep.
           </div>
         </div>
       </div>
-    </GlowCard>
+    </GlassCard>
   );
 }
 
-/** ✅ NEW: single “step navigator” card (no list / no dropdown vibe) */
 function StepNavigatorCard({
   step,
   idx,
@@ -279,25 +414,24 @@ function StepNavigatorCard({
   onDot: (index: number) => void;
 }) {
   return (
-    <GlowCard className="p-5 sm:p-6">
+    <GlassCard className="p-5 sm:p-6">
       <div className="flex items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0">
           <div className="text-[12px] font-extrabold tracking-[0.26em] text-black/45">
-            ROADMAP NAVIGATOR
+            PARTNER ONBOARDING
           </div>
           <div className="mt-1 text-sm font-semibold text-black/60">
             Step {idx + 1} of {total}
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={onPrev}
             disabled={!canPrev}
             className={cx(
-              "grid h-10 w-10 place-items-center rounded-full border border-[color:var(--wb-border)]",
-              "bg-white/70 text-black/70 transition",
+              "grid h-10 w-10 place-items-center rounded-full border border-black/10 bg-white/60 text-black/70 transition",
               !canPrev ? "opacity-45 cursor-not-allowed" : "hover:bg-white hover:-translate-y-[1px]"
             )}
             aria-label="Previous step"
@@ -309,8 +443,7 @@ function StepNavigatorCard({
             onClick={onNext}
             disabled={!canNext}
             className={cx(
-              "grid h-10 w-10 place-items-center rounded-full border border-[color:var(--wb-border)]",
-              "bg-white/70 text-black/70 transition",
+              "grid h-10 w-10 place-items-center rounded-full border border-black/10 bg-white/60 text-black/70 transition",
               !canNext ? "opacity-45 cursor-not-allowed" : "hover:bg-white hover:-translate-y-[1px]"
             )}
             aria-label="Next step"
@@ -320,31 +453,22 @@ function StepNavigatorCard({
         </div>
       </div>
 
-      {/* Main Step Card */}
       <motion.div
         key={step.key}
-        className={cx(
-          "mt-4 relative overflow-hidden rounded-[22px] border border-[color:var(--wb-border)] bg-white/75",
-          "p-5 shadow-[0_18px_44px_rgba(11,18,32,0.08)]"
-        )}
+        className="mt-4 relative overflow-hidden rounded-[24px] border border-black/10 bg-white/65 p-5 shadow-[0_18px_50px_rgba(11,18,32,0.08)]"
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.18 }}
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(520px_240px_at_20%_0%,rgba(27,79,214,0.14),transparent_60%)]" />
+        <div className="pointer-events-none absolute -inset-16">
+          <div className="absolute left-0 top-0 h-[340px] w-[340px] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.16),transparent_62%)]" />
+        </div>
 
         <div className="relative flex items-start gap-4">
           <div className="shrink-0">
-            <div
-              className={cx(
-                "relative grid h-12 w-12 place-items-center rounded-full text-white",
-                step.accent === "a"
-                  ? "bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))]"
-                  : "bg-[linear-gradient(135deg,var(--wb-accent-2),var(--wb-accent))]"
-              )}
-            >
+            <div className="relative grid h-12 w-12 place-items-center rounded-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
               <span className="text-lg font-extrabold">{step.n}</span>
-              <div className="absolute -bottom-3 grid h-8 w-8 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white text-[color:var(--wb-accent)] shadow-[0_10px_20px_rgba(11,18,32,0.10)]">
+              <div className="absolute -bottom-3 grid h-8 w-8 place-items-center rounded-2xl border border-black/10 bg-white text-blue-600 shadow-[0_10px_24px_rgba(11,18,32,0.10)]">
                 {step.icon}
               </div>
             </div>
@@ -352,13 +476,15 @@ function StepNavigatorCard({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-3">
-              <div>
-                <div className="text-[16px] font-extrabold text-[color:var(--wb-ink)]">
+              <div className="min-w-0">
+                <div className="text-[16px] font-extrabold text-slate-950 break-words">
                   {step.title}
                 </div>
-                <div className="mt-1 text-sm leading-6 text-black/55">{step.desc}</div>
+                <div className="mt-1 text-sm leading-6 text-black/55 break-words">
+                  {step.desc}
+                </div>
               </div>
-              <span className="shrink-0 inline-flex items-center rounded-full border border-[color:var(--wb-border)] bg-white/75 px-2.5 py-1 text-[11px] font-extrabold text-black/55">
+              <span className="shrink-0 inline-flex items-center rounded-full border border-black/10 bg-white/60 px-2.5 py-1 text-[11px] font-extrabold text-black/55">
                 {step.eta}
               </span>
             </div>
@@ -367,7 +493,7 @@ function StepNavigatorCard({
               {step.outcomes.slice(0, 3).map((o) => (
                 <span
                   key={o}
-                  className="inline-flex items-center rounded-full border border-[rgba(27,79,214,0.16)] bg-[linear-gradient(135deg,rgba(27,79,214,0.08),rgba(11,42,111,0.04))] px-2.5 py-1 text-[11px] font-extrabold text-black/60"
+                  className="inline-flex items-center rounded-full border border-black/10 bg-white/60 px-2.5 py-1 text-[11px] font-extrabold text-black/60"
                 >
                   {o}
                 </span>
@@ -377,7 +503,6 @@ function StepNavigatorCard({
         </div>
       </motion.div>
 
-      {/* Dots */}
       <div className="mt-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           {Array.from({ length: total }).map((_, i) => {
@@ -388,10 +513,10 @@ function StepNavigatorCard({
                 type="button"
                 onClick={() => onDot(i)}
                 className={cx(
-                  "h-2.5 w-2.5 rounded-full border transition",
+                  "h-2.5 w-2.5 rounded-full border border-black/10 transition",
                   active
-                    ? "bg-[color:var(--wb-accent)] border-[rgba(27,79,214,0.35)] shadow-[0_10px_20px_rgba(27,79,214,0.25)]"
-                    : "bg-white/70 border-[color:var(--wb-border)] hover:bg-white"
+                    ? "bg-blue-600 shadow-[0_10px_22px_rgba(59,130,246,0.25)]"
+                    : "bg-white/60 hover:bg-white"
                 )}
                 aria-label={`Go to step ${i + 1}`}
               />
@@ -399,82 +524,109 @@ function StepNavigatorCard({
           })}
         </div>
 
-        <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--wb-border)] bg-white/70 px-3 py-1 text-xs font-extrabold text-black/60">
-          <RiSparklingLine className="text-[color:var(--wb-accent)]" />
-          Use arrows / dots
+        <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/60 px-3 py-1 text-xs font-extrabold text-black/60">
+          <RiSparklingLine className="text-blue-600" />
+          Arrows / dots
         </div>
       </div>
 
-      <div className="mt-5 rounded-2xl bg-[linear-gradient(135deg,rgba(27,79,214,0.10),rgba(11,42,111,0.05))] p-4">
-        <div className="flex items-center gap-2 text-sm font-extrabold text-[color:var(--wb-ink)]">
-          <RiShieldCheckLine className="text-[color:var(--wb-accent)]" />
-          Built for clarity & control
+      <div className="mt-5 rounded-2xl border border-black/10 bg-white/55 p-4">
+        <div className="flex items-center gap-2 text-sm font-extrabold text-slate-950">
+          <RiShieldCheckLine className="text-blue-600" />
+          Designed for premium delivery
         </div>
         <p className="mt-1 text-sm leading-6 text-black/55">
-          Feasibility first → clean terms → execution checkpoints → transparent distribution.
+          Clear scope → clean checkpoints → quality sign-offs → client trust.
         </p>
       </div>
-    </GlowCard>
+    </GlassCard>
   );
 }
 
+/* ─────────────────────────────────────────────────────────────
+   Page
+   ───────────────────────────────────────────────────────────── */
 export default function Partnerships() {
-  const stats = useMemo(
-    () => [
-      { value: "JV", label: "Partnership model", hint: "Aligned incentives" },
-      { value: "20–30m", label: "Discovery call", hint: "Fast clarity" },
-      { value: "7-step", label: "Roadmap", hint: "Predictable delivery" },
-    ],
-    []
-  );
-
   const heroPills: Pill[] = useMemo(
     () => [
-      { label: "Feasibility-first", icon: <RiPulseLine /> },
-      { label: "Transparent terms", icon: <RiEyeLine /> },
-      { label: "Risk controls", icon: <RiShieldCheckLine /> },
-      { label: "Quality-focused", icon: <RiLeafLine /> },
+      { label: "Custom homes only", icon: <RiHomeSmile2Line /> },
+      { label: "Defined standards", icon: <RiShieldCheckLine /> },
+      { label: "Written checkpoints", icon: <RiFileTextLine /> },
+      { label: "Calm execution", icon: <RiLeafLine /> },
     ],
     []
   );
 
-  const benefits: Benefit[] = useMemo(
+  const stats: Stat[] = useMemo(
+    () => [
+      { value: "3", label: "Partner tracks", hint: "Land • Design • Trade" },
+      { value: "20–30m", label: "Intro call", hint: "Fast alignment" },
+      { value: "7-step", label: "Onboarding", hint: "Predictable" },
+    ],
+    []
+  );
+
+  const tracks: Track[] = useMemo(
     () => [
       {
-        icon: <RiLineChartLine className="text-xl" />,
-        title: "Maximize your land’s value",
-        desc: "A partnership can unlock higher upside than a traditional sale by participating in development value.",
-        tags: ["Upside participation", "Market-driven plan", "Clear projections"],
+        key: "land",
+        title: "Landowners / Development",
+        sub: "If you have land, we evaluate feasibility and propose the best path—sale, JV, or custom-build strategy.",
+        icon: <RiMapPin2Line className="text-lg" />,
+        highlight: "Feasibility-first. Clean terms. Clear reporting.",
+        bullets: [
+          "High-level site review (access, utilities, constraints).",
+          "Feasibility + concept direction (what’s realistic).",
+          "If JV: decision rights + milestones + distribution clarity.",
+          "If sale is smarter: we’ll tell you upfront.",
+        ],
+        goodFit: ["Clear title", "Good access", "Utilities feasible", "Growth location"],
+        whatWeBring: [
+          "Project planning + delivery control.",
+          "Premium design standards + finish discipline.",
+          "Structured updates (budget, timeline, milestones).",
+          "One accountable team—less noise.",
+        ],
       },
       {
-        icon: <RiBriefcaseLine className="text-xl" />,
-        title: "WestBrook executes end-to-end",
-        desc: "You bring the land. We bring planning, approvals guidance, project control, and delivery.",
-        tags: ["One accountable team", "Milestone updates", "Quality standards"],
+        key: "design",
+        title: "Architects / Interior Design",
+        sub: "We protect design intent while keeping buildability, budget, and timelines clean—so homes feel premium, not messy.",
+        icon: <RiDraftLine className="text-lg" />,
+        highlight: "Less rework. Better detailing. Smooth site flow.",
+        bullets: [
+          "Clear design → build handoff (drawings → BOQ → site).",
+          "Detail coordination and material intent alignment.",
+          "Milestone approvals to avoid change-order chaos.",
+          "A delivery rhythm that respects your design language.",
+        ],
+        goodFit: ["Detail-led", "Clear documentation", "Premium taste", "Client-first"],
+        whatWeBring: [
+          "Buildability reviews early (not late).",
+          "Scope templates + sign-off checkpoints.",
+          "Weekly cadence + coordination discipline.",
+          "Finish QA + punch-list control.",
+        ],
       },
       {
-        icon: <RiShieldCheckLine className="text-xl" />,
-        title: "Risk checked early",
-        desc: "We validate zoning, constraints, costs, and demand before spending big time or money.",
-        tags: ["Due diligence", "Budget discipline", "No surprises"],
-      },
-      {
-        icon: <RiEyeLine className="text-xl" />,
-        title: "Transparent & collaborative",
-        desc: "You stay informed with clear checkpoints—design, budgets, approvals, and timeline visibility.",
-        tags: ["Clear terms", "Simple reporting", "Aligned decisions"],
-      },
-      {
-        icon: <RiTeamLine className="text-xl" />,
-        title: "Clean communication",
-        desc: "A calm process with fewer hand-offs and faster decisions—so things move without chaos.",
-        tags: ["Single point updates", "Structured approvals", "Faster cycles"],
-      },
-      {
-        icon: <RiLeafLine className="text-xl" />,
-        title: "Community-first outcomes",
-        desc: "Thoughtful development that protects long-term value with quality, usability, and fit.",
-        tags: ["Long-term value", "Better product", "Responsible growth"],
+        key: "trade",
+        title: "Contractors / Suppliers",
+        sub: "If you deliver quality consistently, we build long-term. We prefer one strong partner over many random vendors.",
+        icon: <RiToolsLine className="text-lg" />,
+        highlight: "Pre-qual → pilot → scale. Quality stays consistent.",
+        bullets: [
+          "Quick pre-qualification (capability, capacity, basics).",
+          "Pilot project to validate speed + finish + coordination.",
+          "Defined QA checkpoints and handoff standards.",
+          "If pilot is strong: repeat pipeline and tiered partnership.",
+        ],
+        goodFit: ["On-time", "Clean workmanship", "Responsive", "Accountable team"],
+        whatWeBring: [
+          "Premium clients + clear scopes.",
+          "Written deliverables (no ambiguity).",
+          "Faster decisions, less site friction.",
+          "Long-term relationship mindset.",
+        ],
       },
     ],
     []
@@ -483,94 +635,99 @@ export default function Partnerships() {
   const steps: Step[] = useMemo(
     () => [
       {
-        key: "consult",
+        key: "intro",
         n: 1,
-        title: "Initial consultation",
-        desc: "We understand your goals, review the site basics, and quickly confirm fit.",
-        eta: "1–3 days",
-        outcomes: ["Clear next steps", "Site context captured", "Decision to proceed"],
-        deliverables: ["Discovery call notes", "Basic site checklist", "Next-step plan"],
+        title: "Intro + fit",
+        desc: "Align on your track, service area, and expectations for premium delivery.",
+        eta: "1–2 days",
+        outcomes: ["Clear fit decision", "Track selected", "Next step locked"],
+        deliverables: ["Intro notes", "Track selection", "Next-step checklist"],
         icon: <RiTeamLine className="text-lg" />,
-        accent: "a",
       },
       {
-        key: "feasibility",
+        key: "prequal",
         n: 2,
-        title: "Feasibility analysis",
-        desc: "Due diligence: zoning, constraints, access, utilities, and market signal.",
-        eta: "1–3 weeks",
-        outcomes: ["Feasible path identified", "Risk/constraints mapped", "Go/No-go clarity"],
-        deliverables: ["Feasibility memo (high-level)", "Constraint summary", "Concept direction"],
-        icon: <RiRoadMapLine className="text-lg" />,
-        accent: "b",
+        title: "Pre-qualification",
+        desc: "Capability, capacity, lead times, and basic risk checks—so expectations stay clean.",
+        eta: "3–7 days",
+        outcomes: ["Capability validated", "Risks mapped", "Standards aligned"],
+        deliverables: ["Capability snapshot", "Capacity notes", "Quality baseline"],
+        icon: <RiStackLine className="text-lg" />,
       },
       {
-        key: "terms",
+        key: "standards",
         n: 3,
-        title: "Proposal & terms",
-        desc: "We propose responsibilities, ownership split, and expected outcomes—kept simple and clear.",
-        eta: "1–2 weeks",
-        outcomes: ["Aligned structure", "Transparent split", "Milestones defined"],
-        deliverables: ["Term summary", "Roles/responsibility grid", "Projected timeline"],
+        title: "Scope + standards",
+        desc: "Define what “done” means: deliverables, materials, finish standards, and approvals.",
+        eta: "1 week",
+        outcomes: ["No ambiguity", "Less rework", "Faster approvals"],
+        deliverables: ["Scope template", "QA checklist", "Approval flow"],
         icon: <RiFileTextLine className="text-lg" />,
-        accent: "a",
       },
       {
-        key: "legal",
+        key: "pilot",
         n: 4,
-        title: "Legal agreement",
-        desc: "A JV agreement that protects both sides and sets decision checkpoints.",
-        eta: "2–6 weeks",
-        outcomes: ["Rights clarified", "Reporting cadence", "Decision gates set"],
-        deliverables: ["JV agreement", "Governance model", "Reporting plan"],
-        icon: <RiGovernmentLine className="text-lg" />,
-        accent: "b",
+        title: "Pilot engagement",
+        desc: "Start controlled. Validate coordination, quality, and speed before scaling.",
+        eta: "Project-based",
+        outcomes: ["Performance proven", "Cadence set", "Trust built"],
+        deliverables: ["Pilot plan", "Milestones", "Update rhythm"],
+        icon: <RiPulseLine className="text-lg" />,
       },
       {
-        key: "planning",
+        key: "cadence",
         n: 5,
-        title: "Project planning",
-        desc: "Architecture, engineering, permits, and a realistic delivery schedule.",
-        eta: "4–12 weeks",
-        outcomes: ["Build plan ready", "Permits moving", "Budget baseline set"],
-        deliverables: ["Concept plans", "Permit strategy", "Budget baseline"],
-        icon: <RiBuilding4Line className="text-lg" />,
-        accent: "a",
+        title: "Execution cadence",
+        desc: "Weekly checkpoints + structured reporting so nothing gets missed.",
+        eta: "Ongoing",
+        outcomes: ["On-time delivery", "Clear accountability", "Smooth site flow"],
+        deliverables: ["Weekly updates", "Issue tracker", "Punch-list process"],
+        icon: <RiRoadMapLine className="text-lg" />,
       },
       {
-        key: "build",
+        key: "qa",
         n: 6,
-        title: "Development & construction",
-        desc: "We manage execution—quality, schedule, and budget control.",
-        eta: "Varies",
-        outcomes: ["On-track delivery", "Quality checks", "Vendor accountability"],
-        deliverables: ["Construction plan", "Progress reports", "Quality checklist"],
-        icon: <RiHammerLine className="text-lg" />,
-        accent: "b",
+        title: "Quality checkpoints",
+        desc: "Inspections at key milestones to keep premium finish consistent.",
+        eta: "Milestone-based",
+        outcomes: ["Premium finish", "Reduced rework", "Clean handover"],
+        deliverables: ["Inspection checklist", "Punch-list", "Sign-off notes"],
+        icon: <RiShieldCheckLine className="text-lg" />,
       },
       {
-        key: "exit",
+        key: "scale",
         n: 7,
-        title: "Sale / lease-up & distribution",
-        desc: "We sell or lease the project, then distribute proceeds based on the agreement.",
-        eta: "Market dependent",
-        outcomes: ["Exit executed", "Proceeds distributed", "Final reporting"],
-        deliverables: ["Closing/lease summary", "Distribution statement", "Final report"],
-        icon: <RiMoneyDollarCircleLine className="text-lg" />,
-        accent: "a",
+        title: "Scale the partnership",
+        desc: "When quality + collaboration are proven, we increase volume and standardize workflows.",
+        eta: "Next projects",
+        outcomes: ["More work", "Smoother delivery", "Long-term collaboration"],
+        deliverables: ["Partner tiering", "Volume plan", "Refined standards"],
+        icon: <RiHammerLine className="text-lg" />,
       },
     ],
     []
   );
 
-  const whoWeWorkWith = useMemo(
+  const tiers = useMemo(
     () => [
-      "Private landowners",
-      "Family trusts",
-      "Property investors",
-      "Owners with raw / underutilized parcels",
-      "Owners with entitled / near-entitled sites",
-      "Brokers bringing strong opportunities",
+      {
+        title: "Pilot Partner",
+        icon: <RiSparklingLine />,
+        desc: "Start here. One controlled engagement to validate quality + coordination.",
+        points: ["Single project", "Defined checkpoints", "Clear feedback loop"],
+      },
+      {
+        title: "Preferred Partner",
+        icon: <RiMedalLine />,
+        desc: "Proven delivery. Priority consideration and repeat pipeline.",
+        points: ["Repeat work", "Standardized workflow", "Faster approvals"],
+      },
+      {
+        title: "Core Partner",
+        icon: <RiHandHeartLine />,
+        desc: "Long-term relationship. You’re embedded in how WestBrook delivers premium homes.",
+        points: ["Volume planning", "Early involvement", "Shared standards"],
+      },
     ],
     []
   );
@@ -578,112 +735,129 @@ export default function Partnerships() {
   const faqs: Faq[] = useMemo(
     () => [
       {
-        q: "What kind of land is ideal for a partnership?",
-        a: "Sites with access, growth potential, and a feasible zoning/entitlement path. Raw land can work if utilities and approvals are realistic.",
+        q: "What’s the fastest way to become a partner?",
+        a: "Take an intro call, share past work (links/photos), and we’ll run a quick pre-qualification. If it fits, we start with a pilot engagement.",
       },
       {
-        q: "Do I lose control if I partner?",
-        a: "No. The agreement defines decision rights, approval checkpoints, and reporting cadence. You stay involved throughout.",
+        q: "Do you work only with big companies?",
+        a: "No. We care about finish quality, reliability, and communication. Strong specialist teams often become our best long-term partners.",
       },
       {
-        q: "How fast can we move?",
-        a: "It depends on zoning, utilities, and approvals. Feasibility gives a realistic schedule early so you know what to expect.",
+        q: "How do you prevent site chaos?",
+        a: "Written scope, milestone approvals, weekly checkpoints, and QA sign-offs. That’s the backbone of premium delivery.",
       },
       {
-        q: "Can we do a normal sale instead of JV?",
-        a: "Yes. If a sale matches your goals better, we’ll tell you. JV is best when you want upside from development.",
+        q: "If I’m a landowner—do I have to do a JV?",
+        a: "Not at all. If a sale matches your goals better, we’ll say it upfront. We lead with feasibility and clarity.",
       },
     ],
     []
   );
 
-  const [activeIdx, setActiveIdx] = useState<number>(0);
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [activeTrack, setActiveTrack] = useState<TrackKey>("land");
+  const activeTrackObj = tracks.find((t) => t.key === activeTrack) ?? tracks[0];
 
+  const [activeIdx, setActiveIdx] = useState<number>(0);
   const activeStep = steps[activeIdx] ?? steps[0];
+
   const canPrev = activeIdx > 0;
   const canNext = activeIdx < steps.length - 1;
 
   const goPrev = () => setActiveIdx((i) => clamp(i - 1, 0, steps.length - 1));
   const goNext = () => setActiveIdx((i) => clamp(i + 1, 0, steps.length - 1));
 
-  return (
-    <main className="wb-container py-10">
-      {/* HERO */}
-      <GlowCard className="p-6 sm:p-10">
-        <div className="relative">
-          <SoftBg />
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-          <div className="relative grid gap-8 lg:grid-cols-[1.35fr_0.65fr] lg:items-start">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--wb-border)] bg-white/70 px-3 py-1 text-[11px] font-extrabold tracking-[0.26em] text-black/55">
-                <span className="grid h-6 w-6 place-items-center rounded-full bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] text-white">
+  return (
+    <main className="relative overflow-x-hidden">
+      <PageBg />
+
+      <div className="relative mx-auto max-w-[1120px] px-4 py-10 sm:px-5">
+        {/* HERO */}
+        <GlassCard className="p-6 sm:p-10">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-start">
+            <div className="min-w-0">
+              <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.26em] text-black/55">
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
                   <RiTeamLine />
                 </span>
                 PARTNERSHIPS
               </div>
 
               <motion.h1
-                className="mt-4 text-3xl font-semibold tracking-tight text-[color:var(--wb-ink)] sm:text-5xl"
+                className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 sm:text-5xl"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.26 }}
               >
                 Partner with{" "}
-                <span className="bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] bg-clip-text text-transparent">
-                  WestBrook
+                <span className="bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
+                  WestBrook Homes
                 </span>
                 <br />
-                and unlock your land’s best future.
+                for premium, custom builds.
               </motion.h1>
 
               <p className="mt-3 max-w-2xl text-sm leading-6 text-black/60">
-                Modern, transparent JV process: feasibility-first, clean terms, structured execution,
-                and clear distribution—without chaos.
+                We design and build customized homes with a calm, structured process. Landowners, architects,
+                interior studios, contractors, and suppliers—if you value quality and clarity, we should talk.
               </p>
 
               <MiniPills items={heroPills} />
 
               <div className="mt-6 flex flex-wrap gap-2">
                 <a
-                  href="#roadmap"
+                  href="#tracks"
                   className={cx(
                     "inline-flex items-center gap-2 rounded-full px-4 py-2",
-                    "bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] text-white",
-                    "text-sm font-extrabold shadow-[0_14px_30px_rgba(27,79,214,0.20)]",
+                    "bg-gradient-to-r from-blue-600 to-indigo-700 text-white",
+                    "text-sm font-extrabold shadow-[0_14px_30px_rgba(59,130,246,0.20)]",
                     "hover:brightness-110 transition"
                   )}
                 >
-                  Explore the roadmap <RiArrowRightUpLine />
+                  Choose a partnership track <RiArrowRightUpLine />
                 </a>
                 <a
                   href="#schedule"
                   className={cx(
                     "inline-flex items-center gap-2 rounded-full px-4 py-2",
-                    "border border-[color:var(--wb-border)] bg-white/70",
+                    "border border-black/10 bg-white/60",
                     "text-sm font-extrabold text-black/70 hover:bg-white transition"
                   )}
                 >
                   Schedule a call <RiCalendarScheduleLine />
                 </a>
               </div>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                {[
+                  { icon: <RiTimeLine />, t: "Fast alignment", d: "20–30 min intro call." },
+                  { icon: <RiBarChart2Line />, t: "Clear expectations", d: "Scope + standards written." },
+                  { icon: <RiShieldCheckLine />, t: "Quality protected", d: "QA checkpoints built-in." },
+                ].map((x) => (
+                  <div key={x.t} className="rounded-2xl border border-black/10 bg-white/60 p-4">
+                    <div className="flex items-center gap-2 text-sm font-extrabold text-slate-950">
+                      <span className="text-blue-600 text-lg">{x.icon}</span>
+                      {x.t}
+                    </div>
+                    <div className="mt-1 text-sm text-black/55">{x.d}</div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* STATS */}
-            <div className="grid gap-3">
+            <div className="grid gap-3 min-w-0">
               {stats.map((s, idx) => (
                 <motion.div
                   key={s.label}
-                  className="rounded-2xl border border-[color:var(--wb-border)] bg-white/75 p-4 shadow-[0_14px_30px_rgba(11,18,32,0.08)]"
+                  className="rounded-2xl border border-black/10 bg-white/60 p-4 shadow-[0_14px_40px_rgba(11,18,32,0.08)]"
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.22, delay: idx * 0.05 }}
                 >
                   <div className="flex items-baseline justify-between gap-2">
-                    <div className="text-2xl font-extrabold text-[color:var(--wb-ink)]">
-                      {s.value}
-                    </div>
+                    <div className="text-2xl font-extrabold text-slate-950">{s.value}</div>
                     <div className="text-[11px] font-extrabold tracking-[0.26em] text-black/45">
                       {s.hint}
                     </div>
@@ -692,253 +866,394 @@ export default function Partnerships() {
                 </motion.div>
               ))}
 
-              <div className="rounded-2xl border border-[color:var(--wb-border)] bg-white/75 p-4 shadow-[0_14px_30px_rgba(11,18,32,0.08)]">
-                <div className="flex items-center gap-2 text-sm font-extrabold text-[color:var(--wb-ink)]">
-                  <RiMapPin2Line className="text-[color:var(--wb-accent)]" />
-                  What to share on the first call
+              <div className="rounded-2xl border border-black/10 bg-white/60 p-4 shadow-[0_14px_40px_rgba(11,18,32,0.08)]">
+                <div className="flex items-center gap-2 text-sm font-extrabold text-slate-950">
+                  <RiCheckLine className="text-blue-600" />
+                  What we need to start
                 </div>
                 <ul className="mt-3 space-y-2">
                   {[
-                    "Location + approximate acreage",
-                    "Current zoning (if known)",
-                    "Road access + utilities status",
-                    "Your goal: sale vs JV",
+                    "Your track: Land / Design / Trade",
+                    "Service area + availability",
+                    "Portfolio / past work (links ok)",
+                    "Timelines + pricing approach",
                   ].map((x) => (
                     <li key={x} className="flex items-start gap-2 text-sm text-black/60">
-                      <span className="mt-0.5 text-[color:var(--wb-accent)]">
+                      <span className="mt-0.5 text-blue-600 shrink-0">
                         <RiCheckLine />
                       </span>
-                      <span>{x}</span>
+                      <span className="break-words">{x}</span>
                     </li>
                   ))}
                 </ul>
+
+                <div className="mt-4 rounded-2xl border border-black/10 bg-white/55 p-3 text-xs font-extrabold text-black/60">
+                  We keep it simple: if it’s a fit, we move fast.
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </GlowCard>
+        </GlassCard>
 
-      {/* WHY */}
-      <section className="mt-12" id="why">
-        <SectionHead
-          kicker="WHY PARTNER"
-          title="Why partner with WestBrook?"
-          sub="Less noise. More clarity. A modern partnership flow with strong controls and real execution."
-        />
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {benefits.map((b) => (
-            <BenefitCard key={b.title} b={b} />
-          ))}
-        </div>
-      </section>
-
-      {/* ROADMAP (NO LIST NOW) */}
-      <section className="mt-12" id="roadmap">
-        <SectionHead
-          kicker="THE ROADMAP"
-          title="Navigate steps with arrows"
-          sub="No dropdown / no long list. Just Prev/Next (and dots). Right panel updates for the selected step."
-        />
-
-        <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-          <StepNavigatorCard
-            step={activeStep}
-            idx={activeIdx}
-            total={steps.length}
-            canPrev={canPrev}
-            canNext={canNext}
-            onPrev={goPrev}
-            onNext={goNext}
-            onDot={(i) => setActiveIdx(clamp(i, 0, steps.length - 1))}
+        {/* TRACKS (LEFT SIDE FILLED) */}
+        <section className="mt-12" id="tracks">
+          <SectionHead
+            kicker="PARTNERSHIP TRACKS"
+            title="Choose how you want to partner"
+            sub="Pick your lane. We’ll tailor the intro call, requirements, and next steps."
           />
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeStep.key}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8 }}
-              transition={{ duration: 0.2 }}
-            >
-              <DetailPanel step={activeStep} />
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </section>
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_560px]">
+            {/* LEFT: partner-intake */}
+            <GlassCard className="p-5 sm:p-6">
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <div className="text-[12px] font-extrabold tracking-[0.26em] text-black/45">
+                    STARTING A PARTNERSHIP
+                  </div>
+                  <div className="mt-1 text-sm font-semibold text-black/60">
+                    Simple, premium, structured.
+                  </div>
+                </div>
 
-      {/* WHO */}
-      <section className="mt-12" id="fit">
-        <SectionHead
-          kicker="WHO WE WORK WITH"
-          title="If you have land, we can evaluate it"
-          sub="Raw, underutilized, or near-entitled—if there’s potential, we’ll help you understand the best move."
-        />
+                <div className="hidden sm:flex items-center gap-2 rounded-full border border-black/10 bg-white/60 px-3 py-1 text-xs font-extrabold text-black/60">
+                  <RiSparklingLine className="text-blue-600" />
+                  No chaos delivery
+                </div>
+              </div>
 
-        <GlowCard className="p-6">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {whoWeWorkWith.map((x) => (
-              <div
-                key={x}
-                className="rounded-2xl border border-[color:var(--wb-border)] bg-white/70 p-4 shadow-[0_12px_24px_rgba(11,18,32,0.06)]"
-              >
-                <div className="flex items-start gap-3">
-                  <span className="mt-0.5 grid h-8 w-8 place-items-center rounded-full bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] text-white">
-                    <RiCheckLine />
-                  </span>
-                  <div className="text-sm font-extrabold text-[color:var(--wb-ink)]">
-                    {x}
+              {/* Tabs */}
+              <div className="mt-4">
+                <TrackTabs active={activeTrack} onChange={setActiveTrack} tracks={tracks} />
+              </div>
+
+              {/* What we look for */}
+              <div className="mt-5 rounded-2xl border border-black/10 bg-white/60 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-[12px] font-extrabold tracking-[0.22em] text-black/45">
+                    <RiMedalLine className="text-blue-600 text-lg" />
+                    WHAT WE LOOK FOR
+                  </div>
+                  <span className="text-xs font-semibold text-black/50">Quick fit checklist</span>
+                </div>
+
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {[
+                    "Quality-first mindset",
+                    "Clear communication",
+                    "Reliable timelines",
+                    "Premium finish discipline",
+                    "Accountable team",
+                    "Documentation / clarity",
+                  ].map((t) => (
+                    <span
+                      key={t}
+                      className="inline-flex items-center rounded-full border border-black/10 bg-white/70 px-3 py-1 text-[12px] font-extrabold text-black/60"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Mini timeline */}
+              <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                {[
+                  {
+                    icon: <RiTimeLine className="text-blue-600 text-lg" />,
+                    title: "Intro call",
+                    desc: "20–30 mins to align on track and expectations.",
+                  },
+                  {
+                    icon: <RiFileTextLine className="text-blue-600 text-lg" />,
+                    title: "Scope + standards",
+                    desc: "Written deliverables + checkpoints to protect quality.",
+                  },
+                  {
+                    icon: <RiShieldCheckLine className="text-blue-600 text-lg" />,
+                    title: "Pilot / start",
+                    desc: "Controlled first engagement, then scale if strong.",
+                  },
+                ].map((x) => (
+                  <div key={x.title} className="rounded-2xl border border-black/10 bg-white/60 p-4">
+                    <div className="flex items-center gap-2 text-sm font-extrabold text-slate-950">
+                      {x.icon} {x.title}
+                    </div>
+                    <div className="mt-1 text-sm text-black/55">{x.desc}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* CTA strip */}
+              <div className="mt-3 rounded-2xl border border-black/10 bg-white/60 p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <div className="text-sm font-extrabold text-slate-950">
+                      Ready to partner with WestBrook Homes?
+                    </div>
+                    <div className="mt-1 text-sm text-black/55">
+                      Share your track + portfolio. We’ll guide the rest.
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 sm:justify-end">
+                    <a
+                      href="#schedule"
+                      className={cx(
+                        "inline-flex items-center gap-2 rounded-full px-4 py-2",
+                        "bg-gradient-to-r from-blue-600 to-indigo-700 text-white",
+                        "text-sm font-extrabold shadow-[0_14px_30px_rgba(59,130,246,0.20)]",
+                        "hover:brightness-110 transition"
+                      )}
+                    >
+                      Schedule a call <RiCalendarScheduleLine />
+                    </a>
+                    <a
+                      href="/contact"
+                      className={cx(
+                        "inline-flex items-center gap-2 rounded-full px-4 py-2",
+                        "border border-black/10 bg-white/70",
+                        "text-sm font-extrabold text-black/70 hover:bg-white transition"
+                      )}
+                    >
+                      Contact <RiPhoneLine />
+                    </a>
                   </div>
                 </div>
               </div>
+            </GlassCard>
+
+            {/* RIGHT: detailed track */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTrackObj.key}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 8 }}
+                transition={{ duration: 0.2 }}
+              >
+                <TrackPanel track={activeTrackObj} />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </section>
+
+        {/* PROCESS */}
+        <section className="mt-12" id="roadmap">
+          <SectionHead
+            kicker="THE PROCESS"
+            title="A clean partnership process"
+            sub="Pre-qualification and checkpoints keep custom-home delivery premium."
+          />
+
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_520px]">
+            <StepNavigatorCard
+              step={activeStep}
+              idx={activeIdx}
+              total={steps.length}
+              canPrev={canPrev}
+              canNext={canNext}
+              onPrev={goPrev}
+              onNext={goNext}
+              onDot={(i) => setActiveIdx(clamp(i, 0, steps.length - 1))}
+            />
+
+            <div className="lg:sticky lg:top-24 self-start">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeStep.key}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <DetailPanel step={activeStep} />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+        </section>
+
+        {/* PARTNER TIERS */}
+        <section className="mt-12" id="tiers">
+          <SectionHead
+            kicker="PARTNER TIERS"
+            title="Pilot → Preferred → Core"
+            sub="We scale only after quality and coordination are proven."
+          />
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {tiers.map((x, idx) => (
+              <motion.div
+                key={x.title}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.22, delay: idx * 0.05 }}
+                className="relative overflow-hidden rounded-[26px] border border-black/10 bg-white/60 backdrop-blur-xl p-6 shadow-[0_18px_50px_rgba(11,18,32,0.08)]"
+              >
+                <div className="pointer-events-none absolute -inset-16">
+                  <div className="absolute left-0 top-0 h-[300px] w-[300px] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.16),transparent_62%)]" />
+                </div>
+
+                <div className="relative">
+                  <div className="flex items-center gap-2 text-sm font-extrabold text-slate-950">
+                    <span className="grid h-10 w-10 place-items-center rounded-2xl border border-black/10 bg-white/65 text-blue-600">
+                      {x.icon}
+                    </span>
+                    {x.title}
+                  </div>
+                  <p className="mt-2 text-sm leading-6 text-black/55">{x.desc}</p>
+
+                  <ul className="mt-4 space-y-2">
+                    {x.points.map((p) => (
+                      <li key={p} className="flex items-start gap-2 text-sm text-black/65">
+                        <span className="mt-0.5 text-blue-600 shrink-0">
+                          <RiCheckLine />
+                        </span>
+                        <span className="break-words">{p}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
             ))}
           </div>
-        </GlowCard>
-      </section>
+        </section>
 
-      {/* FAQ */}
-      <section className="mt-12" id="faq">
-        <SectionHead kicker="FAQ" title="Common questions" sub="Simple answers. No fluff." />
-
-        <div className="space-y-3">
-          {faqs.map((f, i) => {
-            const isOpen = openFaq === i;
-            return (
-              <button
-                key={f.q}
-                type="button"
-                onClick={() => setOpenFaq((p) => (p === i ? null : i))}
-                className={cx(
-                  "w-full text-left rounded-[22px] border border-[color:var(--wb-border)] bg-white/70",
-                  "p-5 shadow-[0_14px_30px_rgba(11,18,32,0.07)] hover:bg-white/85 transition"
-                )}
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="text-[15px] font-extrabold text-[color:var(--wb-ink)]">
-                    {f.q}
-                  </div>
-                  <div
-                    className="grid h-9 w-9 place-items-center rounded-full border border-[color:var(--wb-border)] bg-white text-black/60"
-                    aria-hidden="true"
-                  >
-                    {isOpen ? <RiCloseLine className="text-lg" /> : <RiAddLine className="text-lg" />}
-                  </div>
-                </div>
-
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      className="mt-3 text-sm leading-6 text-black/60"
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      {f.a}
-                    </motion.div>
+        {/* FAQ */}
+        <section className="mt-12" id="faq">
+          <SectionHead kicker="FAQ" title="Quick answers" sub="Straightforward. No fluff." />
+          <div className="space-y-3">
+            {faqs.map((f, i) => {
+              const isOpen = openFaq === i;
+              return (
+                <button
+                  key={f.q}
+                  type="button"
+                  onClick={() => setOpenFaq((p) => (p === i ? null : i))}
+                  className={cx(
+                    "w-full text-left rounded-[24px] border border-black/10 bg-white/60",
+                    "p-5 shadow-[0_14px_40px_rgba(11,18,32,0.07)] hover:bg-white transition"
                   )}
-                </AnimatePresence>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* SCHEDULE */}
-      <section className="mt-12" id="schedule">
-        <SectionHead
-          kicker="LET’S TALK"
-          title="Schedule an appointment"
-          sub="Book a quick discovery call. If the embed doesn’t load, use “Open scheduler”."
-        />
-
-        <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-          <GlowCard>
-            <div className="border-b border-[color:var(--wb-border)] p-5">
-              <div className="flex items-center gap-2 text-sm font-extrabold text-[color:var(--wb-ink)]">
-                <RiCalendarScheduleLine className="text-lg text-[color:var(--wb-accent)]" />
-                Appointment Scheduling
-              </div>
-              <div className="mt-1 text-sm text-black/55">
-                20–30 mins • Discovery call • Next steps
-              </div>
-            </div>
-
-            <div className="relative h-[720px] w-full bg-white">
-              <iframe
-                title="WestBrook Appointment Scheduling"
-                src={APPOINTMENT_URL}
-                className="absolute inset-0 h-full w-full"
-                style={{ border: 0 }}
-                loading="lazy"
-              />
-            </div>
-          </GlowCard>
-
-          <GlowCard className="p-6">
-            <div className="flex items-center gap-2 text-sm font-extrabold text-[color:var(--wb-ink)]">
-              <RiBriefcaseLine className="text-lg text-[color:var(--wb-accent)]" />
-              Before you book
-            </div>
-
-            <div className="mt-4 space-y-3">
-              {[
-                "Location + approximate acreage",
-                "Your goal: sale vs JV",
-                "Zoning status if known",
-                "Any timelines or constraints",
-              ].map((t) => (
-                <div
-                  key={t}
-                  className="rounded-2xl border border-[color:var(--wb-border)] bg-white/75 p-4"
                 >
-                  <div className="flex items-start gap-3">
-                    <span className="mt-0.5 text-[color:var(--wb-accent)]">
-                      <RiCheckLine />
-                    </span>
-                    <div className="text-sm font-semibold text-black/65">{t}</div>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="text-[15px] font-extrabold text-slate-950">{f.q}</div>
+                    <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-black/10 bg-white/70 text-black/60">
+                      {isOpen ? <RiCloseLine className="text-lg" /> : <RiAddLine className="text-lg" />}
+                    </div>
                   </div>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        className="mt-3 text-sm leading-6 text-black/60"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        {f.a}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* SCHEDULE */}
+        <section className="mt-12" id="schedule">
+          <SectionHead
+            kicker="LET’S TALK"
+            title="Schedule a partnership call"
+            sub="20–30 minutes. We’ll pick the right track and define next steps."
+          />
+
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_420px]">
+            <GlassCard>
+              <div className="border-b border-black/10 p-5">
+                <div className="flex items-center gap-2 text-sm font-extrabold text-slate-950">
+                  <RiCalendarScheduleLine className="text-lg text-blue-600" />
+                  Appointment Scheduling
                 </div>
-              ))}
-            </div>
+                <div className="mt-1 text-sm text-black/55">20–30 mins • Track selection • Next steps</div>
+              </div>
 
-            <div className="mt-5 grid gap-2">
-              <a
-                href={APPOINTMENT_URL}
-                target="_blank"
-                rel="noreferrer"
-                className={cx(
-                  "inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3",
-                  "bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] text-white",
-                  "text-sm font-extrabold shadow-[0_14px_30px_rgba(27,79,214,0.20)]",
-                  "hover:brightness-110 transition"
-                )}
-              >
-                Open scheduler <RiArrowRightUpLine />
-              </a>
+              <div className="relative h-[640px] sm:h-[720px] w-full bg-white">
+                <iframe
+                  title="WestBrook Partnerships Scheduling"
+                  src={APPOINTMENT_URL}
+                  className="absolute inset-0 h-full w-full"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                />
+              </div>
+            </GlassCard>
 
-              <a
-                href="/contact"
-                className={cx(
-                  "inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3",
-                  "border border-[color:var(--wb-border)] bg-white/70",
-                  "text-sm font-extrabold text-black/70 hover:bg-white transition"
-                )}
-              >
-                Contact instead <RiPhoneLine />
-              </a>
-            </div>
+            <GlassCard className="p-5 sm:p-6 lg:sticky lg:top-24 self-start">
+              <div className="flex items-center gap-2 text-sm font-extrabold text-slate-950">
+                <RiBriefcaseLine className="text-lg text-blue-600" />
+                Come prepared with
+              </div>
 
-            <div className="mt-4 text-xs text-black/45">
-              If the scheduler looks blank, some browsers block third-party embeds.
-              Use “Open scheduler”.
-            </div>
-          </GlowCard>
+              <div className="mt-4 space-y-3">
+                {[
+                  "Your track + service area",
+                  "Portfolio / past work (links ok)",
+                  "Typical lead times + timelines",
+                  "How you handle QA / revisions",
+                ].map((t) => (
+                  <div key={t} className="rounded-2xl border border-black/10 bg-white/60 p-4">
+                    <div className="flex items-start gap-3">
+                      <span className="mt-0.5 text-blue-600 shrink-0">
+                        <RiCheckLine />
+                      </span>
+                      <div className="text-sm font-semibold text-black/70 break-words">{t}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-5 grid gap-2">
+                <a
+                  href={APPOINTMENT_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={cx(
+                    "inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3",
+                    "bg-gradient-to-r from-blue-600 to-indigo-700 text-white",
+                    "text-sm font-extrabold shadow-[0_14px_30px_rgba(59,130,246,0.20)]",
+                    "hover:brightness-110 transition"
+                  )}
+                >
+                  Open scheduler <RiArrowRightUpLine />
+                </a>
+
+                <a
+                  href="/contact"
+                  className={cx(
+                    "inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3",
+                    "border border-black/10 bg-white/60",
+                    "text-sm font-extrabold text-black/70 hover:bg-white transition"
+                  )}
+                >
+                  Contact instead <RiPhoneLine />
+                </a>
+              </div>
+
+              <div className="mt-4 text-xs text-black/45">
+                If the embed looks blank, your browser may block third-party embeds. Use “Open scheduler”.
+              </div>
+            </GlassCard>
+          </div>
+        </section>
+
+        <div className="mt-12 h-px w-full bg-[linear-gradient(to_right,transparent,rgba(59,130,246,0.22),transparent)]" />
+        <div className="py-8 text-center text-xs text-black/45">
+          © {new Date().getFullYear()} WestBrook Homes • Partnerships
         </div>
-      </section>
-
-      <div className="mt-12 h-px w-full bg-[linear-gradient(to_right,transparent,rgba(27,79,214,0.22),transparent)]" />
-      <div className="py-8 text-center text-xs text-black/45">
-        © {new Date().getFullYear()} WestBrook Estates • Partnerships
       </div>
     </main>
   );
