@@ -17,9 +17,6 @@ export default function HomePage() {
         <ResidentialSection />
       </section> */}
 
-      <section id="why-us" className="wb-container py-12">
-        <WhyWestBrookSection />
-      </section>
 
       <section id="commercial" className="wb-container py-14">
         <CommercialSection />
@@ -37,6 +34,9 @@ export default function HomePage() {
         <PartnersSection />
       </section>
 
+      <section id="why-us" className="wb-container py-12">
+        <WhyWestBrookSection />
+      </section>
       <section id="contact" className="wb-container py-14">
         <ContactSection />
       </section>

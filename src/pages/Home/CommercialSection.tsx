@@ -72,11 +72,11 @@ export default function CommercialSection() {
           transition={{ duration: 0.8, ease: EASE, delay: 0.06 }}
           className="wb-serif mt-3 text-[34px] leading-[1.1] sm:text-[44px] text-[color:var(--wb-ink)]"
         >
-          Built for compliance.
+
           <span className="block">
-            Designed for{" "}
+            Building{" "}
             <span className="relative inline-block">
-              <span className="relative z-10">real-world operations</span>
+              <span className="relative z-10">Dreams Into Reality</span>
               <span className="absolute left-0 bottom-[3px] h-[6px] w-full bg-[color:var(--wb-ink)]/22" />
             </span>
             .
@@ -90,9 +90,7 @@ export default function CommercialSection() {
           transition={{ duration: 0.65, ease: EASE, delay: 0.14 }}
           className="mt-4 text-[15.5px] leading-relaxed text-[color:var(--wb-ink)]/78"
         >
-          From fuel sites and restaurants to healthcare facilities — we execute
-          commercial projects with clear approvals, clean coordination, and fewer
-          surprises.
+          At Westbrook Homes, we believe that a home is more than just a structure—it's where life's most precious moments unfold. With decades of experience in luxury home building, we combine innovative design with timeless craftsmanship.
         </motion.p>
       </div>
 
