@@ -23,13 +23,14 @@ export default function HomePage() {
         <CommercialSection />
       </section>
 
+      <section id="upcoming" className="wb-container py-14">
+        <UpcomingProjects />
+      </section>
+
       <section id="process" className="wb-container py-10">
         <ProcessRoadmap />
       </section>
 
-      <section id="upcoming" className="wb-container py-14">
-        <UpcomingProjects />
-      </section>
 
       <section id="testimonials" className="wb-container py-14">
         <Testimonials />

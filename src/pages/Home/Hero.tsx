@@ -84,9 +84,9 @@ type MarqueeStyle = CSSProperties & { ["--wb-marquee-duration"]?: string };
 /** ✅ premium underline emphasis */
 function Em({ children }: { children: string }) {
   return (
-    <span className="relative inline-block">
+    <span className="relative inline-block transform-gpu">
       <span className="relative z-10">{children}</span>
-      <span className="absolute left-0 right-0 bottom-[3px] h-[8px] rounded-full bg-[color:var(--wb-accent-2)]/22" />
+      <span className="absolute left-0 right-0 bottom-0.75 h-2 rounded-full bg-(--wb-accent-2)/22 transform-gpu" />
     </span>
   );
 }
@@ -125,9 +125,9 @@ function CraftWriter() {
 
   return (
     <div className="relative">
-      <div className="pointer-events-none absolute -inset-x-6 -inset-y-4 rounded-[26px] bg-[color:var(--wb-accent-2)]/12 blur-xl" />
+      <div className="pointer-events-none absolute -inset-x-6 -inset-y-4 rounded-[26px] bg-(--wb-accent-2)/12 blur-xl" />
 
-      <div className="relative inline-flex w-full items-center justify-center gap-2 rounded-[18px] border border-[color:var(--wb-border)] bg-white/80 px-4 py-3 backdrop-blur shadow-[0_18px_55px_rgba(11,18,32,0.10)]">
+      <div className="relative inline-flex w-full items-center justify-center gap-2 rounded-[18px] border border-(--wb-border) bg-white/80 px-4 py-3 backdrop-blur shadow-[0_18px_55px_rgba(11,18,32,0.10)]">
         <div className="text-[14.5px] sm:text-[16.5px] font-semibold text-black/65">
           We craft{" "}
           <span
@@ -136,15 +136,15 @@ function CraftWriter() {
               "transition-all duration-300 will-change-transform",
               phase === "in"
                 ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-[2px]"
+                : "opacity-0 translate-y-0.5"
             )}
           >
-            <span className="font-extrabold text-[color:var(--wb-ink)]">
+            <span className="font-extrabold text-(--wb-ink)">
               <Em>{WORDS[index]}</Em>
             </span>
             <span className="ml-1.5 text-black/55">for you</span>
           </span>
-          <span className="ml-2 inline-block h-[16px] w-[2px] translate-y-[2px] bg-[color:var(--wb-accent-2)]/70 animate-pulse rounded-full" />
+          <span className="ml-2 inline-block h-4 w-0.5 translate-y-0.5 bg-(--wb-accent-2)/70 animate-pulse rounded-full" />
         </div>
       </div>
     </div>
@@ -156,9 +156,9 @@ function ReelCard({ item }: { item: ReelItem }) {
     <div
       className={cx(
         "group relative shrink-0 overflow-hidden rounded-[22px]",
-        "border border-[color:var(--wb-border)] bg-white/70 backdrop-blur",
+        "border border-(--wb-border) bg-white/70 backdrop-blur",
         "shadow-[0_18px_44px_rgba(11,18,32,0.10)]",
-        "h-[140px] w-[200px] sm:h-[170px] sm:w-[250px] lg:h-[190px] lg:w-[290px]"
+        "h-35 w-50 sm:h-42.5 sm:w-62.5 lg:h-47.5 lg:w-72.5"
       )}
     >
       <div className="absolute inset-0">
@@ -174,7 +174,7 @@ function ReelCard({ item }: { item: ReelItem }) {
       </div>
 
       {item.tag ? (
-        <div className="absolute left-3 top-3 rounded-full border border-white/20 bg-white/15 px-2.5 py-1 text-[11px] font-extrabold tracking-[0.10em] text-white/90 backdrop-blur">
+        <div className="absolute left-3 top-3 rounded-full border border-white/20 bg-white/15 px-2.5 py-1 text-[11px] font-extrabold tracking-widest text-white/90 backdrop-blur">
           {item.tag}
         </div>
       ) : null}
@@ -236,7 +236,7 @@ export default function Hero() {
       {/* glows */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-24 left-[-140px] h-[420px] w-[420px] rounded-full blur-3xl"
+        className="pointer-events-none absolute -top-24 -left-35 h-105 w-105 rounded-full blur-3xl"
         style={{
           background:
             "radial-gradient(circle at 30% 30%, rgba(27,79,214,0.26), transparent 60%)",
@@ -244,7 +244,7 @@ export default function Hero() {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-28 right-[-120px] h-[520px] w-[520px] rounded-full blur-3xl"
+        className="pointer-events-none absolute -top-28 -right-30 h-130 w-130 rounded-full blur-3xl"
         style={{
           background:
             "radial-gradient(circle at 40% 40%, rgba(11,42,111,0.22), transparent 62%)",
@@ -257,21 +257,21 @@ export default function Hero() {
         <div className="grid items-center gap-7 py-7 sm:py-10 lg:grid-cols-2 lg:gap-12 lg:py-14">
           {/* RIGHT (mobile first) */}
           <div className="relative min-w-0 order-1 lg:order-2">
-            <div className="relative rounded-[26px] border border-[color:var(--wb-border)] bg-white/55 p-4 backdrop-blur shadow-[0_26px_70px_rgba(11,18,32,0.12)]">
+            <div className="relative rounded-[26px] border border-(--wb-border) bg-white/55 p-4 backdrop-blur shadow-[0_26px_70px_rgba(11,18,32,0.12)]">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="text-[11px] font-extrabold tracking-[0.22em] text-black/45">
                     SIGNATURE BUILDS
                   </div>
-                  <div className="wb-serif mt-1 text-[20px] text-[color:var(--wb-ink)] break-words">
+                  <div className="wb-serif mt-1 text-[20px] text-(--wb-ink) wrap-break-word">
                     Crafted by WestBrook
                   </div>
                 </div>
 
                 <Link
                   to="/projects"
-                  className="inline-flex h-9 shrink-0 items-center rounded-full border border-[color:var(--wb-border)]
-                             bg-white/70 px-3 text-[12px] font-extrabold text-[color:var(--wb-accent)]
+                  className="inline-flex h-9 shrink-0 items-center rounded-full border border-(--wb-border)
+                             bg-white/70 px-3 text-[12px] font-extrabold text-(--wb-accent)
                              hover:bg-white transition whitespace-nowrap"
                 >
                   View →
@@ -284,7 +284,7 @@ export default function Hero() {
                 <ReelRow items={REEL_B} direction="right" seconds={30} />
               </div>
 
-              <div className="mt-3 text-[12px] font-semibold text-black/50 break-words">
+              <div className="mt-3 text-[12px] font-semibold text-black/50 wrap-break-word">
                 From first discussion to final handover — we keep it clear,
                 structured, and on-track.
               </div>
@@ -293,16 +293,16 @@ export default function Hero() {
 
           {/* LEFT */}
           <div className="min-w-0 order-2 lg:order-1">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--wb-border)] bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.20em] text-black/55 backdrop-blur">
-              <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--wb-accent-2)]/70" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-(--wb-border) bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.20em] text-black/55 backdrop-blur">
+              <span className="h-1.5 w-1.5 rounded-full bg-(--wb-accent-2)/70" />
               WESTBROOK HOMES
             </div>
 
-            <h1 className="wb-serif mt-4 text-[30px] leading-[1.12] tracking-tight text-[color:var(--wb-ink)] sm:text-[44px] lg:text-[54px] max-w-[28ch] break-words">
+            <h1 className="wb-serif mt-4 text-[30px] leading-[1.12] tracking-tight text-(--wb-ink) sm:text-[44px] lg:text-[54px] max-w-[28ch] wrap-break-word transform-gpu">
               Homes that <Em>feel right</Em> the moment you <Em>step in</Em>.
             </h1>
 
-            <p className="mt-3 max-w-[54ch] text-[14px] leading-relaxed text-black/60 sm:text-[16px] break-words">
+            <p className="mt-3 max-w-[54ch] text-[14px] leading-relaxed text-black/60 sm:text-[16px] wrap-break-word transform-gpu">
               We work with you to finalize the design you actually want — then we
               build it with discipline, finish, and a clean handover.
             </p>
@@ -313,7 +313,7 @@ export default function Hero() {
                 className="inline-flex h-10 items-center justify-center rounded-full px-4 text-[13px] font-extrabold tracking-[0.02em] text-white
                            bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))]
                            shadow-[0_16px_34px_rgba(27,79,214,0.18)]
-                           hover:brightness-110 hover:-translate-y-[1px] transition whitespace-nowrap"
+                           hover:brightness-110 hover:-translate-y-px transition whitespace-nowrap"
               >
                 Start a Conversation
               </Link>
@@ -321,26 +321,26 @@ export default function Hero() {
               <Link
                 to="/projects"
                 className="inline-flex h-10 items-center justify-center rounded-full px-4 text-[13px] font-extrabold tracking-[0.02em]
-                           border border-[color:var(--wb-border)] bg-white/70 text-black/70
-                           hover:bg-white hover:text-[color:var(--wb-ink)]
-                           hover:-translate-y-[1px] transition whitespace-nowrap"
+                           border border-(--wb-border) bg-white/70 text-black/70
+                           hover:bg-white hover:text-(--wb-ink)
+                           hover:-translate-y-px transition whitespace-nowrap"
               >
                 View Our Work
               </Link>
             </div>
 
             {/* HOW WESTBROOK WORKS (icon removed) */}
-            <div className="mt-6 max-w-xl rounded-[22px] border border-[color:var(--wb-border)] bg-white/60 p-4 backdrop-blur shadow-[0_18px_50px_rgba(11,18,32,0.10)]">
+            <div className="mt-6 max-w-xl rounded-[22px] border border-(--wb-border) bg-white/60 p-4 backdrop-blur shadow-[0_18px_50px_rgba(11,18,32,0.10)]">
               <div className="min-w-0">
                 <div className="text-[12px] font-extrabold tracking-[0.18em] text-black/45">
                   HOW WESTBROOK WORKS
                 </div>
 
-                <div className="wb-serif mt-1 text-[15.5px] sm:text-[16.5px] text-[color:var(--wb-ink)] break-words">
+                <div className="wb-serif mt-1 text-[15.5px] sm:text-[16.5px] text-(--wb-ink) wrap-break-word">
                   We listen first. Then we design. Then we build.
                 </div>
 
-                <p className="mt-2 text-[13.5px] leading-relaxed text-black/60 break-words">
+                <p className="mt-2 text-[13.5px] leading-relaxed text-black/60 wrap-break-word">
                   We start with your requirements, refine layouts and elevations
                   with you, lock budgets + timelines, and execute with clarity
                   until handover.

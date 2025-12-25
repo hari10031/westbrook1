@@ -1,92 +1,68 @@
 // src/pages/Home/UpcomingProjects.tsx
-import type React from "react";
 import { motion } from "framer-motion";
-import {
-  RiMapPin2Line,
-  RiTimeLine,
-  RiArrowRightUpLine,
-  RiStackLine,
-  RiHome4Line,
-  RiLandscapeLine,
-} from "react-icons/ri";
 
 const EASE: [number, number, number, number] = [0.18, 0.82, 0.22, 1];
 
-type UpcomingProject = {
-  title: string;
-  location: string;
-  distanceOrEta: string;
-  summary: string;
-  badges: string[];
+type Project = {
   image: string;
-  icon: React.ReactNode;
+  alt: string;
 };
 
-const PROJECTS: UpcomingProject[] = [
+const PROJECTS: Project[] = [
   {
-    title: "East Dallas Townhomes",
-    location: "Dallas, TX • off Forney Rd",
-    distanceOrEta: "10 mins from Downtown Dallas",
-    summary:
-      "Modern townhomes with commuter convenience, clean layouts, and strong demand pockets nearby.",
-    badges: ["Townhomes", "East Dallas", "Near Downtown"],
-    image:
-      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1800&q=80",
-    icon: <RiHome4Line />,
+    image: "/img/jack.jpg",
+    alt: "Jack Project",
   },
   {
-    title: "Verified Plots Release",
-    location: "DFW Area",
-    distanceOrEta: "Launching Soon",
-    summary:
-      "Plots shortlisted with access clarity, utilities readiness, and straightforward next steps.",
-    badges: ["Plots", "Access Ready", "Utilities"],
-    image:
-      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=80",
-    icon: <RiLandscapeLine />,
+    image: "/img/wind-flower.jpeg",
+    alt: "Wind Flower Project",
   },
   {
-    title: "Homes Collection",
-    location: "North Dallas",
-    distanceOrEta: "Next Pipeline",
-    summary:
-      "Family-friendly homes focused on livability, practical layouts, and stable growth signals.",
-    badges: ["Homes", "Family", "Growth Pockets"],
-    image:
-      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1800&q=80",
-    icon: <RiStackLine />,
+    image: "/img/apollo-house-img.jpg",
+    alt: "Apollo House Project",
   },
 ];
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 24, scale: 0.95 },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.7, ease: EASE },
+  },
+};
 
 export default function UpcomingProjects() {
   return (
     <section className="relative">
       {/* ink glow */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-[-120px] h-[320px] w-[680px] -translate-x-1/2 rounded-full bg-[color:var(--wb-ink)]/10 blur-3xl" />
-        <div className="absolute right-[-140px] top-[140px] h-[260px] w-[260px] rounded-full bg-[color:var(--wb-ink)]/10 blur-3xl" />
+        <div className="absolute left-1/2 -top-30 h-80 w-170 -translate-x-1/2 rounded-full bg-(--wb-ink)/10 blur-3xl" />
+        <div className="absolute -right-35 top-35 h-65 w-65 rounded-full bg-(--wb-ink)/10 blur-3xl" />
       </div>
 
       {/* header */}
       <div className="mx-auto max-w-[78ch] text-center">
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, ease: EASE }}
-          className="text-[12px] font-extrabold tracking-[0.32em] text-[color:var(--wb-ink)]/80"
-        >
-          UPCOMING PROJECTS
-        </motion.p>
-
         <motion.h2
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.75, ease: EASE, delay: 0.06 }}
-          className="wb-serif mt-3 text-[34px] leading-[1.1] sm:text-[44px] text-[color:var(--wb-ink)]"
+          className="wb-serif mt-3 text-[34px] leading-[1.1] sm:text-[44px] text-(--wb-ink)"
         >
-          What’s launching next
+          Featured Homes
         </motion.h2>
 
         <motion.p
@@ -94,105 +70,57 @@ export default function UpcomingProjects() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.65, ease: EASE, delay: 0.14 }}
-          className="mt-4 text-[15.5px] leading-relaxed text-[color:var(--wb-ink)]/78"
+          className="mt-4 text-[15.5px] leading-relaxed text-(--wb-ink)/78"
         >
-          A quick preview of what’s in the pipeline — shortlisted locations and formats
-          worth watching.
+          Explore our portfolio of luxury custom homes, each one a testament to
+          our commitment to excellence and attention to detail.
         </motion.p>
       </div>
 
-      {/* better cards */}
-      <div className="mt-10 grid gap-6 lg:grid-cols-3">
-        {PROJECTS.map((p, i) => (
-          <motion.article
-            key={p.title}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.65, ease: EASE, delay: 0.08 + i * 0.07 }}
-            whileHover={{ y: -6 }}
-            className="group relative overflow-hidden rounded-[30px]
-              border border-[color:var(--wb-ink)]/18 bg-white/40 backdrop-blur
+      {/* image gallery */}
+      <motion.div
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-80px" }}
+        className="mt-10 grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+      >
+        {PROJECTS.map((p) => (
+          <motion.div
+            key={p.alt}
+            variants={item}
+            whileHover={{ y: -8, scale: 1.02 }}
+            transition={{ duration: 0.4, ease: EASE }}
+            className="group relative overflow-hidden rounded-2xl sm:rounded-3xl
               shadow-[0_18px_55px_rgba(12,24,48,0.12)]
               hover:shadow-[0_38px_120px_rgba(12,24,48,0.22)]
-              transition"
+              transition-shadow duration-500"
           >
-            {/* IMAGE */}
-            <div className="relative h-[260px]">
-              <img
+            {/* image container */}
+            <div className="relative aspect-16/9 overflow-hidden">
+              <motion.img
                 src={p.image}
-                alt={p.title}
-                className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.05]"
+                alt={p.alt}
+                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 loading="lazy"
+                initial={{ scale: 1.05 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.2, ease: EASE }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[rgba(8,16,34,0.82)] via-[rgba(8,16,34,0.20)] to-transparent" />
 
-              {/* floating meta pill */}
-              <div className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/10 px-3 py-2 text-white backdrop-blur">
-                <span className="text-[18px]">{p.icon}</span>
-                <span className="text-[12px] font-extrabold tracking-[0.12em]">
-                  UPCOMING
-                </span>
-              </div>
-            </div>
+              {/* subtle overlay on hover */}
+              <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            {/* BODY */}
-            <div className="p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div className="min-w-0">
-                  <p className="text-[18px] font-extrabold text-[color:var(--wb-ink)]">
-                    {p.title}
-                  </p>
-
-                  {/* underline accent */}
-                  <div className="mt-2 h-[2px] w-10 bg-[color:var(--wb-ink)]/45 group-hover:w-16 transition-all duration-300" />
-                </div>
-
-                <div
-                  className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl
-                  border border-[color:var(--wb-ink)]/18 bg-white/55 text-[color:var(--wb-ink)]/80
-                  group-hover:translate-x-[2px] group-hover:-translate-y-[2px] transition"
-                  aria-hidden="true"
-                >
-                  <RiArrowRightUpLine />
-                </div>
-              </div>
-
-              {/* location + eta row */}
-              <div className="mt-4 grid gap-2">
-                <div className="flex items-center gap-2 text-[13.5px] text-[color:var(--wb-ink)]/75">
-                  <RiMapPin2Line />
-                  <span className="font-bold">{p.location}</span>
-                </div>
-                <div className="flex items-center gap-2 text-[13.5px] text-[color:var(--wb-ink)]/70">
-                  <RiTimeLine />
-                  <span>{p.distanceOrEta}</span>
-                </div>
-              </div>
-
-              <p className="mt-4 text-[14.8px] leading-relaxed text-[color:var(--wb-ink)]/76">
-                {p.summary}
-              </p>
-
-              {/* badges */}
-              <div className="mt-5 flex flex-wrap gap-2">
-                {p.badges.map((b) => (
-                  <span
-                    key={b}
-                    className="rounded-full border border-[color:var(--wb-ink)]/18 bg-white/55
-                      px-3 py-1 text-[12px] font-extrabold text-[color:var(--wb-ink)]/75"
-                  >
-                    {b}
-                  </span>
-                ))}
-              </div>
+              {/* premium edge vignette */}
+              <div className="pointer-events-none absolute inset-0 opacity-50 [box-shadow:inset_0_-60px_100px_rgba(0,0,0,0.15)]" />
             </div>
 
             {/* hover ring */}
-            <div className="pointer-events-none absolute inset-0 rounded-[30px] ring-0 ring-[color:var(--wb-ink)]/0 group-hover:ring-2 group-hover:ring-[color:var(--wb-ink)]/10 transition" />
-          </motion.article>
+            <div className="pointer-events-none absolute inset-0 rounded-2xl sm:rounded-3xl ring-0 ring-(--wb-ink)/0 group-hover:ring-2 group-hover:ring-(--wb-ink)/10 transition-all duration-300" />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }

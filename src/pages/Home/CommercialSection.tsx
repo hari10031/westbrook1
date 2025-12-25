@@ -56,18 +56,18 @@ const CARDS: Card[] = [
 
 function UnderlineInk({ children }: { children: React.ReactNode }) {
   return (
-    <span className="relative inline-block">
+    <span className="relative inline-block transform-gpu">
       <span className="relative z-10">{children}</span>
-      <span className="absolute left-0 bottom-0.75 h-1.75 w-full rounded-full bg-(--wb-ink)/22" />
+      <span className="absolute left-0 bottom-0.75 h-1.75 w-full rounded-full bg-(--wb-ink)/22 transform-gpu" />
     </span>
   );
 }
 
 function UnderlineSoft({ children }: { children: React.ReactNode }) {
   return (
-    <span className="relative inline-block">
+    <span className="relative inline-block transform-gpu">
       <span className="relative z-10">{children}</span>
-      <span className="absolute left-0 bottom-0.5 h-1.5 w-full rounded-full bg-(--wb-accent-2)/18" />
+      <span className="absolute left-0 bottom-0.5 h-1.5 w-full rounded-full bg-(--wb-accent-2)/18 transform-gpu" />
     </span>
   );
 }
@@ -155,9 +155,9 @@ export default function CommercialSection() {
         <motion.p
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.55, ease: EASE }}
-          className="text-[12px] font-extrabold tracking-[0.32em] text-(--wb-ink)/80"
+          className="text-[12px] font-extrabold tracking-[0.32em] text-(--wb-ink)/80 will-change-transform"
         >
           WESTBROOK HOMES
         </motion.p>
@@ -165,9 +165,9 @@ export default function CommercialSection() {
         <motion.h2
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.85, ease: EASE, delay: 0.06 }}
-          className="wb-serif mt-3 text-[34px] leading-[1.08] sm:text-[46px] text-(--wb-ink)"
+          className="wb-serif mt-3 text-[34px] leading-[1.08] sm:text-[46px] text-(--wb-ink) will-change-transform"
         >
           Building <UnderlineInk>Dreams Into Reality</UnderlineInk>.
         </motion.h2>
@@ -175,9 +175,9 @@ export default function CommercialSection() {
         <motion.p
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.14 }}
-          className="mt-4 text-[15.5px] leading-relaxed text-(--wb-ink)/78"
+          className="mt-4 text-[15.5px] leading-relaxed text-(--wb-ink)/78 will-change-transform"
         >
           A home isn’t just a structure—it’s where life happens. We align on your
           requirements, refine the design with you, then build with discipline,
