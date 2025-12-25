@@ -130,7 +130,11 @@ export default function CommercialSection() {
 
   const underline = {
     rest: { width: "42px", opacity: 0.75 },
-    hover: { width: "88px", opacity: 1, transition: { duration: 0.35, ease: EASE } },
+    hover: {
+      width: "88px",
+      opacity: 1,
+      transition: { duration: 0.35, ease: EASE },
+    },
   };
 
   const sheen = {
@@ -291,7 +295,9 @@ export default function CommercialSection() {
 
                   <div className="mt-4 inline-flex items-center gap-2 text-[13px] font-extrabold text-(--wb-ink)">
                     Explore details
-                    <span className="opacity-70 group-hover:opacity-100 transition">→</span>
+                    <span className="opacity-70 group-hover:opacity-100 transition">
+                      →
+                    </span>
                   </div>
                 </div>
               </Link>
