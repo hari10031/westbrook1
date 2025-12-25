@@ -58,7 +58,7 @@ function UnderlineInk({ children }: { children: React.ReactNode }) {
   return (
     <span className="relative inline-block">
       <span className="relative z-10">{children}</span>
-      <span className="absolute left-0 bottom-[3px] h-[7px] w-full rounded-full bg-[color:var(--wb-ink)]/22" />
+      <span className="absolute left-0 bottom-0.75 h-1.75 w-full rounded-full bg-(--wb-ink)/22" />
     </span>
   );
 }
@@ -67,7 +67,7 @@ function UnderlineSoft({ children }: { children: React.ReactNode }) {
   return (
     <span className="relative inline-block">
       <span className="relative z-10">{children}</span>
-      <span className="absolute left-0 bottom-[2px] h-[6px] w-full rounded-full bg-[color:var(--wb-accent-2)]/18" />
+      <span className="absolute left-0 bottom-0.5 h-1.5 w-full rounded-full bg-(--wb-accent-2)/18" />
     </span>
   );
 }
@@ -106,11 +106,11 @@ export default function CommercialSection() {
     hover: reduce
       ? { transition: { duration: 0.25 } }
       : {
-          y: -8,
-          scale: 1.015,
-          rotate: -0.2,
-          transition: { duration: 0.45, ease: EASE },
-        },
+        y: -8,
+        scale: 1.015,
+        rotate: -0.2,
+        transition: { duration: 0.45, ease: EASE },
+      },
   };
 
   const img = {
@@ -122,10 +122,10 @@ export default function CommercialSection() {
     hover: reduce
       ? { transition: { duration: 0.25 } }
       : {
-          scale: 1.06,
-          y: -6,
-          transition: { duration: 0.7, ease: EASE },
-        },
+        scale: 1.06,
+        y: -6,
+        transition: { duration: 0.7, ease: EASE },
+      },
   };
 
   const underline = {
@@ -146,8 +146,8 @@ export default function CommercialSection() {
     <section className="relative">
       {/* elevated background glow */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-[-160px] h-[380px] w-[760px] -translate-x-1/2 rounded-full bg-[color:var(--wb-ink)]/12 blur-3xl" />
-        <div className="absolute right-[-140px] top-[120px] h-[320px] w-[320px] rounded-full bg-[color:var(--wb-accent-2)]/12 blur-3xl" />
+        <div className="absolute left-1/2 -top-40 h-95 w-190 -translate-x-1/2 rounded-full bg-(--wb-ink)/12 blur-3xl" />
+        <div className="absolute -right-35 top-30 h-80 w-80 rounded-full bg-(--wb-accent-2)/12 blur-3xl" />
       </div>
 
       {/* header */}
@@ -157,7 +157,7 @@ export default function CommercialSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.55, ease: EASE }}
-          className="text-[12px] font-extrabold tracking-[0.32em] text-[color:var(--wb-ink)]/80"
+          className="text-[12px] font-extrabold tracking-[0.32em] text-(--wb-ink)/80"
         >
           WESTBROOK HOMES
         </motion.p>
@@ -167,7 +167,7 @@ export default function CommercialSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.85, ease: EASE, delay: 0.06 }}
-          className="wb-serif mt-3 text-[34px] leading-[1.08] sm:text-[46px] text-[color:var(--wb-ink)]"
+          className="wb-serif mt-3 text-[34px] leading-[1.08] sm:text-[46px] text-(--wb-ink)"
         >
           Building <UnderlineInk>Dreams Into Reality</UnderlineInk>.
         </motion.h2>
@@ -177,7 +177,7 @@ export default function CommercialSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.14 }}
-          className="mt-4 text-[15.5px] leading-relaxed text-[color:var(--wb-ink)]/78"
+          className="mt-4 text-[15.5px] leading-relaxed text-(--wb-ink)/78"
         >
           A home isn’t just a structure—it’s where life happens. We align on your
           requirements, refine the design with you, then build with discipline,
@@ -193,7 +193,7 @@ export default function CommercialSection() {
         viewport={{ once: true, margin: "-80px" }}
         className="mt-10 grid gap-6 md:grid-cols-3"
       >
-        {CARDS.map((c, i) => (
+        {CARDS.map((c) => (
           <motion.div key={c.title} variants={item}>
             <motion.div
               initial="rest"
@@ -206,13 +206,13 @@ export default function CommercialSection() {
               <Link
                 to={c.to}
                 className="group relative block overflow-hidden rounded-[30px]
-                border border-[color:var(--wb-ink)]/18 bg-white/55 backdrop-blur
+                border border-(--wb-ink)/18 bg-white/55 backdrop-blur
                 shadow-[0_18px_55px_rgba(12,24,48,0.12)]
                 hover:shadow-[0_38px_130px_rgba(12,24,48,0.24)]
                 transition"
               >
                 {/* top image */}
-                <div className="relative h-[220px] sm:h-[260px]">
+                <div className="relative h-55 sm:h-65">
                   <motion.img
                     variants={img}
                     src={c.image}
@@ -229,11 +229,11 @@ export default function CommercialSection() {
                     variants={sheen}
                     className="pointer-events-none absolute inset-y-0 left-0 w-[45%]
                       bg-[linear-gradient(110deg,transparent,rgba(255,255,255,0.30),transparent)]
-                      rotate-[12deg]"
+                      rotate-12"
                   />
 
                   {/* top chip */}
-                  <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/12 px-3 py-1 text-[11px] font-extrabold tracking-[0.10em] text-white/90 backdrop-blur">
+                  <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-3 py-1 text-[11px] font-extrabold tracking-widest text-white/90 backdrop-blur-md shadow-lg">
                     <span className="text-[16px]">{c.icon}</span>
                     {c.title.toUpperCase()}
                   </div>
@@ -251,7 +251,7 @@ export default function CommercialSection() {
 
                         <motion.div
                           variants={underline}
-                          className="mt-3 h-[2px] bg-white/75"
+                          className="mt-3 h-0.5 bg-white/75"
                         />
                       </div>
 
@@ -269,27 +269,27 @@ export default function CommercialSection() {
                   <div className="pointer-events-none absolute inset-0 opacity-70 [box-shadow:inset_0_-40px_80px_rgba(0,0,0,0.25)]" />
 
                   {/* hover ring */}
-                  <div className="pointer-events-none absolute inset-0 rounded-[30px] ring-0 ring-[color:var(--wb-ink)]/0 group-hover:ring-2 group-hover:ring-[color:var(--wb-ink)]/10 transition" />
+                  <div className="pointer-events-none absolute inset-0 rounded-[30px] ring-0 ring-(--wb-ink)/0 group-hover:ring-2 group-hover:ring-(--wb-ink)/10 transition" />
                 </div>
 
                 {/* BODY (make heading BIG + dominant) */}
                 <div className="p-5">
-                  <h3 className="wb-serif text-[22px] sm:text-[24px] leading-tight text-[color:var(--wb-ink)]">
+                  <h3 className="wb-serif text-[22px] sm:text-[24px] leading-tight text-(--wb-ink)">
                     <span className="relative inline-block">
                       <span className="relative z-10">{c.title}</span>
-                      <span className="absolute left-0 bottom-[3px] h-[7px] w-full rounded-full bg-[color:var(--wb-accent-2)]/25" />
+                      <span className="absolute left-0 bottom-0.75 h-1.75 w-full rounded-full bg-(--wb-accent-2)/25" />
                     </span>
                   </h3>
 
-                  <p className="mt-1 text-[13px] font-semibold tracking-wide text-[color:var(--wb-ink)]/65">
+                  <p className="mt-1 text-[13px] font-semibold tracking-wide text-(--wb-ink)/65">
                     {c.subtitle}
                   </p>
 
-                  <p className="mt-3 text-[13.5px] leading-relaxed text-[color:var(--wb-ink)]/75">
+                  <p className="mt-3 text-[13.5px] leading-relaxed text-(--wb-ink)/75">
                     {c.desc}
                   </p>
 
-                  <div className="mt-4 inline-flex items-center gap-2 text-[13px] font-extrabold text-[color:var(--wb-ink)]">
+                  <div className="mt-4 inline-flex items-center gap-2 text-[13px] font-extrabold text-(--wb-ink)">
                     Explore details
                     <span className="opacity-70 group-hover:opacity-100 transition">→</span>
                   </div>
@@ -315,7 +315,7 @@ export default function CommercialSection() {
         ))}
       </motion.div>
 
-      <p className="mt-6 text-center text-[13px] text-[color:var(--wb-ink)]/65">
+      <p className="mt-6 text-center text-[13px] text-(--wb-ink)/65">
         Explore the full scope in Services.
       </p>
     </section>

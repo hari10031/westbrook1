@@ -6,7 +6,7 @@ type NavItem = { label: string; to: string };
 
 const NAV: NavItem[] = [
   { label: "Home", to: "/" },
-  { label: "Services", to: "/services" },
+  // { label: "Services", to: "/services" },
   { label: "Explore Homes", to: "/explore-homes" },
 
   // ✅ ADDED in the middle section

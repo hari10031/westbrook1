@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import Home from "../pages/Home";
 import About from "../pages/About";
-import Services from "../pages/Services";
+// import Services from "../pages/Services";
 import Projects from "../pages/Projects";
 // import Land from "../pages/Land";
 import Contact from "../pages/Contact";
@@ -17,7 +17,7 @@ export default function AppRouter() {
       <Route path="/" element={<Home />} />
 
       <Route path="/about" element={<About />} />
-      <Route path="/services" element={<Services />} />
+      {/* <Route path="/services" element={<Services />} /> */}
       <Route path="/explore-homes" element={<Projects />} />
       {/* <Route path="/land" element={<Land />} /> */}
       <Route path="/contact" element={<Contact />} />
