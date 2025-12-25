@@ -111,8 +111,8 @@ export default function Footer() {
             <FooterColumn
               title="Contact"
               links={[
-                { label: "Get in touch", to: "/contact" },
-                { label: "Request a callback", to: "/contact" },
+                { label: "Get in touch", to: "/#contact", isSection: true },
+                { label: "Request a callback", to: "/#contact", isSection: true },
               ]}
               onSectionClick={handleSectionClick}
             />
@@ -143,7 +143,7 @@ export default function Footer() {
             </div>
 
             <Link
-              to="/contact"
+              to="/#contact"
               className={cx(
                 "inline-flex items-center justify-center",
                 "rounded-full px-6 py-3",
