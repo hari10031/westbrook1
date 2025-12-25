@@ -1,255 +1,412 @@
 // src/pages/Home/ProcessRoadmap.tsx
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
-const STEPS = [
-    {
-        number: 1,
-        title: "Consultation",
-        description:
-            "We begin by understanding your vision, lifestyle, and requirements for your dream home.",
-        icon: (
-            <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5 sm:w-6 sm:h-6"
-            >
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                <path d="M8 9h8" />
-                <path d="M8 13h6" />
-            </svg>
-        ),
-    },
-    {
-        number: 2,
-        title: "Design",
-        description:
-            "Our team creates detailed plans and 3D renderings to bring your vision to life.",
-        icon: (
-            <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5 sm:w-6 sm:h-6"
-            >
-                <path d="M12 19l7-7 3 3-7 7-3-3z" />
-                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
-                <path d="M2 2l7.586 7.586" />
-                <circle cx="11" cy="11" r="2" />
-            </svg>
-        ),
-    },
-    {
-        number: 3,
-        title: "Construction",
-        description:
-            "Expert craftsmen build your home with precision and attention to every detail.",
-        icon: (
-            <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5 sm:w-6 sm:h-6"
-            >
-                <path d="M2 20h20" />
-                <path d="M5 20V8.5L12 4l7 4.5V20" />
-                <path d="M9 20v-6h6v6" />
-                <path d="M9 12h6" />
-                <path d="M12 8v4" />
-            </svg>
-        ),
-    },
-    {
-        number: 4,
-        title: "Move In",
-        description:
-            "We complete final inspections and hand you the keys to your beautiful new home.",
-        icon: (
-            <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5 sm:w-6 sm:h-6"
-            >
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                <polyline points="10 17 15 12 10 7" />
-                <line x1="15" y1="12" x2="3" y2="12" />
-            </svg>
-        ),
-    },
+const EASE: [number, number, number, number] = [0.18, 0.82, 0.22, 1];
+
+type Step = {
+  number: string;
+  label: string;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  accent: "a" | "b";
+};
+
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Premium, architectural icons (no extra libraries)
+   ───────────────────────────────────────────────────────────── */
+function IconCompass() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
+      <path
+        d="M12 21a9 9 0 1 0-9-9 9 9 0 0 0 9 9Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+      />
+      <path
+        d="M14.8 9.2 13.6 13.6 9.2 14.8 10.4 10.4 14.8 9.2Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+      <path d="M12 3v2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M21 12h-2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M12 21v-2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M3 12h2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function IconBlueprint() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
+      <path
+        d="M4 4h13a3 3 0 0 1 3 3v13H7a3 3 0 0 0-3 3V4Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+      <path d="M7 7h10" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M7 10h7" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M7 13h10" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M7 16h6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function IconBuild() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
+      <path
+        d="M3 20h18"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+      <path
+        d="M6 20V9.5L12 6l6 3.5V20"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9 20v-5h6v5"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10 11h4"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function IconKey() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
+      <path
+        d="M7.5 14.5a5 5 0 1 1 3.9 1.9H10l-2 2H6v2H4v-2l3.5-4Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16.8 8.2h.01"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Steps (impactful, trust-building copy)
+   ───────────────────────────────────────────────────────────── */
+const STEPS: Step[] = [
+  {
+    number: "01",
+    label: "DISCOVERY",
+    title: "We understand how you want to live",
+    description:
+      "We start with your lifestyle, priorities, budget, and long-term goals — then shape a clear plan you feel confident about.",
+    icon: <IconCompass />,
+    accent: "a",
+  },
+  {
+    number: "02",
+    label: "DESIGN",
+    title: "Layouts that feel right — on paper & in real life",
+    description:
+      "Plans, elevations, and details are refined with you until everything makes sense: flow, light, storage, and proportion.",
+    icon: <IconBlueprint />,
+    accent: "b",
+  },
+  {
+    number: "03",
+    label: "BUILD",
+    title: "Disciplined execution with steady progress",
+    description:
+      "Once the design is locked, we build with structure — timelines, checkpoints, and quality control that keeps surprises out.",
+    icon: <IconBuild />,
+    accent: "a",
+  },
+  {
+    number: "04",
+    label: "HANDOVER",
+    title: "Finished, inspected, and ready to move in",
+    description:
+      "Final walkthroughs, finishing touches, and a clean handover — so your home arrives exactly as promised.",
+    icon: <IconKey />,
+    accent: "b",
+  },
 ];
 
+/* ─────────────────────────────────────────────────────────────
+   Component
+   ───────────────────────────────────────────────────────────── */
 export default function ProcessRoadmap() {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const isInView = useInView(containerRef, { once: true, margin: "-80px" });
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-120px" });
 
-    return (
-        <section ref={containerRef} className="relative py-12 sm:py-16 lg:py-20 overflow-hidden">
-            {/* Background glow */}
-            <div className="pointer-events-none absolute inset-0 -z-10">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ duration: 1.2 }}
-                    className="absolute left-1/4 top-1/2 h-[350px] w-[350px] -translate-y-1/2 rounded-full bg-[color:var(--wb-accent)]/5 blur-3xl"
-                />
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ duration: 1.2, delay: 0.2 }}
-                    className="absolute right-1/4 top-1/3 h-[280px] w-[280px] rounded-full bg-[color:var(--wb-accent-2)]/5 blur-3xl"
-                />
-            </div>
+  const header = useMemo(
+    () => ({
+      initial: { opacity: 0, y: 14, filter: "blur(6px)" },
+      animate: inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {},
+      transition: (d = 0) => ({ duration: 0.75, ease: EASE, delay: d }),
+    }),
+    [inView]
+  );
 
-            {/* Section Header */}
-            <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14 px-4">
-                <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.5 }}
-                    className="text-[10px] sm:text-[11px] font-extrabold tracking-[0.26em] text-black/45 uppercase"
-                >
-                    Our Process
-                </motion.p>
-                <motion.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.5, delay: 0.1 }}
-                    className="wb-serif mt-2 text-[24px] sm:text-[30px] lg:text-[36px] text-[color:var(--wb-ink)]"
-                >
-                    Building your dream home
-                </motion.h2>
-                <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                    className="mt-2 text-[12px] sm:text-[13px] text-black/55 max-w-md mx-auto"
-                >
-                    A seamless journey from initial concept to handing over the keys.
-                </motion.p>
-            </div>
+  return (
+    <section ref={ref} className="relative overflow-hidden py-12 sm:py-16 lg:py-20">
+      {/* Premium background: soft glows + grid + fade */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+        {/* subtle grid */}
+        <div
+          className="absolute inset-0 opacity-[0.22]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, rgba(10,20,40,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(10,20,40,0.06) 1px, transparent 1px)",
+            backgroundSize: "44px 44px",
+          }}
+        />
+        {/* glows */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 1.1, ease: EASE }}
+          className="absolute left-[-120px] top-[-120px] h-[420px] w-[420px] rounded-full blur-3xl"
+          style={{
+            background:
+              "radial-gradient(circle at 35% 35%, rgba(27,79,214,0.18), transparent 60%)",
+          }}
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 1.1, ease: EASE, delay: 0.12 }}
+          className="absolute right-[-140px] top-[40px] h-[520px] w-[520px] rounded-full blur-3xl"
+          style={{
+            background:
+              "radial-gradient(circle at 40% 40%, rgba(11,42,111,0.16), transparent 62%)",
+          }}
+        />
+        {/* bottom fade */}
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-[linear-gradient(to_bottom,transparent,var(--wb-bg))]" />
+      </div>
 
-            {/* Vertical Timeline */}
-            <div className="relative px-4 sm:px-6">
-                <div className="max-w-3xl mx-auto">
-                    {/* Vertical line - center */}
-                    <div className="absolute left-1/2 -translate-x-[1px] top-0 bottom-0 w-[2px]">
-                        {/* Background line */}
-                        <div className="absolute inset-0 bg-[color:var(--wb-border)]" />
-                        {/* Animated progress line */}
+      {/* Header */}
+      <div className="wb-container">
+        <div className="mx-auto max-w-[72ch] text-center">
+          <motion.p
+            {...header}
+            transition={header.transition(0)}
+            className="text-[11px] font-extrabold tracking-[0.34em] text-black/45"
+          >
+            OUR PROCESS
+          </motion.p>
+
+          <motion.h2
+            {...header}
+            transition={header.transition(0.06)}
+            className="wb-serif mt-3 text-[28px] leading-[1.08] sm:text-[38px] lg:text-[44px] text-[color:var(--wb-ink)]"
+          >
+            Building{" "}
+            <span className="relative inline-block">
+              <span className="relative z-10">Dreams Into Reality</span>
+              <span className="absolute left-0 bottom-[4px] h-[8px] w-full rounded-full bg-[color:var(--wb-accent-2)]/18" />
+            </span>
+            .
+          </motion.h2>
+
+          <motion.p
+            {...header}
+            transition={header.transition(0.14)}
+            className="mt-4 text-[14.5px] leading-relaxed text-black/60 sm:text-[15.5px]"
+          >
+            A premium, clear journey — from the first conversation to a confident handover.
+            Simple steps. Sharp details. Zero chaos.
+          </motion.p>
+        </div>
+
+        {/* Roadmap */}
+        <div className="mt-10 sm:mt-12 lg:mt-14">
+          {/* Desktop: center spine + alternating cards
+              Mobile: left spine + stacked cards */}
+          <div className="relative">
+            {/* Spine */}
+            <div className="absolute left-[18px] top-0 bottom-0 w-[2px] bg-[color:var(--wb-border)]/70 md:left-1/2 md:-translate-x-[1px]" />
+            <motion.div
+              className="absolute left-[18px] top-0 w-[2px] md:left-1/2 md:-translate-x-[1px]"
+              initial={{ height: 0, opacity: 0.9 }}
+              animate={inView ? { height: "100%", opacity: 1 } : { height: 0, opacity: 0.9 }}
+              transition={{ duration: 2.1, ease: "easeOut", delay: 0.25 }}
+              style={{
+                background:
+                  "linear-gradient(to bottom, rgba(27,79,214,0.0), rgba(27,79,214,0.65), rgba(11,42,111,0.55), rgba(27,79,214,0.0))",
+              }}
+            />
+
+            <div className="space-y-7 sm:space-y-10 md:space-y-12">
+              {STEPS.map((s, idx) => {
+                const even = idx % 2 === 0;
+                return (
+                  <div
+                    key={s.number}
+                    className={cx(
+                      "relative",
+                      "md:flex md:items-center",
+                      even ? "md:flex-row" : "md:flex-row-reverse"
+                    )}
+                  >
+                    {/* Marker (number + ring) */}
+                    <div className="absolute left-[18px] top-3 -translate-x-1/2 md:left-1/2 md:-translate-x-1/2">
+                      <motion.div
+                        initial={{ scale: 0.72, opacity: 0, rotate: -12 }}
+                        animate={inView ? { scale: 1, opacity: 1, rotate: 0 } : {}}
+                        transition={{ type: "spring", stiffness: 200, damping: 18, delay: 0.18 + idx * 0.12 }}
+                        className="relative"
+                      >
+                        <div
+                          className={cx(
+                            "grid h-11 w-11 place-items-center rounded-full text-white font-extrabold text-[12px] shadow-[0_18px_40px_rgba(27,79,214,0.18)]",
+                            s.accent === "a"
+                              ? "bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))]"
+                              : "bg-[linear-gradient(135deg,var(--wb-accent-2),var(--wb-accent))]"
+                          )}
+                        >
+                          {s.number}
+                        </div>
                         <motion.div
-                            className="absolute inset-x-0 top-0 bg-gradient-to-b from-[color:var(--wb-accent)] to-[color:var(--wb-accent-2)]"
-                            initial={{ height: "0%" }}
-                            animate={{ height: isInView ? "100%" : "0%" }}
-                            transition={{ duration: 2.5, delay: 0.4, ease: "easeOut" }}
+                          initial={{ scale: 1, opacity: 0.45 }}
+                          animate={inView ? { scale: 2.1, opacity: 0 } : {}}
+                          transition={{ duration: 1.6, ease: "easeOut", delay: 0.36 + idx * 0.12 }}
+                          className={cx(
+                            "absolute inset-0 rounded-full",
+                            s.accent === "a"
+                              ? "bg-[color:var(--wb-accent)]/22"
+                              : "bg-[color:var(--wb-accent-2)]/22"
+                          )}
                         />
+                      </motion.div>
                     </div>
 
-                    {/* Steps */}
-                    <div className="relative space-y-8 sm:space-y-12">
-                        {STEPS.map((step, index) => {
-                            const isEven = index % 2 === 0;
-                            return (
-                                <div
-                                    key={step.number}
-                                    className={`relative flex items-center ${isEven ? "flex-row" : "flex-row-reverse"}`}
-                                >
-                                    {/* Content card */}
-                                    <motion.div
-                                        initial={{
-                                            opacity: 0,
-                                            x: isEven ? -50 : 50,
-                                            scale: 0.9
-                                        }}
-                                        animate={isInView ? {
-                                            opacity: 1,
-                                            x: 0,
-                                            scale: 1
-                                        } : {}}
-                                        transition={{
-                                            duration: 0.6,
-                                            delay: 0.3 + index * 0.2,
-                                            ease: "easeOut"
-                                        }}
-                                        className={`w-[calc(50%-24px)] sm:w-[calc(50%-32px)] ${isEven ? "pr-2 sm:pr-4 text-right" : "pl-2 sm:pl-4 text-left"}`}
-                                    >
-                                        <div className="bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 border border-[color:var(--wb-border)] shadow-[0_8px_30px_rgba(11,18,32,0.05)] hover:shadow-[0_12px_40px_rgba(11,18,32,0.08)] transition-all duration-300 hover:-translate-y-0.5">
-                                            <div className={`flex items-center gap-2 sm:gap-3 mb-2 ${isEven ? "justify-end flex-row-reverse" : "justify-start"}`}>
-                                                {/* Icon */}
-                                                <motion.div
-                                                    initial={{ opacity: 0, scale: 0 }}
-                                                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                                                    transition={{
-                                                        type: "spring",
-                                                        stiffness: 300,
-                                                        damping: 20,
-                                                        delay: 0.5 + index * 0.2
-                                                    }}
-                                                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[color:var(--wb-accent)]/8 flex items-center justify-center text-[color:var(--wb-accent)] flex-shrink-0"
-                                                >
-                                                    {step.icon}
-                                                </motion.div>
-                                                <h3 className="text-[13px] sm:text-[14px] lg:text-[15px] font-bold text-[color:var(--wb-ink)]">
-                                                    {step.title}
-                                                </h3>
-                                            </div>
-                                            <p className="text-[11px] sm:text-[12px] leading-relaxed text-black/55">
-                                                {step.description}
-                                            </p>
-                                        </div>
-                                    </motion.div>
+                    {/* Content (mobile left padded; desktop half width) */}
+                    <div
+                      className={cx(
+                        "pl-12 md:pl-0",
+                        "md:w-[calc(50%-52px)]",
+                        even ? "md:pr-10" : "md:pl-10"
+                      )}
+                    >
+                      <motion.div
+                        initial={{
+                          opacity: 0,
+                          y: 16,
+                          x: 0,
+                          filter: "blur(8px)",
+                        }}
+                        animate={
+                          inView
+                            ? { opacity: 1, y: 0, x: 0, filter: "blur(0px)" }
+                            : {}
+                        }
+                        transition={{
+                          duration: 0.75,
+                          ease: EASE,
+                          delay: 0.22 + idx * 0.14,
+                        }}
+                        className={cx(
+                          "group relative overflow-hidden rounded-[22px] border border-[color:var(--wb-border)] bg-white/70 backdrop-blur",
+                          "shadow-[0_18px_60px_rgba(11,18,32,0.10)] hover:shadow-[0_28px_90px_rgba(11,18,32,0.16)]",
+                          "transition"
+                        )}
+                      >
+                        {/* card sheen */}
+                        <div
+                          aria-hidden="true"
+                          className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition"
+                          style={{
+                            background:
+                              "radial-gradient(circle at 20% 10%, rgba(255,255,255,0.55), transparent 42%), radial-gradient(circle at 80% 30%, rgba(27,79,214,0.14), transparent 50%)",
+                          }}
+                        />
 
-                                    {/* Center circle with number */}
-                                    <motion.div
-                                        initial={{ scale: 0, rotate: -180 }}
-                                        animate={isInView ? { scale: 1, rotate: 0 } : {}}
-                                        transition={{
-                                            type: "spring",
-                                            stiffness: 200,
-                                            damping: 15,
-                                            delay: 0.4 + index * 0.2,
-                                        }}
-                                        className="absolute left-1/2 -translate-x-1/2 z-10"
-                                    >
-                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-[color:var(--wb-accent)] to-[color:var(--wb-accent-2)] flex items-center justify-center shadow-lg shadow-[color:var(--wb-accent)]/20">
-                                            <span className="text-white font-bold text-sm sm:text-base">
-                                                {step.number}
-                                            </span>
-                                        </div>
-                                        {/* Pulse ring animation */}
-                                        <motion.div
-                                            initial={{ scale: 1, opacity: 0.6 }}
-                                            animate={isInView ? { scale: 2, opacity: 0 } : {}}
-                                            transition={{
-                                                duration: 1.5,
-                                                delay: 0.6 + index * 0.2,
-                                                ease: "easeOut",
-                                            }}
-                                            className="absolute inset-0 rounded-full bg-[color:var(--wb-accent)]/30"
-                                        />
-                                    </motion.div>
+                        <div className="relative p-4 sm:p-5 lg:p-6">
+                          {/* top row */}
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <div className="text-[10px] font-extrabold tracking-[0.28em] text-black/45">
+                                {s.label}
+                              </div>
+                              <div className="wb-serif mt-2 text-[18px] sm:text-[20px] lg:text-[22px] leading-tight text-[color:var(--wb-ink)]">
+                                {s.title}
+                              </div>
+                            </div>
 
-                                    {/* Empty space for the other side */}
-                                    <div className="w-[calc(50%-24px)] sm:w-[calc(50%-32px)]" />
-                                </div>
-                            );
-                        })}
+                            <div
+                              className={cx(
+                                "grid h-11 w-11 shrink-0 place-items-center rounded-2xl border",
+                                "bg-white/55 backdrop-blur",
+                                s.accent === "a"
+                                  ? "border-[color:var(--wb-accent)]/18 text-[color:var(--wb-accent)]"
+                                  : "border-[color:var(--wb-accent-2)]/18 text-[color:var(--wb-accent-2)]"
+                              )}
+                            >
+                              <motion.div
+                                initial={{ rotate: -6, scale: 0.96 }}
+                                whileHover={{ rotate: 0, scale: 1.02 }}
+                                transition={{ duration: 0.35, ease: EASE }}
+                              >
+                                {s.icon}
+                              </motion.div>
+                            </div>
+                          </div>
+
+                          <p className="mt-3 text-[13.5px] sm:text-[14px] leading-relaxed text-black/60">
+                            {s.description}
+                          </p>
+
+                          {/* premium divider */}
+                          <div className="mt-5">
+                            <div className="h-[2px] w-10 bg-[color:var(--wb-ink)]/18 group-hover:w-20 transition-all duration-300" />
+                          </div>
+                        </div>
+
+                        {/* hover ring */}
+                        <div className="pointer-events-none absolute inset-0 rounded-[22px] ring-0 ring-[color:var(--wb-ink)]/0 group-hover:ring-2 group-hover:ring-[color:var(--wb-ink)]/10 transition" />
+                      </motion.div>
                     </div>
-                </div>
+
+                    {/* Spacer for the other side (desktop only) */}
+                    <div className="hidden md:block md:w-[calc(50%-52px)]" />
+                  </div>
+                );
+              })}
             </div>
-        </section>
-    );
+
+            {/* footer micro line */}
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, ease: EASE, delay: 0.85 }}
+              className="mt-10 text-center text-[13px] text-black/55"
+            >
+              Clear decisions. Clean execution. Confident handover.
+            </motion.p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }

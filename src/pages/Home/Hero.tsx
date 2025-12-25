@@ -1,42 +1,42 @@
+import { useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 
 type ReelItem = {
   title: string;
   meta: string;
-  // price: string;
   img: string;
   tag?: string;
 };
 
 const REEL_A: ReelItem[] = [
   {
-    title: "Skyline Penthouse",
-    meta: "SoHo, NYC • 2,980 sqft",
+    title: "Signature Modern Residence",
+    meta: "Tailored layout • Clean lines • Warm light",
     img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1400&q=80",
-    tag: "Featured",
+    tag: "Signature",
   },
   {
-    title: "Modern Villa",
-    meta: "Beverly Hills • 3,420 sqft",
+    title: "Hillside Glass Villa",
+    meta: "Open views • Calm palette • Detail-led",
     img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80",
-    tag: "Verified",
+    tag: "Bespoke",
   },
   {
-    title: "Luxury Apartment",
-    meta: "Downtown Austin • 1,860 sqft",
-    img: "https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&w=1400&q=80",
-    tag: "Hot",
-  },
-  {
-    title: "Calm Estate Home",
-    meta: "Scottsdale • 4,900 sqft",
+    title: "Courtyard Estate Home",
+    meta: "Private feel • Soft textures • Timeless",
     img: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1400&q=80",
-    tag: "New",
+    tag: "Curated",
   },
   {
-    title: "Minimal Townhome",
-    meta: "Santa Monica • 2,220 sqft",
+    title: "Urban Luxe Duplex",
+    meta: "Space-first • Strong elevation • Balanced",
+    img: "https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&w=1400&q=80",
+    tag: "Refined",
+  },
+  {
+    title: "Coastal Minimal Townhome",
+    meta: "Bright corners • Seamless flow • Modern",
     img: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1400&q=80",
     tag: "Prime",
   },
@@ -44,39 +44,34 @@ const REEL_A: ReelItem[] = [
 
 const REEL_B: ReelItem[] = [
   {
-    title: "Lakeview Duplex",
-    meta: "Lake Union, Seattle • 2,450 sqft",
-    // price: "$2.35M",
-    img: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=80",
-    tag: "Tour",
-  },
-  {
-    title: "Elegant Bungalow",
-    meta: "Palo Alto • 3,120 sqft",
-    // price: "$5.90M",
-    img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1400&q=80",
-    tag: "Verified",
-  },
-  {
-    title: "Studio Loft",
-    meta: "Brooklyn • 940 sqft",
-    // price: "$899K",
-    img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1400&q=80",
-    tag: "Deal",
-  },
-  {
-    title: "Garden Home",
-    meta: "Naples, FL • 2,780 sqft",
-    // price: "$1.95M",
+    title: "Garden + Pool Residence",
+    meta: "Indoor–outdoor living • Easy elegance",
     img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1400&q=80",
+    tag: "Featured",
+  },
+  {
+    title: "Warm Family Bungalow",
+    meta: "Comfort-first • Light-filled • Classic",
+    img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1400&q=80",
     tag: "New",
   },
   {
-    title: "Premium Land",
-    meta: "Bozeman, MT • 2.1 acres",
-    // price: "$720K",
+    title: "Lakefront Villa Build",
+    meta: "Views-first • Calm interiors • Clean finish",
+    img: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=80",
+    tag: "Bespoke",
+  },
+  {
+    title: "Designer Loft Home",
+    meta: "Compact • Quiet detail • High impact",
+    img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1400&q=80",
+    tag: "Curated",
+  },
+  {
+    title: "Plot-to-Home Concept",
+    meta: "Plan-ready • Elevation choices • Tailored",
     img: "https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=1400&q=80",
-    tag: "Land",
+    tag: "Concept",
   },
 ];
 
@@ -86,18 +81,73 @@ function cx(...classes: Array<string | false | null | undefined>) {
 
 type MarqueeStyle = CSSProperties & { ["--wb-marquee-duration"]?: string };
 
-function IconDot() {
+/** ✅ premium underline emphasis */
+function Em({ children }: { children: string }) {
   return (
-    <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-[color:var(--wb-accent-2)]/70 shadow-[0_10px_22px_rgba(27,79,214,0.22)]" />
+    <span className="relative inline-block">
+      <span className="relative z-10">{children}</span>
+      <span className="absolute left-0 right-0 bottom-[3px] h-[8px] rounded-full bg-[color:var(--wb-accent-2)]/22" />
+    </span>
   );
 }
 
-function Pill({ children }: { children: string }) {
+/** ✅ Writer effect (kept) */
+function CraftWriter() {
+  const WORDS = useMemo(
+    () => [
+      "homes around your life",
+      "designs that make sense",
+      "spaces built to last",
+      "clarity from plan to handover",
+      "details that feel intentional",
+    ],
+    []
+  );
+
+  const [index, setIndex] = useState(0);
+  const [phase, setPhase] = useState<"in" | "out">("in");
+
+  useEffect(() => {
+    const HOLD_MS = 1650;
+    const FADE_OUT_MS = 240;
+
+    const t1 = window.setTimeout(() => setPhase("out"), HOLD_MS);
+    const t2 = window.setTimeout(() => {
+      setIndex((i) => (i + 1) % WORDS.length);
+      setPhase("in");
+    }, HOLD_MS + FADE_OUT_MS);
+
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, [index, WORDS.length]);
+
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--wb-border)] bg-white/70 px-3 py-1 text-[12px] font-extrabold text-black/60 whitespace-nowrap">
-      <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--wb-accent-2)]/70" />
-      {children}
-    </span>
+    <div className="relative">
+      <div className="pointer-events-none absolute -inset-x-6 -inset-y-4 rounded-[26px] bg-[color:var(--wb-accent-2)]/12 blur-xl" />
+
+      <div className="relative inline-flex w-full items-center justify-center gap-2 rounded-[18px] border border-[color:var(--wb-border)] bg-white/80 px-4 py-3 backdrop-blur shadow-[0_18px_55px_rgba(11,18,32,0.10)]">
+        <div className="text-[14.5px] sm:text-[16.5px] font-semibold text-black/65">
+          We craft{" "}
+          <span
+            className={cx(
+              "relative inline-flex items-baseline",
+              "transition-all duration-300 will-change-transform",
+              phase === "in"
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-[2px]"
+            )}
+          >
+            <span className="font-extrabold text-[color:var(--wb-ink)]">
+              <Em>{WORDS[index]}</Em>
+            </span>
+            <span className="ml-1.5 text-black/55">for you</span>
+          </span>
+          <span className="ml-2 inline-block h-[16px] w-[2px] translate-y-[2px] bg-[color:var(--wb-accent-2)]/70 animate-pulse rounded-full" />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -108,40 +158,35 @@ function ReelCard({ item }: { item: ReelItem }) {
         "group relative shrink-0 overflow-hidden rounded-[22px]",
         "border border-[color:var(--wb-border)] bg-white/70 backdrop-blur",
         "shadow-[0_18px_44px_rgba(11,18,32,0.10)]",
-        "h-[148px] w-[210px] sm:h-[175px] sm:w-[250px] lg:h-[190px] lg:w-[290px]"
+        "h-[140px] w-[200px] sm:h-[170px] sm:w-[250px] lg:h-[190px] lg:w-[290px]"
       )}
     >
       <div className="absolute inset-0">
         <div
           className="h-full w-full scale-[1.02] transition-transform duration-500 group-hover:scale-[1.08]"
           style={{
-            backgroundImage: `linear-gradient(135deg, rgba(11,18,32,0.10), rgba(11,18,32,0.34)), url(${item.img})`,
+            backgroundImage: `linear-gradient(135deg, rgba(11,18,32,0.10), rgba(11,18,32,0.36)), url(${item.img})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         />
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(11,18,32,0.62),transparent_62%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(11,18,32,0.74),transparent_62%)]" />
       </div>
 
       {item.tag ? (
-        <div className="absolute left-3 top-3 rounded-full border border-white/20 bg-white/15 px-2.5 py-1 text-[11px] font-extrabold tracking-[0.08em] text-white/90 backdrop-blur">
+        <div className="absolute left-3 top-3 rounded-full border border-white/20 bg-white/15 px-2.5 py-1 text-[11px] font-extrabold tracking-[0.10em] text-white/90 backdrop-blur">
           {item.tag}
         </div>
       ) : null}
 
       <div className="absolute inset-x-0 bottom-0 p-4">
-        <div className="flex items-end justify-between gap-3">
-          <div className="min-w-0">
-            <div className="wb-serif truncate text-[15px] sm:text-[16px] lg:text-[18px] leading-tight text-white">
-              {item.title}
-            </div>
-            <div className="mt-1 truncate text-[12px] font-semibold text-white/75">
-              {item.meta}
-            </div>
+        <div className="min-w-0">
+          <div className="wb-serif truncate text-[15px] sm:text-[16px] lg:text-[18px] leading-tight text-white">
+            {item.title}
           </div>
-          {/* <div className="shrink-0 rounded-full border border-white/20 bg-white/15 px-3 py-2 text-[12px] font-extrabold text-white backdrop-blur whitespace-nowrap">
-            {item.price}
-          </div> */}
+          <div className="mt-1 truncate text-[12px] font-semibold text-white/75">
+            {item.meta}
+          </div>
         </div>
       </div>
     </div>
@@ -208,161 +253,104 @@ export default function Hero() {
 
       <div className="h-px w-full bg-[linear-gradient(to_right,transparent,rgba(27,79,214,0.18),transparent)]" />
 
-      {/* ✅ IMPORTANT: remove extra padding duplication */}
       <div className="wb-container">
-        <div className="grid items-center gap-8 py-8 sm:py-10 lg:grid-cols-2 lg:gap-12 lg:py-14">
-          {/* RIGHT (shown first on mobile) */}
+        <div className="grid items-center gap-7 py-7 sm:py-10 lg:grid-cols-2 lg:gap-12 lg:py-14">
+          {/* RIGHT (mobile first) */}
           <div className="relative min-w-0 order-1 lg:order-2">
-            <div className="relative rounded-[28px] border border-[color:var(--wb-border)] bg-white/55 p-4 backdrop-blur shadow-[0_26px_70px_rgba(11,18,32,0.12)]">
-              <div className="flex items-end justify-between gap-3">
+            <div className="relative rounded-[26px] border border-[color:var(--wb-border)] bg-white/55 p-4 backdrop-blur shadow-[0_26px_70px_rgba(11,18,32,0.12)]">
+              <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  {/* <div className="text-[12px] font-extrabold tracking-[0.18em] text-black/45">
-                    IN DEMAND
-                  </div> */}
+                  <div className="text-[11px] font-extrabold tracking-[0.22em] text-black/45">
+                    SIGNATURE BUILDS
+                  </div>
                   <div className="wb-serif mt-1 text-[20px] text-[color:var(--wb-ink)] break-words">
-                    Featured Homes
+                    Crafted by WestBrook
                   </div>
                 </div>
 
                 <Link
-                  to="/explorehomes"
+                  to="/projects"
                   className="inline-flex h-9 shrink-0 items-center rounded-full border border-[color:var(--wb-border)]
                              bg-white/70 px-3 text-[12px] font-extrabold text-[color:var(--wb-accent)]
                              hover:bg-white transition whitespace-nowrap"
                 >
-                  View all →
+                  View →
                 </Link>
               </div>
 
-              <div className="mt-4 space-y-4">
+              {/* marquee */}
+              <div className="mt-4 space-y-3 sm:space-y-4">
                 <ReelRow items={REEL_A} direction="left" seconds={26} />
                 <ReelRow items={REEL_B} direction="right" seconds={30} />
               </div>
 
-              <div className="mt-4 text-[12px] font-semibold text-black/50">
-                Updated regularly.
+              <div className="mt-3 text-[12px] font-semibold text-black/50 break-words">
+                From first discussion to final handover — we keep it clear,
+                structured, and on-track.
               </div>
             </div>
           </div>
 
-          {/* LEFT (shown second on mobile) */}
+          {/* LEFT */}
           <div className="min-w-0 order-2 lg:order-1">
             <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--wb-border)] bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.20em] text-black/55 backdrop-blur">
               <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--wb-accent-2)]/70" />
               WESTBROOK HOMES
             </div>
 
-            {/* ✅ No clipping: safe wrapping + max width for nice breaks */}
-            <h1 className="wb-serif mt-4 text-[30px] leading-[1.14] tracking-tight text-[color:var(--wb-ink)] sm:text-[44px] lg:text-[54px] max-w-[26ch] sm:max-w-none break-words">
-              Find a home you’ll love coming back to.
+            <h1 className="wb-serif mt-4 text-[30px] leading-[1.12] tracking-tight text-[color:var(--wb-ink)] sm:text-[44px] lg:text-[54px] max-w-[28ch] break-words">
+              Homes that <Em>feel right</Em> the moment you <Em>step in</Em>.
             </h1>
 
-            <p className="mt-3 max-w-[56ch] text-[14px] leading-relaxed text-black/60 sm:text-[16px] break-words">
-              Handpicked homes, private access, and guidance you can trust.
+            <p className="mt-3 max-w-[54ch] text-[14px] leading-relaxed text-black/60 sm:text-[16px] break-words">
+              We work with you to finalize the design you actually want — then we
+              build it with discipline, finish, and a clean handover.
             </p>
 
-            {/* CTAs */}
             <div className="mt-5 flex flex-wrap items-center gap-2">
               <Link
-                to="/explorehomes"
+                to="/contact"
                 className="inline-flex h-10 items-center justify-center rounded-full px-4 text-[13px] font-extrabold tracking-[0.02em] text-white
                            bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))]
                            shadow-[0_16px_34px_rgba(27,79,214,0.18)]
                            hover:brightness-110 hover:-translate-y-[1px] transition whitespace-nowrap"
               >
-                Explore Listings
+                Start a Conversation
               </Link>
 
               <Link
-                to="/contact"
+                to="/projects"
                 className="inline-flex h-10 items-center justify-center rounded-full px-4 text-[13px] font-extrabold tracking-[0.02em]
                            border border-[color:var(--wb-border)] bg-white/70 text-black/70
                            hover:bg-white hover:text-[color:var(--wb-ink)]
                            hover:-translate-y-[1px] transition whitespace-nowrap"
               >
-                Get a Callback
+                View Our Work
               </Link>
             </div>
 
-            {/* Status strip */}
-            <div className="mt-4 rounded-2xl border border-[color:var(--wb-border)] bg-white/55 px-3 py-2 shadow-[0_12px_28px_rgba(11,18,32,0.06)] backdrop-blur">
-              <div className="flex flex-wrap items-center gap-2 text-[12px] font-semibold text-black/55">
-                <Pill>Private access</Pill>
-                <Pill>No-pressure guidance</Pill>
-                <Pill>Clear pricing</Pill>
+            {/* HOW WESTBROOK WORKS (icon removed) */}
+            <div className="mt-6 max-w-xl rounded-[22px] border border-[color:var(--wb-border)] bg-white/60 p-4 backdrop-blur shadow-[0_18px_50px_rgba(11,18,32,0.10)]">
+              <div className="min-w-0">
+                <div className="text-[12px] font-extrabold tracking-[0.18em] text-black/45">
+                  HOW WESTBROOK WORKS
+                </div>
+
+                <div className="wb-serif mt-1 text-[15.5px] sm:text-[16.5px] text-[color:var(--wb-ink)] break-words">
+                  We listen first. Then we design. Then we build.
+                </div>
+
+                <p className="mt-2 text-[13.5px] leading-relaxed text-black/60 break-words">
+                  We start with your requirements, refine layouts and elevations
+                  with you, lock budgets + timelines, and execute with clarity
+                  until handover.
+                </p>
               </div>
             </div>
 
-            {/* Premium panel */}
-            <div className="mt-6 max-w-xl overflow-hidden rounded-[26px] border border-[color:var(--wb-border)] bg-white/55 backdrop-blur shadow-[0_20px_60px_rgba(11,18,32,0.12)]">
-              <div className="relative px-4 py-4 sm:px-5 sm:py-5">
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(27,79,214,0.14), rgba(11,42,111,0.06))",
-                  }}
-                />
-                <div className="relative">
-                  <div className="text-[11px] font-extrabold tracking-[0.22em] text-black/45">
-                    CONCIERGE ADVANTAGE
-                  </div>
-                  <div className="wb-serif mt-1 text-[16px] leading-snug text-[color:var(--wb-ink)] sm:text-[18px] break-words">
-                    Calm, clear guidance — from browse to keys.
-                  </div>
-                  <p className="mt-2 text-[12.5px] font-semibold leading-relaxed text-black/55 sm:text-[13px] break-words">
-                    Early access, smart showings, clean pricing, and steady support
-                    through closing.
-                  </p>
-                </div>
-              </div>
-
-              <div className="px-4 py-4 sm:px-5">
-                <div className="grid gap-2 sm:gap-3 grid-cols-1 sm:grid-cols-2">
-                  {[
-                    {
-                      t: "Early access",
-                      d: "See standout homes before they get crowded.",
-                    },
-                    {
-                      t: "Private showings",
-                      d: "Viewings arranged around your schedule.",
-                    },
-                    {
-                      t: "Pricing clarity",
-                      d: "Comps and value explained plainly.",
-                    },
-                    {
-                      t: "Closing support",
-                      d: "Offers, paperwork, timelines handled cleanly.",
-                    },
-                  ].map((x) => (
-                    <div
-                      key={x.t}
-                      className="rounded-2xl bg-white/70 p-3 shadow-[0_10px_24px_rgba(11,18,32,0.06)]"
-                    >
-                      <div className="flex items-start gap-3">
-                        <IconDot />
-                        <div className="min-w-0">
-                          <div className="text-[13px] font-extrabold text-[color:var(--wb-ink)] break-words">
-                            {x.t}
-                          </div>
-                          <div className="mt-0.5 text-[12px] font-semibold leading-relaxed text-black/55 break-words">
-                            {x.d}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <Pill>Verified listings</Pill>
-                  <Pill>Clear timelines</Pill>
-                  <Pill>No surprises</Pill>
-                </div>
-              </div>
+            {/* WRITER */}
+            <div className="mt-4 max-w-xl">
+              <CraftWriter />
             </div>
           </div>
         </div>
