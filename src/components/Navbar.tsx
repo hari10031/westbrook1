@@ -1,20 +1,16 @@
 // src/components/Navbar.tsx
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 
-type NavItem = { label: string; to: string };
+type NavItem = { label: string; to: string; isSection?: boolean };
 
 const NAV: NavItem[] = [
   { label: "Home", to: "/" },
-  // { label: "Services", to: "/services" },
+  { label: "Portfolio", to: "/#commercial", isSection: true },
+  { label: "Our Process", to: "/#process", isSection: true },
   { label: "Explore Homes", to: "/explore-homes" },
-
-  // ✅ ADDED in the middle section
   { label: "Partnerships", to: "/partnerships" },
-
-  // { label: "Land", to: "/land" },
   { label: "About", to: "/about" },
-  // { label: "Contact", to: "/contact" },
 ];
 
 function cx(...classes: Array<string | false | null | undefined>) {
@@ -35,28 +31,66 @@ function useScrolled(threshold = 10) {
 export default function Navbar() {
   const scrolled = useScrolled(10);
   const location = useLocation();
+  const navigate = useNavigate();
   const navItems = useMemo(() => NAV, []);
   const [open, setOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
 
   const navRef = useRef<HTMLDivElement | null>(null);
   const pillRef = useRef<HTMLSpanElement | null>(null);
 
-  const moveIndicator = () => {
+  const scrollToSection = useCallback((sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
+
+  const handleNavClick = useCallback((item: NavItem, e: React.MouseEvent) => {
+    if (item.isSection) {
+      e.preventDefault();
+      const sectionId = item.to.replace("/#", "");
+      setActiveSection(item.to); // Track the clicked section
+
+      if (location.pathname === "/") {
+        // Already on home page, just scroll
+        scrollToSection(sectionId);
+      } else {
+        // Navigate to home first, then scroll
+        navigate("/");
+        setTimeout(() => scrollToSection(sectionId), 100);
+      }
+      setOpen(false);
+    } else {
+      // Clear active section when clicking a regular nav item
+      setActiveSection(null);
+    }
+  }, [location.pathname, navigate, scrollToSection]);
+
+  const moveIndicator = useCallback((target?: HTMLElement | null) => {
     const root = navRef.current;
     const pill = pillRef.current;
     if (!root || !pill) return;
 
-    const active = root.querySelector<HTMLAnchorElement>(
-      'a[aria-current="page"]'
-    );
+    // Use provided target, or find by activeSection, or fall back to active link
+    let element: HTMLElement | null = target;
 
-    if (!active) {
+    if (!element && activeSection) {
+      // Find the section link by data attribute
+      element = root.querySelector<HTMLAnchorElement>(`a[data-nav-to="${activeSection}"]`);
+    }
+
+    if (!element) {
+      element = root.querySelector<HTMLAnchorElement>('a[aria-current="page"]');
+    }
+
+    if (!element) {
       pill.style.opacity = "0";
       return;
     }
 
     const r = root.getBoundingClientRect();
-    const a = active.getBoundingClientRect();
+    const a = element.getBoundingClientRect();
     // Subtract the container's padding (4px = 1 in tailwind) from left position
     const left = a.left - r.left - 4;
     const width = a.width;
@@ -64,11 +98,15 @@ export default function Navbar() {
     pill.style.opacity = "1";
     pill.style.transform = `translateX(${left}px)`;
     pill.style.width = `${width}px`;
-  };
+  }, [activeSection]);
 
   // Close drawer on route change (simple + reliable)
   useEffect(() => {
     setOpen(false);
+    // Clear active section when navigating away from home
+    if (location.pathname !== "/") {
+      setActiveSection(null);
+    }
   }, [location.pathname]);
 
   // ESC closes drawer
@@ -88,14 +126,13 @@ export default function Navbar() {
     return () => root.classList.remove("wb-lock");
   }, [open]);
 
-  // move active pill on route change + resize + first paint
+  // move active pill on route change + resize + first paint + section change
   useEffect(() => {
     moveIndicator();
     const onResize = () => moveIndicator();
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
+  }, [location.pathname, activeSection, moveIndicator]);
 
   return (
     <header className="sticky top-0 z-40">
@@ -175,26 +212,37 @@ export default function Navbar() {
                   style={{ width: 0, opacity: 0 }}
                 />
 
-                {navItems.map((item) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    onMouseEnter={moveIndicator}
-                    className={({ isActive }) =>
-                      cx(
-                        "relative z-10 rounded-full px-4 py-2",
-                        "text-[13px] font-extrabold tracking-[0.02em]",
-                        "transition-all duration-200",
-                        isActive
-                          ? "text-[color:var(--wb-ink)]"
-                          : "text-black/60 hover:text-[color:var(--wb-ink)]",
-                        "hover:-translate-y-[1px]"
-                      )
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                ))}
+                {navItems.map((item) => {
+                  const isSectionActive = item.isSection && activeSection === item.to;
+                  const isHomeActive = item.to === "/" && !item.isSection && location.pathname === "/" && !activeSection;
+                  const isPageActive = !item.isSection && item.to !== "/" && location.pathname === item.to;
+                  const isCurrentlyActive = isSectionActive || isHomeActive || isPageActive;
+
+                  return (
+                    <NavLink
+                      key={item.to}
+                      to={item.isSection ? "/" : item.to}
+                      data-nav-to={item.to}
+                      onClick={(e) => handleNavClick(item, e)}
+                      onMouseEnter={(e) => moveIndicator(e.currentTarget)}
+                      onMouseLeave={() => moveIndicator()}
+                      className={() =>
+                        cx(
+                          "relative z-10 rounded-full px-4 py-2",
+                          "text-[13px] font-extrabold tracking-[0.02em]",
+                          "transition-all duration-200",
+                          isCurrentlyActive
+                            ? "text-[color:var(--wb-ink)]"
+                            : "text-black/60 hover:text-[color:var(--wb-ink)]",
+                          "hover:-translate-y-[1px]"
+                        )
+                      }
+                      aria-current={isCurrentlyActive ? "page" : undefined}
+                    >
+                      {item.label}
+                    </NavLink>
+                  );
+                })}
               </div>
             </div>
 
@@ -231,24 +279,39 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Mobile hamburger */}
-            <button
-              type="button"
-              className={cx(
-                "lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-full",
-                "border border-[color:var(--wb-border)] bg-white/55 backdrop-blur hover:bg-white/70",
-                "transition"
-              )}
-              aria-label={open ? "Close menu" : "Open menu"}
-              aria-expanded={open}
-              onClick={() => setOpen((v) => !v)}
-            >
-              <span className="relative block h-4 w-5">
-                <span className="absolute left-0 top-0 h-0.5 w-full rounded bg-[color:var(--wb-ink)]/70" />
-                <span className="absolute left-0 top-1/2 h-0.5 w-full -translate-y-1/2 rounded bg-[color:var(--wb-ink)]/45" />
-                <span className="absolute left-0 bottom-0 h-0.5 w-full rounded bg-[color:var(--wb-ink)]/70" />
-              </span>
-            </button>
+            {/* Mobile Contact + hamburger */}
+            <div className="lg:hidden flex items-center gap-2">
+              <Link
+                to="/contact"
+                className={cx(
+                  "rounded-full px-3 py-1.5",
+                  "text-[11px] font-extrabold tracking-[0.02em]",
+                  "bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] text-white",
+                  "shadow-[0_8px_16px_rgba(27,79,214,0.18)]",
+                  "hover:brightness-110 transition-all duration-200"
+                )}
+              >
+                Contact Us
+              </Link>
+
+              <button
+                type="button"
+                className={cx(
+                  "inline-flex h-10 w-10 items-center justify-center rounded-full",
+                  "border border-[color:var(--wb-border)] bg-white/55 backdrop-blur hover:bg-white/70",
+                  "transition"
+                )}
+                aria-label={open ? "Close menu" : "Open menu"}
+                aria-expanded={open}
+                onClick={() => setOpen((v) => !v)}
+              >
+                <span className="relative block h-4 w-5">
+                  <span className="absolute left-0 top-0 h-0.5 w-full rounded bg-[color:var(--wb-ink)]/70" />
+                  <span className="absolute left-0 top-1/2 h-0.5 w-full -translate-y-1/2 rounded bg-[color:var(--wb-ink)]/45" />
+                  <span className="absolute left-0 bottom-0 h-0.5 w-full rounded bg-[color:var(--wb-ink)]/70" />
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -344,52 +407,58 @@ export default function Navbar() {
             </div>
 
             <div className="mt-5 space-y-2">
-              {navItems.map((item, idx) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  onClick={() => setOpen(false)}
-                  className={({ isActive }) =>
-                    cx(
-                      "group flex items-center justify-between rounded-2xl px-4 py-3",
-                      "border border-transparent transition-all duration-200",
-                      isActive
-                        ? "bg-white/80 border-[color:var(--wb-border)] shadow-[0_12px_28px_rgba(11,18,32,0.08)]"
-                        : "hover:bg-white/70 hover:border-[color:var(--wb-border)]"
-                    )
-                  }
-                  style={{
-                    transitionDelay: open ? `${idx * 35}ms` : "0ms",
-                    transform: open ? "translateY(0px)" : "translateY(6px)",
-                    opacity: open ? 1 : 0,
-                  }}
-                >
-                  {({ isActive }) => (
-                    <>
-                      <span
-                        className={cx(
-                          "text-[15px] font-extrabold tracking-[0.01em]",
-                          isActive
-                            ? "text-[color:var(--wb-ink)]"
-                            : "text-black/70 group-hover:text-black"
-                        )}
-                      >
-                        {item.label}
-                      </span>
-                      <span
-                        className={cx(
-                          "text-sm",
-                          isActive
-                            ? "text-[color:var(--wb-accent)]"
-                            : "text-black/30 group-hover:text-black/45"
-                        )}
-                      >
-                        →
-                      </span>
-                    </>
-                  )}
-                </NavLink>
-              ))}
+              {navItems.map((item, idx) => {
+                const isSectionActive = item.isSection && activeSection === item.to;
+                const isHomeActive = item.to === "/" && !item.isSection && location.pathname === "/" && !activeSection;
+                const isPageActive = !item.isSection && item.to !== "/" && location.pathname === item.to;
+                const isCurrentlyActive = isSectionActive || isHomeActive || isPageActive;
+
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.isSection ? "/" : item.to}
+                    onClick={(e) => {
+                      handleNavClick(item, e);
+                      if (!item.isSection) setOpen(false);
+                    }}
+                    className={() =>
+                      cx(
+                        "group flex items-center justify-between rounded-2xl px-4 py-3",
+                        "border border-transparent transition-all duration-200",
+                        isCurrentlyActive
+                          ? "bg-white/80 border-[color:var(--wb-border)] shadow-[0_12px_28px_rgba(11,18,32,0.08)]"
+                          : "hover:bg-white/70 hover:border-[color:var(--wb-border)]"
+                      )
+                    }
+                    style={{
+                      transitionDelay: open ? `${idx * 35}ms` : "0ms",
+                      transform: open ? "translateY(0px)" : "translateY(6px)",
+                      opacity: open ? 1 : 0,
+                    }}
+                  >
+                    <span
+                      className={cx(
+                        "text-[15px] font-extrabold tracking-[0.01em]",
+                        isCurrentlyActive
+                          ? "text-[color:var(--wb-ink)]"
+                          : "text-black/70 group-hover:text-black"
+                      )}
+                    >
+                      {item.label}
+                    </span>
+                    <span
+                      className={cx(
+                        "text-sm",
+                        isCurrentlyActive
+                          ? "text-[color:var(--wb-accent)]"
+                          : "text-black/30 group-hover:text-black/45"
+                      )}
+                    >
+                      →
+                    </span>
+                  </NavLink>
+                );
+              })}
             </div>
           </div>
         </aside>

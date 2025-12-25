@@ -1,10 +1,35 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useCallback } from "react";
 
 function cx(...c: Array<string | false | null | undefined>) {
   return c.filter(Boolean).join(" ");
 }
 
 export default function Footer() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const scrollToSection = useCallback((sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
+
+  const handleSectionClick = useCallback((to: string, e: React.MouseEvent) => {
+    if (to.startsWith("/#")) {
+      e.preventDefault();
+      const sectionId = to.replace("/#", "");
+
+      if (location.pathname === "/") {
+        scrollToSection(sectionId);
+      } else {
+        navigate("/");
+        setTimeout(() => scrollToSection(sectionId), 100);
+      }
+    }
+  }, [location.pathname, navigate, scrollToSection]);
+
   return (
     <footer
       className={cx(
@@ -65,21 +90,22 @@ export default function Footer() {
             <FooterColumn
               title="Explore"
               links={[
-                { label: "Homes", to: "/explorehomes" },
-                { label: "Residential Projects", to: "/projects" },
-                { label: "Land & Plots", to: "/land" },
-                { label: "Commercial Spaces", to: "/services" },
+                { label: "Explore Homes", to: "/explore-homes" },
+                { label: "Portfolio", to: "/#commercial", isSection: true },
+                { label: "Our Process", to: "/#process", isSection: true },
               ]}
+              onSectionClick={handleSectionClick}
             />
 
             <FooterColumn
               title="WestBrook"
               links={[
                 { label: "About", to: "/about" },
-                { label: "Why WestBrook", to: "/#why-us" },
-                { label: "Client Feedback", to: "/#testimonials" },
-                { label: "Partners", to: "/#partners" },
+                { label: "Partnerships", to: "/partnerships" },
+                { label: "Why WestBrook", to: "/#why-us", isSection: true },
+                { label: "Testimonials", to: "/#testimonials", isSection: true },
               ]}
+              onSectionClick={handleSectionClick}
             />
 
             <FooterColumn
@@ -87,8 +113,8 @@ export default function Footer() {
               links={[
                 { label: "Get in touch", to: "/contact" },
                 { label: "Request a callback", to: "/contact" },
-                { label: "Email us", to: "/contact" },
               ]}
+              onSectionClick={handleSectionClick}
             />
           </div>
         </div>
@@ -155,12 +181,16 @@ export default function Footer() {
 
 /* ================= SUB COMPONENT ================= */
 
+type FooterLink = { label: string; to: string; isSection?: boolean };
+
 function FooterColumn({
   title,
   links,
+  onSectionClick,
 }: {
   title: string;
-  links: { label: string; to: string }[];
+  links: FooterLink[];
+  onSectionClick: (to: string, e: React.MouseEvent) => void;
 }) {
   return (
     <div>
@@ -171,8 +201,9 @@ function FooterColumn({
         {links.map((l) => (
           <li key={l.label}>
             <Link
-              to={l.to}
-              className="text-[14px] text-black/60 hover:text-[color:var(--wb-ink)] transition"
+              to={l.isSection ? "/" : l.to}
+              onClick={(e) => l.isSection && onSectionClick(l.to, e)}
+              className="text-[14px] text-black/60 hover:text-(--wb-ink) transition"
             >
               {l.label}
             </Link>
