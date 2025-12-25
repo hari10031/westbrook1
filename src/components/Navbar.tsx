@@ -73,7 +73,7 @@ export default function Navbar() {
     if (!root || !pill) return;
 
     // Use provided target, or find by activeSection, or fall back to active link
-    let element: HTMLElement | null = target;
+    let element: HTMLElement | null = target ?? null;
 
     if (!element && activeSection) {
       // Find the section link by data attribute
