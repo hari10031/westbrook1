@@ -1,5 +1,5 @@
 // src/components/Navbar.tsx
-import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 
 type NavItem = { label: string; to: string; isSection?: boolean };
@@ -41,72 +41,84 @@ export default function Navbar() {
 
   const scrollToSection = useCallback((sectionId: string) => {
     const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    if (element) element.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
-  const handleNavClick = useCallback((item: NavItem, e: React.MouseEvent) => {
-    if (item.isSection) {
-      e.preventDefault();
-      const sectionId = item.to.replace("/#", "");
-      setActiveSection(item.to); // Track the clicked section
-
+  const goToHomeAndScroll = useCallback(
+    (sectionId: string) => {
       if (location.pathname === "/") {
-        // Already on home page, just scroll
         scrollToSection(sectionId);
-      } else {
-        // Navigate to home first, then scroll
-        navigate("/");
-        setTimeout(() => scrollToSection(sectionId), 100);
+        return;
       }
+      navigate("/");
+      window.setTimeout(() => scrollToSection(sectionId), 120);
+    },
+    [location.pathname, navigate, scrollToSection]
+  );
+
+  const handleNavClick = useCallback(
+    (item: NavItem, e: React.MouseEvent) => {
+      if (item.isSection) {
+        e.preventDefault();
+        const sectionId = item.to.replace("/#", "");
+        setActiveSection(item.to);
+        goToHomeAndScroll(sectionId);
+        setOpen(false);
+        return;
+      }
+
+      // regular page nav
+      setActiveSection(null);
       setOpen(false);
-    } else {
-      // Clear active section when clicking a regular nav item
-      setActiveSection(null);
-    }
-  }, [location.pathname, navigate, scrollToSection]);
+    },
+    [goToHomeAndScroll]
+  );
 
-  const moveIndicator = useCallback((target?: HTMLElement | null) => {
-    const root = navRef.current;
-    const pill = pillRef.current;
-    if (!root || !pill) return;
+  const moveIndicator = useCallback(
+    (target?: HTMLElement | null) => {
+      const root = navRef.current;
+      const pill = pillRef.current;
+      if (!root || !pill) return;
 
-    // Use provided target, or find by activeSection, or fall back to active link
-    let element: HTMLElement | null = target ?? null;
+      let element: HTMLElement | null = target ?? null;
 
-    if (!element && activeSection) {
-      // Find the section link by data attribute
-      element = root.querySelector<HTMLAnchorElement>(`a[data-nav-to="${activeSection}"]`);
-    }
+      if (!element && activeSection) {
+        element = root.querySelector<HTMLAnchorElement>(
+          `a[data-nav-to="${activeSection}"]`
+        );
+      }
 
-    if (!element) {
-      element = root.querySelector<HTMLAnchorElement>('a[aria-current="page"]');
-    }
+      if (!element) {
+        element = root.querySelector<HTMLAnchorElement>(
+          'a[aria-current="page"]'
+        );
+      }
 
-    if (!element) {
-      pill.style.opacity = "0";
-      return;
-    }
+      if (!element) {
+        pill.style.opacity = "0";
+        return;
+      }
 
-    const r = root.getBoundingClientRect();
-    const a = element.getBoundingClientRect();
-    // Subtract the container's padding (4px = 1 in tailwind) from left position
-    const left = a.left - r.left - 4;
-    const width = a.width;
+      const r = root.getBoundingClientRect();
+      const a = element.getBoundingClientRect();
+      const left = a.left - r.left - 4; // padding compensation
+      const width = a.width;
 
-    pill.style.opacity = "1";
-    pill.style.transform = `translateX(${left}px)`;
-    pill.style.width = `${width}px`;
-  }, [activeSection]);
+      pill.style.opacity = "1";
+      pill.style.transform = `translateX(${left}px)`;
+      pill.style.width = `${width}px`;
+    },
+    [activeSection]
+  );
 
-  // Close drawer on route change (simple + reliable)
+  // ✅ Close drawer + clear activeSection on route change
+  // (Fixes eslint react-hooks/set-state-in-effect by moving setState into a callback)
   useEffect(() => {
-    setOpen(false);
-    // Clear active section when navigating away from home
-    if (location.pathname !== "/") {
-      setActiveSection(null);
-    }
+    const raf = requestAnimationFrame(() => {
+      setOpen(false);
+      if (location.pathname !== "/") setActiveSection(null);
+    });
+    return () => cancelAnimationFrame(raf);
   }, [location.pathname]);
 
   // ESC closes drawer
@@ -136,25 +148,23 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-40">
-      {/* subtle top hairline */}
       <div className="h-px w-full bg-[linear-gradient(to_right,transparent,rgba(27,79,214,0.22),transparent)]" />
 
-      {/* Glass shell */}
       <div
         className={cx(
           "transition-all duration-300",
           "supports-[backdrop-filter]:backdrop-blur-xl",
           scrolled
             ? [
-              "bg-white/70",
-              "border-b border-[color:var(--wb-border)]",
-              "shadow-[0_14px_38px_rgba(11,18,32,0.10)]",
-            ].join(" ")
+                "bg-white/70",
+                "border-b border-[color:var(--wb-border)]",
+                "shadow-[0_14px_38px_rgba(11,18,32,0.10)]",
+              ].join(" ")
             : [
-              "bg-white/35",
-              "border-b border-transparent",
-              "shadow-[0_10px_28px_rgba(11,18,32,0.06)]",
-            ].join(" ")
+                "bg-white/35",
+                "border-b border-transparent",
+                "shadow-[0_10px_28px_rgba(11,18,32,0.06)]",
+              ].join(" ")
         )}
       >
         <div className="wb-container">
@@ -198,7 +208,6 @@ export default function Navbar() {
                   "shadow-[0_14px_32px_rgba(11,18,32,0.08)]"
                 )}
               >
-                {/* Active pill */}
                 <span
                   ref={pillRef}
                   aria-hidden="true"
@@ -214,8 +223,14 @@ export default function Navbar() {
 
                 {navItems.map((item) => {
                   const isSectionActive = item.isSection && activeSection === item.to;
-                  const isHomeActive = item.to === "/" && !item.isSection && location.pathname === "/" && !activeSection;
-                  const isPageActive = !item.isSection && item.to !== "/" && location.pathname === item.to;
+                  const isHomeActive =
+                    item.to === "/" &&
+                    !item.isSection &&
+                    location.pathname === "/" &&
+                    !activeSection;
+                  const isPageActive =
+                    !item.isSection && item.to !== "/" && location.pathname === item.to;
+
                   const isCurrentlyActive = isSectionActive || isHomeActive || isPageActive;
 
                   return (
@@ -248,7 +263,6 @@ export default function Navbar() {
 
             {/* Actions (Desktop) */}
             <div className="hidden lg:flex items-center gap-2">
-              {/* Keep Explore as a small quick action */}
               <Link
                 to="/explore-homes"
                 className={cx(
@@ -264,16 +278,10 @@ export default function Navbar() {
                 Explore
               </Link>
 
+              {/* ✅ /contact -> /#contact */}
               <button
                 type="button"
-                onClick={() => {
-                  if (location.pathname === "/") {
-                    scrollToSection("contact");
-                  } else {
-                    navigate("/");
-                    setTimeout(() => scrollToSection("contact"), 100);
-                  }
-                }}
+                onClick={() => goToHomeAndScroll("contact")}
                 className={cx(
                   "rounded-full px-3 py-1.5",
                   "text-[12px] font-extrabold tracking-[0.02em]",
@@ -285,21 +293,13 @@ export default function Navbar() {
               >
                 Get a Callback
               </button>
-
             </div>
 
             {/* Mobile Contact + hamburger */}
             <div className="lg:hidden flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => {
-                  if (location.pathname === "/") {
-                    scrollToSection("contact");
-                  } else {
-                    navigate("/");
-                    setTimeout(() => scrollToSection("contact"), 100);
-                  }
-                }}
+                onClick={() => goToHomeAndScroll("contact")}
                 className={cx(
                   "rounded-full px-3 py-1.5",
                   "text-[11px] font-extrabold tracking-[0.02em]",
@@ -333,7 +333,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ✅ Mobile Drawer */}
+      {/* Mobile Drawer */}
       <div
         className={cx(
           "fixed inset-0 z-[999] lg:hidden",
@@ -341,7 +341,6 @@ export default function Navbar() {
           open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
       >
-        {/* Backdrop */}
         <div
           className={cx(
             "absolute inset-0 bg-black/20 backdrop-blur-[2px] transition-opacity duration-300",
@@ -363,23 +362,15 @@ export default function Navbar() {
           aria-label="Mobile navigation drawer"
         >
           <div className="flex items-center justify-between px-5 pt-5">
-            <Link
-              to="/"
-              className="inline-flex items-center gap-3"
-              onClick={() => setOpen(false)}
-            >
+            <Link to="/" className="inline-flex items-center gap-3" onClick={() => setOpen(false)}>
               <span className="grid h-10 w-10 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white shadow-[0_12px_24px_rgba(11,18,32,0.08)]">
                 <span className="wb-serif text-[18px] leading-none text-[color:var(--wb-accent)]">
                   W
                 </span>
               </span>
               <div className="leading-tight">
-                <div className="wb-serif text-[18px] text-[color:var(--wb-ink)]">
-                  WestBrook
-                </div>
-                <div className="text-[11px] font-extrabold tracking-[0.26em] text-black/45">
-                  HOMES
-                </div>
+                <div className="wb-serif text-[18px] text-[color:var(--wb-ink)]">WestBrook</div>
+                <div className="text-[11px] font-extrabold tracking-[0.26em] text-black/45">HOMES</div>
               </div>
             </Link>
 
@@ -398,46 +389,42 @@ export default function Navbar() {
 
           <div className="px-5 pb-6 pt-5">
             <div className="rounded-[20px] border border-[color:var(--wb-border)] bg-[linear-gradient(135deg,rgba(27,79,214,0.10),rgba(11,42,111,0.05))] p-4 shadow-[0_16px_34px_rgba(11,18,32,0.08)]">
-              <p className="wb-serif text-[20px] text-[color:var(--wb-ink)]">
-                Let’s find the right place
-              </p>
-              <p className="mt-1 text-sm text-black/55">
-                Verified listings • Calm guidance • Clear next steps
-              </p>
+              <p className="wb-serif text-[20px] text-[color:var(--wb-ink)]">Let’s find the right place</p>
+              <p className="mt-1 text-sm text-black/55">Verified listings • Calm guidance • Clear next steps</p>
 
               <div className="mt-4 grid grid-cols-2 gap-2">
-                <Link
-                  to="/explore-homes"
-                  onClick={() => setOpen(false)}
-                  className="wb-btn-ghost w-full"
-                >
+                <Link to="/explore-homes" onClick={() => setOpen(false)} className="wb-btn-ghost w-full">
                   Explore
                 </Link>
-                <Link
-                  to="/contact"
-                  onClick={() => setOpen(false)}
+
+                {/* ✅ /contact -> /#contact */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    goToHomeAndScroll("contact");
+                  }}
                   className="wb-btn-primary w-full"
                 >
                   Get Callback
-                </Link>
+                </button>
               </div>
             </div>
 
             <div className="mt-5 space-y-2">
               {navItems.map((item, idx) => {
                 const isSectionActive = item.isSection && activeSection === item.to;
-                const isHomeActive = item.to === "/" && !item.isSection && location.pathname === "/" && !activeSection;
-                const isPageActive = !item.isSection && item.to !== "/" && location.pathname === item.to;
+                const isHomeActive =
+                  item.to === "/" && !item.isSection && location.pathname === "/" && !activeSection;
+                const isPageActive =
+                  !item.isSection && item.to !== "/" && location.pathname === item.to;
                 const isCurrentlyActive = isSectionActive || isHomeActive || isPageActive;
 
                 return (
                   <NavLink
                     key={item.to}
                     to={item.isSection ? "/" : item.to}
-                    onClick={(e) => {
-                      handleNavClick(item, e);
-                      if (!item.isSection) setOpen(false);
-                    }}
+                    onClick={(e) => handleNavClick(item, e)}
                     className={() =>
                       cx(
                         "group flex items-center justify-between rounded-2xl px-4 py-3",

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   RiTeamLine,
   RiShieldCheckLine,
-  RiEyeLine,
+  // ✅ removed RiEyeLine (unused)
   RiLeafLine,
   RiArrowRightUpLine,
   RiCheckLine,
@@ -131,7 +131,11 @@ function SectionHead({
       <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
         {title}
       </h2>
-      {sub && <p className="mx-auto mt-2 max-w-3xl text-sm leading-6 text-black/55">{sub}</p>}
+      {sub && (
+        <p className="mx-auto mt-2 max-w-3xl text-sm leading-6 text-black/55">
+          {sub}
+        </p>
+      )}
     </div>
   );
 }
@@ -181,7 +185,9 @@ function TrackTabs({
                 : "bg-white/60 text-black/70 hover:bg-white"
             )}
           >
-            <span className={cx("text-lg", is ? "text-white" : "text-blue-600")}>{t.icon}</span>
+            <span className={cx("text-lg", is ? "text-white" : "text-blue-600")}>
+              {t.icon}
+            </span>
             {t.title}
           </button>
         );
@@ -212,7 +218,9 @@ function TrackPanel({ track }: { track: Track }) {
                     PARTNERSHIP TRACK
                   </span>
                 </div>
-                <p className="mt-1 text-sm leading-6 text-black/55 break-words">{track.sub}</p>
+                <p className="mt-1 text-sm leading-6 text-black/55 break-words">
+                  {track.sub}
+                </p>
               </div>
             </div>
           </div>
@@ -342,7 +350,9 @@ function DetailPanel({ step }: { step: Step }) {
             <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-black/10 bg-white/65 text-blue-600 shadow-[0_12px_26px_rgba(11,18,32,0.08)]">
               {step.icon}
             </div>
-            <div className="text-xl font-extrabold text-slate-950 truncate">{step.title}</div>
+            <div className="text-xl font-extrabold text-slate-950 truncate">
+              {step.title}
+            </div>
           </div>
 
           <p className="mt-3 text-sm leading-6 text-black/55">{step.desc}</p>
@@ -432,7 +442,9 @@ function StepNavigatorCard({
             disabled={!canPrev}
             className={cx(
               "grid h-10 w-10 place-items-center rounded-full border border-black/10 bg-white/60 text-black/70 transition",
-              !canPrev ? "opacity-45 cursor-not-allowed" : "hover:bg-white hover:-translate-y-[1px]"
+              !canPrev
+                ? "opacity-45 cursor-not-allowed"
+                : "hover:bg-white hover:-translate-y-[1px]"
             )}
             aria-label="Previous step"
           >
@@ -444,7 +456,9 @@ function StepNavigatorCard({
             disabled={!canNext}
             className={cx(
               "grid h-10 w-10 place-items-center rounded-full border border-black/10 bg-white/60 text-black/70 transition",
-              !canNext ? "opacity-45 cursor-not-allowed" : "hover:bg-white hover:-translate-y-[1px]"
+              !canNext
+                ? "opacity-45 cursor-not-allowed"
+                : "hover:bg-white hover:-translate-y-[1px]"
             )}
             aria-label="Next step"
           >
@@ -799,8 +813,9 @@ export default function Partnerships() {
               </motion.h1>
 
               <p className="mt-3 max-w-2xl text-sm leading-6 text-black/60">
-                We design and build customized homes with a calm, structured process. Landowners, architects,
-                interior studios, contractors, and suppliers—if you value quality and clarity, we should talk.
+                We design and build customized homes with a calm, structured
+                process. Landowners, architects, interior studios, contractors,
+                and suppliers—if you value quality and clarity, we should talk.
               </p>
 
               <MiniPills items={heroPills} />
@@ -895,7 +910,7 @@ export default function Partnerships() {
           </div>
         </GlassCard>
 
-        {/* TRACKS (LEFT SIDE FILLED) */}
+        {/* TRACKS */}
         <section className="mt-12" id="tracks">
           <SectionHead
             kicker="PARTNERSHIP TRACKS"
@@ -904,7 +919,7 @@ export default function Partnerships() {
           />
 
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_560px]">
-            {/* LEFT: partner-intake */}
+            {/* LEFT */}
             <GlassCard className="p-5 sm:p-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
@@ -922,19 +937,19 @@ export default function Partnerships() {
                 </div>
               </div>
 
-              {/* Tabs */}
               <div className="mt-4">
                 <TrackTabs active={activeTrack} onChange={setActiveTrack} tracks={tracks} />
               </div>
 
-              {/* What we look for */}
               <div className="mt-5 rounded-2xl border border-black/10 bg-white/60 p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2 text-[12px] font-extrabold tracking-[0.22em] text-black/45">
                     <RiMedalLine className="text-blue-600 text-lg" />
                     WHAT WE LOOK FOR
                   </div>
-                  <span className="text-xs font-semibold text-black/50">Quick fit checklist</span>
+                  <span className="text-xs font-semibold text-black/50">
+                    Quick fit checklist
+                  </span>
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -956,7 +971,6 @@ export default function Partnerships() {
                 </div>
               </div>
 
-              {/* Mini timeline */}
               <div className="mt-3 grid gap-3 sm:grid-cols-3">
                 {[
                   {
@@ -984,7 +998,6 @@ export default function Partnerships() {
                 ))}
               </div>
 
-              {/* CTA strip */}
               <div className="mt-3 rounded-2xl border border-black/10 bg-white/60 p-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="min-w-0">
@@ -1008,8 +1021,10 @@ export default function Partnerships() {
                     >
                       Schedule a call <RiCalendarScheduleLine />
                     </a>
+
+                    {/* ✅ /contact -> /#contact */}
                     <a
-                      href="/contact"
+                      href="/#contact"
                       className={cx(
                         "inline-flex items-center gap-2 rounded-full px-4 py-2",
                         "border border-black/10 bg-white/70",
@@ -1023,7 +1038,7 @@ export default function Partnerships() {
               </div>
             </GlassCard>
 
-            {/* RIGHT: detailed track */}
+            {/* RIGHT */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTrackObj.key}
@@ -1140,7 +1155,11 @@ export default function Partnerships() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="text-[15px] font-extrabold text-slate-950">{f.q}</div>
                     <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-black/10 bg-white/70 text-black/60">
-                      {isOpen ? <RiCloseLine className="text-lg" /> : <RiAddLine className="text-lg" />}
+                      {isOpen ? (
+                        <RiCloseLine className="text-lg" />
+                      ) : (
+                        <RiAddLine className="text-lg" />
+                      )}
                     </div>
                   </div>
 
@@ -1178,7 +1197,9 @@ export default function Partnerships() {
                   <RiCalendarScheduleLine className="text-lg text-blue-600" />
                   Appointment Scheduling
                 </div>
-                <div className="mt-1 text-sm text-black/55">20–30 mins • Track selection • Next steps</div>
+                <div className="mt-1 text-sm text-black/55">
+                  20–30 mins • Track selection • Next steps
+                </div>
               </div>
 
               <div className="relative h-[640px] sm:h-[720px] w-full bg-white">
@@ -1210,7 +1231,9 @@ export default function Partnerships() {
                       <span className="mt-0.5 text-blue-600 shrink-0">
                         <RiCheckLine />
                       </span>
-                      <div className="text-sm font-semibold text-black/70 break-words">{t}</div>
+                      <div className="text-sm font-semibold text-black/70 break-words">
+                        {t}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -1231,8 +1254,9 @@ export default function Partnerships() {
                   Open scheduler <RiArrowRightUpLine />
                 </a>
 
+                {/* ✅ /contact -> /#contact */}
                 <a
-                  href="/contact"
+                  href="/#contact"
                   className={cx(
                     "inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3",
                     "border border-black/10 bg-white/60",
@@ -1244,7 +1268,8 @@ export default function Partnerships() {
               </div>
 
               <div className="mt-4 text-xs text-black/45">
-                If the embed looks blank, your browser may block third-party embeds. Use “Open scheduler”.
+                If the embed looks blank, your browser may block third-party embeds.
+                Use “Open scheduler”.
               </div>
             </GlassCard>
           </div>
