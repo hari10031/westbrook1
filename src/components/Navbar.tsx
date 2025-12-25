@@ -264,8 +264,16 @@ export default function Navbar() {
                 Explore
               </Link>
 
-              <Link
-                to="/contact"
+              <button
+                type="button"
+                onClick={() => {
+                  if (location.pathname === "/") {
+                    scrollToSection("contact");
+                  } else {
+                    navigate("/");
+                    setTimeout(() => scrollToSection("contact"), 100);
+                  }
+                }}
                 className={cx(
                   "rounded-full px-3 py-1.5",
                   "text-[12px] font-extrabold tracking-[0.02em]",
@@ -276,7 +284,8 @@ export default function Navbar() {
                 )}
               >
                 Get a Callback
-              </Link>
+              </button>
+
             </div>
 
             {/* Mobile Contact + hamburger */}
