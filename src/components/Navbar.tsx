@@ -281,8 +281,16 @@ export default function Navbar() {
 
             {/* Mobile Contact + hamburger */}
             <div className="lg:hidden flex items-center gap-2">
-              <Link
-                to="/contact"
+              <button
+                type="button"
+                onClick={() => {
+                  if (location.pathname === "/") {
+                    scrollToSection("contact");
+                  } else {
+                    navigate("/");
+                    setTimeout(() => scrollToSection("contact"), 100);
+                  }
+                }}
                 className={cx(
                   "rounded-full px-3 py-1.5",
                   "text-[11px] font-extrabold tracking-[0.02em]",
@@ -292,7 +300,7 @@ export default function Navbar() {
                 )}
               >
                 Contact Us
-              </Link>
+              </button>
 
               <button
                 type="button"

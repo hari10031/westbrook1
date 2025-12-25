@@ -24,7 +24,7 @@ type FormState = {
   name: string;
   email: string;
   phone: string;
-  intent: "residential" | "plots" | "commercial" | "other";
+  // intent: "residential" | "plots" | "commercial" | "other";
   message: string;
 };
 
@@ -33,7 +33,7 @@ export default function ContactSection() {
     name: "",
     email: "",
     phone: "",
-    intent: "residential",
+    // intent: "residential",
     message: "",
   });
 
@@ -80,7 +80,7 @@ export default function ContactSection() {
           name: form.name,
           email: form.email,
           phone: form.phone,
-          looking_for: form.intent,
+          // looking_for: form.intent,
           message: form.message,
           // This sends auto-reply to user (configure template in Web3Forms dashboard)
           replyto: form.email,
@@ -91,7 +91,7 @@ export default function ContactSection() {
 
       if (result.success) {
         setStatus("sent");
-        setForm({ name: "", email: "", phone: "", intent: "residential", message: "" });
+        setForm({ name: "", email: "", phone: "", message: "" });
         setTouched({});
         window.setTimeout(() => setStatus("idle"), 3000);
       } else {
@@ -101,7 +101,7 @@ export default function ContactSection() {
       console.error("Form submission failed:", error);
       // For demo, still show success - in production handle error properly
       setStatus("sent");
-      setForm({ name: "", email: "", phone: "", intent: "residential", message: "" });
+      setForm({ name: "", email: "", phone: "", message: "" });
       setTouched({});
       window.setTimeout(() => setStatus("idle"), 3000);
     }
@@ -127,7 +127,7 @@ export default function ContactSection() {
           CONTACT
         </motion.p>
 
-        <motion.h2
+        {/* <motion.h2
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -143,7 +143,7 @@ export default function ContactSection() {
             </span>
             .
           </span>
-        </motion.h2>
+        </motion.h2> */}
 
         <motion.p
           initial={{ opacity: 0, y: 14 }}
@@ -335,36 +335,7 @@ export default function ContactSection() {
 
                   {/* intent */}
                   <div>
-                    <label className="text-[13px] font-extrabold text-[color:var(--wb-ink)]/85">
-                      I’m looking for
-                    </label>
-                    <div className="mt-2 grid gap-3 sm:grid-cols-2">
-                      {(
-                        [
-                          ["residential", "Residential homes"],
-                          ["plots", "Plots / land"],
-                          ["commercial", "Commercial"],
-                          ["other", "Other"],
-                        ] as const
-                      ).map(([k, label]) => (
-                        <button
-                          type="button"
-                          key={k}
-                          onClick={() => setField("intent", k)}
-                          className={cx(
-                            "rounded-2xl border px-4 py-3 text-left transition",
-                            "bg-white/55 hover:bg-white/70",
-                            form.intent === k
-                              ? "border-[color:var(--wb-ink)]/35 shadow-[0_0_0_3px_rgba(13,35,74,0.10)]"
-                              : "border-[color:var(--wb-ink)]/14"
-                          )}
-                        >
-                          <p className="text-[13.5px] font-extrabold text-[color:var(--wb-ink)]/85">
-                            {label}
-                          </p>
-                        </button>
-                      ))}
-                    </div>
+
                   </div>
 
                   {/* message */}

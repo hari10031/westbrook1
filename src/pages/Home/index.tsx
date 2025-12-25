@@ -14,36 +14,36 @@ export default function HomePage() {
     <main>
       <Hero />
 
-      {/* <section id="residential" className="wb-container py-14">
+      {/* <section id="residential" className="wb-container py-8">
         <ResidentialSection />
       </section> */}
 
 
-      <section id="commercial" className="wb-container py-14">
+      <section id="commercial" className="wb-container py-8">
         <CommercialSection />
       </section>
 
-      <section id="upcoming" className="wb-container py-14">
+      <section id="upcoming" className="wb-container py-8">
         <UpcomingProjects />
       </section>
 
-      <section id="process" className="wb-container py-10">
+      <section id="process" className="wb-container py-8">
         <ProcessRoadmap />
       </section>
 
 
-      <section id="testimonials" className="wb-container py-14">
+      <section id="testimonials" className="wb-container py-8">
         <Testimonials />
       </section>
 
-      <section id="partners" className="wb-container py-14">
+      <section id="partners" className="wb-container py-8">
         <PartnersSection />
       </section>
 
-      <section id="why-us" className="wb-container py-12">
+      <section id="why-us" className="wb-container py-8">
         <WhyWestBrookSection />
       </section>
-      <section id="contact" className="wb-container py-14">
+      <section id="contact" className="wb-container py-8">
         <ContactSection />
       </section>
     </main>
