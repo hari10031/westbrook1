@@ -6,6 +6,7 @@ import UpcomingProjects from "./UpcomingProjects";
 import Testimonials from "./Testimonials";
 import PartnersSection from "./PartnersSection";
 import ContactSection from "./ContactSection";
+import ProcessRoadmap from "./ProcessRoadmap";
 import Hero from "./Hero";
 
 export default function HomePage() {
@@ -20,6 +21,10 @@ export default function HomePage() {
 
       <section id="commercial" className="wb-container py-14">
         <CommercialSection />
+      </section>
+
+      <section id="process" className="wb-container py-10">
+        <ProcessRoadmap />
       </section>
 
       <section id="upcoming" className="wb-container py-14">

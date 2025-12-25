@@ -269,3 +269,50 @@ html.wb-lock,
     transform: translateX(0) !important;
   }
 }
+
+/* ================================
+   TESTIMONIALS MARQUEE
+   ================================ */
+
+.animate-marquee-left {
+  animation: testimonials-marquee-left linear infinite;
+}
+
+.animate-marquee-right {
+  animation: testimonials-marquee-right linear infinite;
+}
+
+@keyframes testimonials-marquee-left {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-33.333%);
+  }
+}
+
+@keyframes testimonials-marquee-right {
+  from {
+    transform: translateX(-33.333%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Pause on hover */
+.animate-marquee-left:hover,
+.animate-marquee-right:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .animate-marquee-left,
+  .animate-marquee-right {
+    animation: none !important;
+    transform: translateX(0) !important;
+  }
+}
