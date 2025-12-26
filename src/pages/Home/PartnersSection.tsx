@@ -14,7 +14,15 @@ function cx(...classes: Array<string | false | null | undefined>) {
    ───────────────────────────────────────────────────────────── */
 function IconArrowRight() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M5 12h12" />
       <path d="M13 6l6 6-6 6" />
     </svg>
@@ -22,14 +30,30 @@ function IconArrowRight() {
 }
 function IconCheck() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M20 6L9 17l-5-5" />
     </svg>
   );
 }
 function IconShield() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M12 2l8 4v6c0 5-3.4 9.4-8 10-4.6-.6-8-5-8-10V6l8-4z" />
       <path d="M9 12l2 2 4-5" />
     </svg>
@@ -37,14 +61,30 @@ function IconShield() {
 }
 function IconBolt() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z" />
     </svg>
   );
 }
 function IconClipboard() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M9 5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
       <path d="M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2" />
       <path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
@@ -55,7 +95,15 @@ function IconClipboard() {
 }
 function IconRepeat() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M17 1l4 4-4 4" />
       <path d="M3 11V9a4 4 0 0 1 4-4h14" />
       <path d="M7 23l-4-4 4-4" />
@@ -68,7 +116,12 @@ const fadeUp = (d = 0, reduce = false) => ({
   hidden: reduce ? { opacity: 0 } : { opacity: 0, y: 14, filter: "blur(10px)" },
   show: reduce
     ? { opacity: 1, transition: { duration: 0.25, delay: d } }
-    : { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: EASE, delay: d } },
+    : {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        transition: { duration: 0.8, ease: EASE, delay: d },
+      },
 });
 
 type Reason = { icon: React.ReactNode; title: string; desc: string };
@@ -126,7 +179,11 @@ export default function PartnersSection() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-[1.15fr_.85fr] lg:items-start">
           {/* LEFT */}
-          <motion.div initial="hidden" animate={inView ? "show" : "hidden"} variants={fadeUp(0, !!reduce)}>
+          <motion.div
+            initial="hidden"
+            animate={inView ? "show" : "hidden"}
+            variants={fadeUp(0, !!reduce)}
+          >
             <p className="text-[12px] font-extrabold tracking-[0.32em] text-[color:var(--wb-ink)]/70">
               PARTNERSHIPS
             </p>
@@ -136,8 +193,8 @@ export default function PartnersSection() {
             </h2>
 
             <p className="mt-3 max-w-[65ch] text-[15.5px] leading-relaxed text-[color:var(--wb-ink)]/72">
-              WestBrook builds customized, user-specific homes. We partner with teams who want premium execution without
-              day-to-day confusion.
+              WestBrook builds customized, user-specific homes. We partner with
+              teams who want premium execution without day-to-day confusion.
             </p>
 
             {/* hairline divider for luxury feel */}
@@ -159,8 +216,12 @@ export default function PartnersSection() {
                       {r.icon}
                     </div>
                     <div className="min-w-0">
-                      <div className="text-[14.5px] font-semibold text-[color:var(--wb-ink)]">{r.title}</div>
-                      <div className="mt-1 text-[13.5px] leading-relaxed text-[color:var(--wb-ink)]/70">{r.desc}</div>
+                      <div className="text-[14.5px] font-semibold text-[color:var(--wb-ink)]">
+                        {r.title}
+                      </div>
+                      <div className="mt-1 text-[13.5px] leading-relaxed text-[color:var(--wb-ink)]/70">
+                        {r.desc}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -168,39 +229,58 @@ export default function PartnersSection() {
             </div>
           </motion.div>
 
-          {/* RIGHT (premium CTA card, compact) */}
+          {/* RIGHT (fixed) */}
           <motion.div
             initial="hidden"
             animate={inView ? "show" : "hidden"}
             variants={fadeUp(0.12, !!reduce)}
             className="lg:sticky lg:top-24"
           >
-            <div className="relative overflow-hidden rounded-[28px] border border-[color:var(--wb-ink)]/14 bg-white/55 p-6 backdrop-blur
-                            shadow-[0_22px_70px_rgba(12,24,48,0.10)]">
-              {/* subtle sweep */}
-              <div className="pointer-events-none absolute -top-24 left-1/2 h-56 w-56 -translate-x-1/2 rounded-full bg-[color:var(--wb-ink)]/8 blur-3xl" />
+            <div
+              className={cx(
+                "relative overflow-hidden rounded-[28px]",
+                "border border-[color:var(--wb-ink)]/14 bg-white/55 backdrop-blur",
+                "shadow-[0_22px_70px_rgba(12,24,48,0.10)]"
+              )}
+            >
+              {/* header strip (makes it feel structured + premium) */}
+              <div className="relative border-b border-[color:var(--wb-ink)]/10 px-6 py-5">
+                <div className="pointer-events-none absolute -top-24 left-1/2 h-56 w-56 -translate-x-1/2 rounded-full bg-[color:var(--wb-ink)]/8 blur-3xl" />
+                <div className="relative">
+                  <p className="text-[12px] font-extrabold tracking-[0.28em] text-[color:var(--wb-ink)]/70">
+                    WHAT PARTNERS GET
+                  </p>
 
-              <div className="relative">
-                <p className="text-[12px] font-extrabold tracking-[0.28em] text-[color:var(--wb-ink)]/70">
-                  WHAT PARTNERS GET
-                </p>
+                  <h3 className="wb-serif mt-2 text-[26px] leading-[1.15] text-[color:var(--wb-ink)]">
+                    Clean collaboration.
+                  </h3>
 
-                <h3 className="wb-serif mt-2 text-[26px] leading-[1.15] text-[color:var(--wb-ink)]">
-                  Clean collaboration.
-                </h3>
+                  <p className="mt-2 text-[13.5px] leading-relaxed text-[color:var(--wb-ink)]/62">
+                    Clear scope, clean checkpoints, and a repeatable way of working.
+                  </p>
+                </div>
+              </div>
 
-                <div className="mt-4 space-y-2">
+              {/* body */}
+              <div className="relative px-6 py-5">
+                <div className="grid gap-2.5">
                   {whatYouGet.map((t) => (
-                    <div key={t} className="flex items-start gap-2 text-[13.5px] text-[color:var(--wb-ink)]/72">
-                      <span className="mt-[2px] inline-flex h-5 w-5 items-center justify-center rounded-full border border-[color:var(--wb-ink)]/14 bg-white/70 text-[color:var(--wb-ink)]">
+                    <div
+                      key={t}
+                      className="flex items-start gap-2 rounded-[18px] border border-[color:var(--wb-ink)]/10 bg-white/55 px-4 py-3"
+                    >
+                      <span className="mt-[2px] inline-flex h-6 w-6 items-center justify-center rounded-full border border-[color:var(--wb-ink)]/14 bg-white/70 text-[color:var(--wb-ink)]">
                         <IconCheck />
                       </span>
-                      <span>{t}</span>
+                      <div className="text-[13.5px] leading-relaxed text-[color:var(--wb-ink)]/72">
+                        {t}
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-6 flex flex-col gap-3">
+                {/* CTA */}
+                <div className="mt-5 grid gap-3">
                   <Link
                     to="/partnerships"
                     className={cx(
@@ -217,12 +297,21 @@ export default function PartnersSection() {
                     </span>
                   </Link>
 
+                  {/* secondary subtle link for clarity */}
+                  <Link
+                    to="/partnerships#schedule"
+                    className="inline-flex w-full items-center justify-center rounded-full border border-[color:var(--wb-ink)]/14 bg-white/60 px-5 py-3 text-[13.5px] font-semibold text-[color:var(--wb-ink)]/85 transition hover:bg-white"
+                  >
+                    Or schedule a 20–30 min call
+                  </Link>
+
                   <div className="text-center text-[12.5px] text-[color:var(--wb-ink)]/55">
-                    Redirects to <span className="font-semibold text-[color:var(--wb-ink)]">/partnerships</span>
+                    Redirects to{" "}
+                    <span className="font-semibold text-[color:var(--wb-ink)]">/partnerships</span>
                   </div>
                 </div>
 
-                <div className="mt-5 text-[12.5px] text-[color:var(--wb-ink)]/55">
+                <div className="mt-5 rounded-[18px] border border-[color:var(--wb-ink)]/10 bg-white/50 px-4 py-3 text-[12.5px] leading-relaxed text-[color:var(--wb-ink)]/58">
                   If your team cares about quality + clarity, we’ll work well together.
                 </div>
               </div>
