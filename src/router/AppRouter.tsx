@@ -21,7 +21,7 @@ export default function AppRouter() {
       <Route path="/explore-homes" element={<ExploreHomes />} />
       {/* <Route path="/land" element={<Land />} /> */}
       <Route path="/contact" element={<Contact />} />
-      <Route path="/partnerships" element={<Partnerships />} />
+      {/* <Route path="/partnerships" element={<Partnerships />} /> */}
 
       <Route path="/home" element={<Navigate to="/" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
