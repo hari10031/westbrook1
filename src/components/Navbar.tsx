@@ -9,7 +9,7 @@ const NAV: NavItem[] = [
   { label: "Portfolio", to: "/#commercial", isSection: true },
   { label: "Our Process", to: "/#process", isSection: true },
   { label: "Explore Homes", to: "/explore-homes" },
-  { label: "Partnerships", to: "/partnerships" },
+  // { label: "Partnerships", to: "/partnerships" },
   { label: "About", to: "/about" },
 ];
 
@@ -156,15 +156,15 @@ export default function Navbar() {
           "supports-[backdrop-filter]:backdrop-blur-xl",
           scrolled
             ? [
-                "bg-white/70",
-                "border-b border-[color:var(--wb-border)]",
-                "shadow-[0_14px_38px_rgba(11,18,32,0.10)]",
-              ].join(" ")
+              "bg-white/70",
+              "border-b border-[color:var(--wb-border)]",
+              "shadow-[0_14px_38px_rgba(11,18,32,0.10)]",
+            ].join(" ")
             : [
-                "bg-white/35",
-                "border-b border-transparent",
-                "shadow-[0_10px_28px_rgba(11,18,32,0.06)]",
-              ].join(" ")
+              "bg-white/35",
+              "border-b border-transparent",
+              "shadow-[0_10px_28px_rgba(11,18,32,0.06)]",
+            ].join(" ")
         )}
       >
         <div className="wb-container">
