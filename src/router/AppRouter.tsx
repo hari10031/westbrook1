@@ -7,7 +7,6 @@ import About from "../pages/About";
 // import Projects from "../pages/Projects";
 // import Land from "../pages/Land";
 import Contact from "../pages/Contact";
-import Partnerships from "../pages/Partnerships";
 
 import ExploreHomes from "../pages/ExploreHomes";
 
