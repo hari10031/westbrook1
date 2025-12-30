@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/fraunces": "^5.2.9",
+    "@fontsource/inter-tight": "^5.2.7",
     "@tailwindcss/postcss": "^4.1.18",
     "framer-motion": "^12.23.26",
     "react": "^19.2.0",
