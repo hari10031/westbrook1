@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 
 const HERO_STATS = [
@@ -15,79 +15,123 @@ const HERO_IMAGES = [
 
 export default function Hero() {
   const [currentImage, setCurrentImage] = useState(0);
+  const [nextImage, setNextImage] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const goToSlide = useCallback((index: number) => {
+    if (isTransitioning || index === currentImage) return;
+    setNextImage(index);
+    setIsTransitioning(true);
+  }, [isTransitioning, currentImage]);
+
+  useEffect(() => {
+    if (isTransitioning) {
+      const timer = setTimeout(() => {
+        setCurrentImage(nextImage);
+        setIsTransitioning(false);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [isTransitioning, nextImage]);
 
   useEffect(() => {
     const interval = setInterval(() => {
+      const next = (currentImage + 1) % HERO_IMAGES.length;
+      setNextImage(next);
       setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentImage((prev) => (prev + 1) % HERO_IMAGES.length);
-        setIsTransitioning(false);
-      }, 500);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(interval);
-  }, []);
+  }, [currentImage]);
 
   return (
-    <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden">
-      {/* Background Image with Overlay */}
+    <section className="relative min-h-[100svh] overflow-hidden">
+      {/* Background Images with Crossfade */}
       <div className="absolute inset-0">
+        {/* Current Image */}
         <div
-          className={`absolute inset-0 transition-opacity duration-500 ${isTransitioning ? "opacity-0" : "opacity-100"
-            }`}
+          className="absolute inset-0 transition-transform duration-[1200ms] ease-out will-change-transform"
           style={{
             backgroundImage: `url(${HERO_IMAGES[currentImage]})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
+            transform: isTransitioning ? "scale(1.05)" : "scale(1)",
           }}
         />
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+        {/* Next Image (fades in on top) */}
+        <div
+          className="absolute inset-0 transition-opacity duration-800 ease-in-out will-change-opacity"
+          style={{
+            backgroundImage: `url(${HERO_IMAGES[nextImage]})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: isTransitioning ? 1 : 0,
+          }}
+        />
+        {/* Gradient Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/25 sm:from-black/70 sm:via-black/45 sm:to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/30" />
       </div>
 
       {/* Content */}
-      <div className="relative wb-container flex flex-col justify-center min-h-[90vh] lg:min-h-screen py-20 lg:py-0">
-        <div className="max-w-3xl">
+      <div className="relative wb-container flex flex-col justify-center min-h-[100svh] px-4 sm:px-6 lg:px-8 py-24 sm:py-20 lg:py-0">
+        <div className="max-w-3xl w-full">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 mb-6">
+          <div
+            className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 
+                       px-3 py-1.5 sm:px-4 sm:py-2 mb-4 sm:mb-6
+                       animate-[fadeInUp_0.6s_ease-out_forwards] opacity-0"
+            style={{ animationDelay: "0.1s" }}
+          >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
             </span>
-            <span className="text-[12px] font-semibold tracking-wide text-white/90 uppercase">
+            <span className="text-[10px] sm:text-[12px] font-semibold tracking-wide text-white/90 uppercase">
               Now Accepting New Projects
             </span>
           </div>
 
           {/* Headline */}
-          <h1 className="wb-serif text-[36px] sm:text-[52px] lg:text-[68px] leading-[1.08] tracking-tight text-white mb-6">
+          <h1
+            className="wb-serif text-[32px] xs:text-[38px] sm:text-[48px] md:text-[56px] lg:text-[64px] xl:text-[72px] 
+                       leading-[1.1] tracking-tight text-white mb-4 sm:mb-6
+                       animate-[fadeInUp_0.6s_ease-out_forwards] opacity-0"
+            style={{ animationDelay: "0.2s" }}
+          >
             Build Your
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-blue-200 to-white">
+            <span className="block mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-blue-200 to-white">
               Dream Home
             </span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-[16px] sm:text-[18px] lg:text-[20px] leading-relaxed text-white/80 max-w-xl mb-8">
+          <p
+            className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] leading-relaxed text-white/80 
+                       max-w-[90%] sm:max-w-xl mb-6 sm:mb-8
+                       animate-[fadeInUp_0.6s_ease-out_forwards] opacity-0"
+            style={{ animationDelay: "0.3s" }}
+          >
             Premium home construction with transparent pricing, expert
             craftsmanship, and a commitment to bringing your vision to life —
             on time and on budget.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-12">
+          <div
+            className="flex flex-wrap gap-3 mb-8 sm:mb-10
+                       animate-[fadeInUp_0.6s_ease-out_forwards] opacity-0"
+            style={{ animationDelay: "0.4s" }}
+          >
             <Link
               to="/contact"
-              className="group inline-flex h-14 items-center justify-center gap-2 rounded-full px-8 
-                         bg-white text-[15px] font-bold text-gray-900
-                         shadow-[0_20px_50px_rgba(255,255,255,0.15)]
-                         hover:bg-gray-100 hover:scale-[1.02] active:scale-[0.98]
+              className="group inline-flex h-11 items-center justify-center gap-2 rounded-full 
+                         px-5 bg-white text-[13px] font-semibold text-gray-900
+                         hover:bg-white/90 active:scale-[0.98]
                          transition-all duration-200"
             >
               Get Free Consultation
               <svg
-                className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -103,43 +147,28 @@ export default function Hero() {
 
             <Link
               to="/projects"
-              className="group inline-flex h-14 items-center justify-center gap-2 rounded-full px-8 
-                         bg-white/10 backdrop-blur-md border border-white/30 
-                         text-[15px] font-bold text-white
-                         hover:bg-white/20 hover:border-white/50
+              className="group inline-flex h-11 items-center justify-center gap-2 rounded-full 
+                         px-5 bg-white/10 backdrop-blur-sm border border-white/25 
+                         text-[13px] font-semibold text-white
+                         hover:bg-white/15 hover:border-white/40
                          transition-all duration-200"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
               View Our Projects
             </Link>
           </div>
 
           {/* Stats */}
-          <div className="flex flex-wrap gap-8 lg:gap-12">
+          <div
+            className="grid grid-cols-3 gap-4 sm:flex sm:flex-wrap sm:gap-8 lg:gap-12
+                       animate-[fadeInUp_0.6s_ease-out_forwards] opacity-0"
+            style={{ animationDelay: "0.5s" }}
+          >
             {HERO_STATS.map((stat, index) => (
               <div key={index} className="text-center sm:text-left">
-                <div className="wb-serif text-[28px] sm:text-[36px] font-bold text-white">
+                <div className="wb-serif text-[22px] xs:text-[26px] sm:text-[32px] lg:text-[36px] font-bold text-white leading-none">
                   {stat.value}
                 </div>
-                <div className="text-[13px] sm:text-[14px] font-medium text-white/60 uppercase tracking-wider">
+                <div className="text-[10px] xs:text-[11px] sm:text-[13px] lg:text-[14px] font-medium text-white/60 uppercase tracking-wider mt-1">
                   {stat.label}
                 </div>
               </div>
@@ -148,14 +177,14 @@ export default function Hero() {
         </div>
 
         {/* Image Indicators */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+        <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 sm:gap-3 z-10">
           {HERO_IMAGES.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentImage(index)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${currentImage === index
-                  ? "w-8 bg-white"
-                  : "w-1.5 bg-white/40 hover:bg-white/60"
+              onClick={() => goToSlide(index)}
+              className={`h-1 sm:h-1.5 rounded-full transition-all duration-500 ease-out ${currentImage === index
+                ? "w-8 sm:w-10 bg-white"
+                : "w-1 sm:w-1.5 bg-white/40 hover:bg-white/60"
                 }`}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -163,16 +192,30 @@ export default function Hero() {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-8 right-8 hidden lg:flex flex-col items-center gap-2">
-          <span className="text-[11px] font-semibold text-white/50 uppercase tracking-widest rotate-90 origin-center translate-x-6">
+        <div className="absolute bottom-6 sm:bottom-8 right-4 sm:right-8 hidden md:flex flex-col items-center gap-2">
+          <span className="text-[10px] sm:text-[11px] font-semibold text-white/50 uppercase tracking-widest [writing-mode:vertical-rl]">
             Scroll
           </span>
-          <div className="w-px h-16 bg-gradient-to-b from-white/50 to-transparent" />
+          <div className="w-px h-12 sm:h-16 bg-gradient-to-b from-white/50 to-transparent animate-pulse" />
         </div>
       </div>
 
       {/* Bottom Gradient Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[var(--wb-bg)] to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-32 bg-gradient-to-t from-[var(--wb-bg)] to-transparent pointer-events-none" />
+
+      {/* CSS Animations */}
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </section>
   );
 }
