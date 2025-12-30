@@ -18,11 +18,14 @@ export default function Hero() {
   const [nextImage, setNextImage] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const goToSlide = useCallback((index: number) => {
-    if (isTransitioning || index === currentImage) return;
-    setNextImage(index);
-    setIsTransitioning(true);
-  }, [isTransitioning, currentImage]);
+  const goToSlide = useCallback(
+    (index: number) => {
+      if (isTransitioning || index === currentImage) return;
+      setNextImage(index);
+      setIsTransitioning(true);
+    },
+    [isTransitioning, currentImage]
+  );
 
   useEffect(() => {
     if (isTransitioning) {
@@ -47,7 +50,6 @@ export default function Hero() {
     <section className="relative min-h-[100svh] overflow-hidden">
       {/* Background Images with Crossfade */}
       <div className="absolute inset-0">
-        {/* Current Image */}
         <div
           className="absolute inset-0 transition-transform duration-[1200ms] ease-out will-change-transform"
           style={{
@@ -57,7 +59,6 @@ export default function Hero() {
             transform: isTransitioning ? "scale(1.05)" : "scale(1)",
           }}
         />
-        {/* Next Image (fades in on top) */}
         <div
           className="absolute inset-0 transition-opacity duration-800 ease-in-out will-change-opacity"
           style={{
@@ -68,7 +69,7 @@ export default function Hero() {
           }}
         />
         {/* Gradient Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/25 sm:from-black/70 sm:via-black/45 sm:to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/25" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/30" />
       </div>
 
@@ -93,7 +94,7 @@ export default function Hero() {
 
           {/* Headline */}
           <h1
-            className="wb-serif text-[32px] xs:text-[38px] sm:text-[48px] md:text-[56px] lg:text-[64px] xl:text-[72px] 
+            className="wb-serif text-[32px] sm:text-[48px] md:text-[56px] lg:text-[64px] xl:text-[72px] 
                        leading-[1.1] tracking-tight text-white mb-4 sm:mb-6
                        animate-[fadeInUp_0.6s_ease-out_forwards] opacity-0"
             style={{ animationDelay: "0.2s" }}
@@ -147,7 +148,7 @@ export default function Hero() {
 
             <Link
               to="/projects"
-              className="group inline-flex h-11 items-center justify-center gap-2 rounded-full 
+              className="inline-flex h-11 items-center justify-center rounded-full 
                          px-5 bg-white/10 backdrop-blur-sm border border-white/25 
                          text-[13px] font-semibold text-white
                          hover:bg-white/15 hover:border-white/40
@@ -165,10 +166,10 @@ export default function Hero() {
           >
             {HERO_STATS.map((stat, index) => (
               <div key={index} className="text-center sm:text-left">
-                <div className="wb-serif text-[22px] xs:text-[26px] sm:text-[32px] lg:text-[36px] font-bold text-white leading-none">
+                <div className="wb-serif text-[22px] sm:text-[32px] lg:text-[36px] font-bold text-white leading-none">
                   {stat.value}
                 </div>
-                <div className="text-[10px] xs:text-[11px] sm:text-[13px] lg:text-[14px] font-medium text-white/60 uppercase tracking-wider mt-1">
+                <div className="text-[10px] sm:text-[13px] lg:text-[14px] font-medium text-white/60 uppercase tracking-wider mt-1">
                   {stat.label}
                 </div>
               </div>
@@ -183,8 +184,8 @@ export default function Hero() {
               key={index}
               onClick={() => goToSlide(index)}
               className={`h-1 sm:h-1.5 rounded-full transition-all duration-500 ease-out ${currentImage === index
-                ? "w-8 sm:w-10 bg-white"
-                : "w-1 sm:w-1.5 bg-white/40 hover:bg-white/60"
+                  ? "w-8 sm:w-10 bg-white"
+                  : "w-1 sm:w-1.5 bg-white/40 hover:bg-white/60"
                 }`}
               aria-label={`Go to slide ${index + 1}`}
             />

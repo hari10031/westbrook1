@@ -1,26 +1,18 @@
 // src/pages/About.tsx
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   RiArrowRightUpLine,
   RiShieldCheckLine,
-  RiSparklingLine,
-  RiHomeSmile2Line,
   RiDraftLine,
-  RiMedalLine,
-  RiCheckLine,
-  RiTeamLine,
   RiRuler2Line,
+  RiTeamLine,
   RiTimeLine,
-  RiStarSmileLine,
-  RiFocus3Line,
-  RiLeafLine,
+  RiCheckboxCircleLine,
   RiChatSmile2Line,
-  RiLayoutMasonryLine,
+  RiFocus3Line,
   RiVerifiedBadgeLine,
-  RiFileTextLine,
-  RiPulseLine,
 } from "react-icons/ri";
 
 function cx(...classes: Array<string | false | null | undefined>) {
@@ -28,15 +20,6 @@ function cx(...classes: Array<string | false | null | undefined>) {
 }
 
 const EASE: [number, number, number, number] = [0.18, 0.82, 0.22, 1];
-
-/**
- * ✅ FINAL PREMIUM ABOUT PAGE (responsive + no text cut/crop)
- * - NO images
- * - NO extra bright blues (only your WB variables + soft rgba glows)
- * - Cards never have fixed heights
- * - No truncate / line-clamp
- * - Every flex text area uses min-w-0 + break-words so nothing gets clipped
- */
 
 function useScrolled(threshold = 10) {
   const [scrolled, setScrolled] = React.useState(false);
@@ -52,16 +35,16 @@ function useScrolled(threshold = 10) {
 function SoftBg() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="absolute -top-32 -left-36 h-[640px] w-[640px] rounded-full bg-[radial-gradient(circle_at_center,rgba(27,79,214,0.12),transparent_68%)]" />
-      <div className="absolute -top-40 -right-40 h-[720px] w-[720px] rounded-full bg-[radial-gradient(circle_at_center,rgba(11,42,111,0.10),transparent_70%)]" />
-      <div className="absolute -bottom-60 left-[8%] h-[820px] w-[820px] rounded-full bg-[radial-gradient(circle_at_center,rgba(27,79,214,0.08),transparent_72%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(1200px_520px_at_50%_0%,rgba(255,255,255,0.75),transparent_62%)]" />
-      <div className="absolute inset-0 opacity-[0.06] [background-image:radial-gradient(rgba(0,0,0,0.6)_1px,transparent_1px)] [background-size:18px_18px]" />
+      <div className="absolute -top-28 -left-36 h-[620px] w-[620px] rounded-full bg-[radial-gradient(circle_at_center,rgba(27,79,214,0.10),transparent_70%)]" />
+      <div className="absolute -top-36 -right-40 h-[720px] w-[720px] rounded-full bg-[radial-gradient(circle_at_center,rgba(11,42,111,0.08),transparent_72%)]" />
+      <div className="absolute -bottom-56 left-[10%] h-[760px] w-[760px] rounded-full bg-[radial-gradient(circle_at_center,rgba(27,79,214,0.07),transparent_72%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(1200px_520px_at_50%_0%,rgba(255,255,255,0.72),transparent_62%)]" />
+      <div className="absolute inset-0 opacity-[0.05] [background-image:radial-gradient(rgba(0,0,0,0.6)_1px,transparent_1px)] [background-size:18px_18px]" />
     </div>
   );
 }
 
-function GlassCard({
+function Glass({
   children,
   className,
 }: {
@@ -71,307 +54,220 @@ function GlassCard({
   return (
     <div
       className={cx(
-        "relative rounded-[30px] border border-[color:var(--wb-border)] bg-white/60 backdrop-blur-xl",
+        "relative rounded-[28px] border border-[color:var(--wb-border)] bg-white/60 backdrop-blur-xl",
         "shadow-[0_18px_70px_rgba(11,18,32,0.10)]",
         className
       )}
     >
-      {/* keep glows INSIDE without cropping text: background layers are absolute */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[30px]">
-        <div className="absolute -left-32 -top-32 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(27,79,214,0.10),transparent_70%)]" />
-        <div className="absolute -right-36 -top-28 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(11,42,111,0.08),transparent_72%)]" />
-      </div>
-      <div className="relative">{children}</div>
+      {children}
     </div>
   );
 }
 
-function SectionHead({
-  kicker,
-  title,
-  sub,
-  align = "center",
-}: {
-  kicker?: string;
-  title: string;
-  sub?: string;
-  align?: "center" | "left";
-}) {
+function Kicker({ children }: { children: string }) {
   return (
-    <div className={cx("mb-6", align === "center" ? "text-center" : "text-left")}>
-      {kicker && (
-        <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--wb-border)] bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.28em] text-black/55">
-          <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--wb-accent)]" />
-          <span className="whitespace-normal break-words">{kicker}</span>
-        </div>
-      )}
-      <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[color:var(--wb-ink)] sm:text-3xl [text-wrap:balance]">
-        {title}
-      </h2>
-      {sub && (
-        <p className="mx-auto mt-2 max-w-3xl text-sm leading-6 text-black/55 whitespace-normal break-words">
-          {sub}
-        </p>
-      )}
-    </div>
-  );
-}
-
-function Tag({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-[color:var(--wb-border)] bg-white/60 px-3 py-1.5 text-xs font-extrabold text-black/65">
-      <span className="shrink-0 text-[color:var(--wb-accent)]">{icon}</span>
-      <span className="whitespace-normal break-words">{label}</span>
+    <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--wb-border)] bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.28em] text-black/55">
+      <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--wb-accent)]" />
+      {children}
     </div>
   );
 }
 
 function Stat({
-  value,
-  label,
   icon,
+  title,
+  sub,
 }: {
-  value: string;
-  label: string;
   icon: React.ReactNode;
+  title: string;
+  sub: string;
 }) {
   return (
-    <div className="rounded-2xl border border-[color:var(--wb-border)] bg-white/60 p-4 shadow-[0_14px_44px_rgba(11,18,32,0.08)]">
-      <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <div className="text-xl font-extrabold text-[color:var(--wb-ink)] whitespace-normal break-words">
-            {value}
-          </div>
-          <div className="mt-1 text-sm font-semibold text-black/60 whitespace-normal break-words">
-            {label}
-          </div>
-        </div>
+    <div className="rounded-[22px] border border-[color:var(--wb-border)] bg-white/60 p-4">
+      <div className="flex items-start gap-3">
         <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-[color:var(--wb-accent)]">
           {icon}
         </div>
+        <div className="min-w-0">
+          <div className="text-sm font-extrabold text-[color:var(--wb-ink)]">{title}</div>
+          <div className="mt-1 text-sm leading-6 text-black/55">{sub}</div>
+        </div>
       </div>
     </div>
   );
 }
 
-function SignatureStrip({
-  items,
-}: {
-  items: Array<{ title: string; sub: string; icon: React.ReactNode }>;
-}) {
-  return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      {items.map((it, idx) => (
-        <motion.div
-          key={it.title}
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.22, ease: EASE, delay: idx * 0.03 }}
-          className={cx(
-            "relative rounded-[24px] border border-[color:var(--wb-border)] bg-white/60 backdrop-blur-xl",
-            "p-4 shadow-[0_14px_40px_rgba(11,18,32,0.07)]"
-          )}
-        >
-          <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[24px] opacity-0 transition-opacity duration-300 hover:opacity-100">
-            <div className="absolute -left-20 -top-20 h-[360px] w-[360px] rounded-full bg-[radial-gradient(circle,rgba(27,79,214,0.10),transparent_70%)]" />
-          </div>
-
-          <div className="relative flex items-start gap-3">
-            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-[color:var(--wb-accent)]">
-              {it.icon}
-            </div>
-            <div className="min-w-0">
-              <div className="text-sm font-extrabold text-[color:var(--wb-ink)] whitespace-normal break-words">
-                {it.title}
-              </div>
-              <div className="mt-1 text-xs font-semibold text-black/55 whitespace-normal break-words">
-                {it.sub}
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  );
-}
-
-function PrincipleCard({
+function MiniCard({
   icon,
   title,
   desc,
-  points,
 }: {
   icon: React.ReactNode;
   title: string;
   desc: string;
-  points: string[];
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.22, ease: EASE }}
-      className={cx(
-        "relative rounded-[28px] border border-[color:var(--wb-border)] bg-white/60 backdrop-blur-xl",
-        "p-6 shadow-[0_18px_52px_rgba(11,18,32,0.08)]"
-      )}
-    >
-      <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[28px] opacity-0 transition-opacity duration-300 hover:opacity-100">
-        <div className="absolute -left-24 -top-24 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(27,79,214,0.10),transparent_70%)]" />
-      </div>
-
-      <div className="relative">
-        <div className="flex items-start gap-3">
-          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-[color:var(--wb-accent)] shadow-[0_10px_22px_rgba(11,18,32,0.08)]">
-            {icon}
-          </div>
-          <div className="min-w-0">
-            <div className="text-[16px] font-extrabold text-[color:var(--wb-ink)] whitespace-normal break-words">
-              {title}
-            </div>
-            <div className="mt-1 text-sm leading-6 text-black/55 whitespace-normal break-words">
-              {desc}
-            </div>
-          </div>
+    <div className="rounded-[24px] border border-[color:var(--wb-border)] bg-white/60 p-5">
+      <div className="flex items-start gap-3">
+        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-[color:var(--wb-accent)]">
+          {icon}
         </div>
-
-        <div className="mt-4 grid gap-2">
-          {points.map((p) => (
-            <div key={p} className="flex items-start gap-2 text-sm text-black/65">
-              <span className="mt-0.5 shrink-0 text-[color:var(--wb-accent)]">
-                <RiCheckLine />
-              </span>
-              <span className="whitespace-normal break-words">{p}</span>
-            </div>
-          ))}
+        <div className="min-w-0">
+          <div className="text-[15px] font-extrabold text-[color:var(--wb-ink)]">{title}</div>
+          <div className="mt-1 text-sm leading-6 text-black/55">{desc}</div>
         </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function WorkStep({
-  n,
-  title,
-  desc,
-}: {
-  n: string;
-  title: string;
-  desc: string;
-}) {
-  return (
-    <div className="relative rounded-[24px] border border-[color:var(--wb-border)] bg-white/60 p-5">
-      <div className="flex items-start justify-between gap-3">
-        <div className="text-[12px] font-extrabold tracking-[0.28em] text-black/45 whitespace-normal break-words">
-          {n}
-        </div>
-        <div className="h-8 w-8 shrink-0 rounded-full bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] opacity-15" />
-      </div>
-      <div className="mt-3 text-[15px] font-extrabold text-[color:var(--wb-ink)] whitespace-normal break-words">
-        {title}
-      </div>
-      <div className="mt-1 text-sm leading-6 text-black/55 whitespace-normal break-words">
-        {desc}
       </div>
     </div>
   );
 }
 
-function Reveal({ children }: { children: React.ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.22 });
+function BulletRow({ text }: { text: string }) {
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 10 }}
-      animate={inView ? { opacity: 1, y: 0 } : undefined}
-      transition={{ duration: 0.28, ease: EASE }}
-    >
-      {children}
-    </motion.div>
+    <div className="flex items-start gap-2 rounded-[18px] border border-[color:var(--wb-border)] bg-white/60 px-4 py-3 text-sm text-black/65">
+      <RiCheckboxCircleLine className="mt-0.5 shrink-0 text-[color:var(--wb-accent)]" />
+      <span className="min-w-0 break-words">{text}</span>
+    </div>
+  );
+}
+
+function FAQItem({
+  q,
+  a,
+}: {
+  q: string;
+  a: string;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-[22px] border border-[color:var(--wb-border)] bg-white/60">
+      <button
+        type="button"
+        onClick={() => setOpen((s) => !s)}
+        className="flex w-full items-start justify-between gap-3 px-5 py-4 text-left"
+      >
+        <div className="min-w-0">
+          <div className="text-sm font-extrabold text-[color:var(--wb-ink)]">{q}</div>
+        </div>
+        <div
+          className={cx(
+            "mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-black/60 transition",
+            open ? "rotate-45" : "rotate-0"
+          )}
+          aria-hidden="true"
+        >
+          +
+        </div>
+      </button>
+
+      <motion.div
+        initial={false}
+        animate={open ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+        transition={{ duration: 0.25, ease: EASE }}
+        className="overflow-hidden"
+      >
+        <div className="px-5 pb-4 text-sm leading-6 text-black/55">{a}</div>
+      </motion.div>
+
+      <div className="h-px w-full bg-[color:var(--wb-border)]/80" />
+    </div>
   );
 }
 
 export default function About() {
   const scrolled = useScrolled(12);
 
-  const tags = useMemo(
+  const stats = useMemo(
     () => [
-      { label: "Custom builds", icon: <RiHomeSmile2Line /> },
-      { label: "Design-led", icon: <RiDraftLine /> },
-      { label: "Finish discipline", icon: <RiMedalLine /> },
-      { label: "Clear updates", icon: <RiShieldCheckLine /> },
+      { icon: <RiDraftLine className="text-xl" />, title: "Design-led", sub: "We refine the plan until it feels right." },
+      { icon: <RiTimeLine className="text-xl" />, title: "Structured", sub: "Clear decisions, clean updates." },
+      { icon: <RiRuler2Line className="text-xl" />, title: "Detail discipline", sub: "Finishes stay sharp, end to end." },
     ],
     []
   );
 
-  const heroStats = useMemo(
+  const beliefs = useMemo(
     () => [
-      { value: "Personal", label: "Built around your life", icon: <RiChatSmile2Line className="text-xl" /> },
-      { value: "Structured", label: "Milestones that track", icon: <RiTimeLine className="text-xl" /> },
-      { value: "Premium", label: "Detail discipline", icon: <RiRuler2Line className="text-xl" /> },
-    ],
-    []
-  );
-
-  const signatures = useMemo(
-    () => [
-      { title: "Scope clarity", sub: "Defined early", icon: <RiFocus3Line className="text-xl" /> },
-      { title: "Finish-first", sub: "Details stay sharp", icon: <RiMedalLine className="text-xl" /> },
-      { title: "Clean comms", sub: "One accountable team", icon: <RiTeamLine className="text-xl" /> },
-      { title: "Built to last", sub: "Long-term livability", icon: <RiLeafLine className="text-xl" /> },
-    ],
-    []
-  );
-
-  const principles = useMemo(
-    () => [
+      {
+        icon: <RiFocus3Line className="text-xl" />,
+        title: "Clarity wins",
+        desc: "We keep scope, choices, and next steps easy to follow.",
+      },
+      {
+        icon: <RiTeamLine className="text-xl" />,
+        title: "One accountable team",
+        desc: "One team, one standard, one outcome.",
+      },
       {
         icon: <RiVerifiedBadgeLine className="text-xl" />,
-        title: "Trust is designed",
-        desc: "We document decisions and keep the path visible.",
-        points: ["Milestone updates", "Approval checkpoints", "Budget + timeline visibility"],
-      },
-      {
-        icon: <RiLayoutMasonryLine className="text-xl" />,
-        title: "Custom means personal",
-        desc: "Plans are shaped by routine—not trends.",
-        points: ["Lifestyle-first layouts", "Light + flow", "Practical luxury"],
-      },
-      {
-        icon: <RiRuler2Line className="text-xl" />,
-        title: "Details are the product",
-        desc: "Edges, joins, lighting—done with discipline.",
-        points: ["Material intent protected", "Finish consistency", "Clean handover"],
-      },
-      {
-        icon: <RiShieldCheckLine className="text-xl" />,
-        title: "Quality has checkpoints",
-        desc: "Premium is controlled, not hoped for.",
-        points: ["Stage inspections", "Snag lists", "Vendor accountability"],
+        title: "Quality is controlled",
+        desc: "Premium comes from discipline and checks.",
       },
     ],
     []
   );
 
-  const workSteps = useMemo(
+  const deliver = useMemo(
     () => [
-      { n: "01", title: "Listen", desc: "Goals, site, priorities—quick clarity." },
-      { n: "02", title: "Design", desc: "Layout + look, refined with intent." },
-      { n: "03", title: "Plan", desc: "Scope + schedule, kept simple." },
-      { n: "04", title: "Build", desc: "Disciplined execution with updates." },
+      "Design that fits your lifestyle — not a template.",
+      "A clean estimate and honest trade-offs before work starts.",
+      "Simple updates, so you always know what’s next.",
+      "A final handover that feels finished — not rushed.",
     ],
     []
   );
 
-  const fit = useMemo(
+  // ✅ more general FAQs + detailed answers (only section with more text)
+  const faqs = useMemo(
     () => [
-      "You want a true custom home.",
-      "You care about finishes.",
-      "You want clarity, not chaos.",
-      "You want one accountable team.",
+      {
+        q: "What exactly do you do — design, build, or both?",
+        a:
+          "We handle the full journey end-to-end: understanding your requirements, developing the design, planning the execution, and building with consistent quality checks. " +
+          "You don’t have to coordinate multiple vendors or chase updates — one accountable team owns the outcome.",
+      },
+      {
+        q: "How is a custom home different from a “ready plan” home?",
+        a:
+          "A custom home is designed around you and your plot. That means the layout, light, privacy, storage, and movement are planned for your daily life — not forced into a pre-set template. " +
+          "It also means decisions are made intentionally (not last minute), which helps the build feel cleaner and more predictable.",
+      },
+      {
+        q: "How do you keep the project on track?",
+        a:
+          "We keep it simple: clear scope, clear milestones, and checkpoints during execution. " +
+          "Before work moves, key choices are confirmed so the site doesn’t keep changing direction. " +
+          "During the build, updates are short and structured — what’s done, what’s next, and what needs your input.",
+      },
+      {
+        q: "Can I control the budget without compromising the outcome?",
+        a:
+          "Yes. We keep pricing transparent and show trade-offs clearly. If you want to save cost, we guide you toward changes that reduce budget without hurting the feel of the home (like smarter planning, simplified forms, or material swaps that still look premium). " +
+          "You’ll always know what changes cost before work starts — no surprise jumps later.",
+      },
+      {
+        q: "How do you manage quality on site?",
+        a:
+          "Quality is controlled through checks and finish discipline. We set standards for details that matter — edges, alignments, lighting points, surface finish, and joinery cleanliness. " +
+          "Then we verify those standards at key stages so the final result looks intentional, not patched together.",
+      },
+      {
+        q: "What do you need from me to get started?",
+        a:
+          "Just the essentials: your plot/location details, your timeline, your budget comfort range, and a simple style direction (even 2–3 reference images helps). " +
+          "From there, we guide the rest — layouts, priorities, and finish level choices — without overwhelming you.",
+      },
+      {
+        q: "Do you take up projects on any plot or constraints?",
+        a:
+          "We work with real constraints: setbacks, access, orientation, slope, and utilities. The plan is shaped around the site so it works naturally and avoids rework. " +
+          "If a constraint forces a compromise, we call it early and propose clean options — not late-stage fixes.",
+      },
+      {
+        q: "How involved do I have to be during the build?",
+        a:
+          "As involved as you want — but not forced. We keep approvals to key decisions, and we keep communication clean. " +
+          "You’ll get regular updates and check-in moments for important choices, without being pulled into daily site management.",
+      },
     ],
     []
   );
@@ -382,39 +278,31 @@ export default function About() {
 
       <div className="relative mx-auto max-w-[1120px] px-4 py-10 sm:px-5">
         {/* HERO */}
-        <GlassCard className="p-6 sm:p-10">
+        <Glass className="p-6 sm:p-10">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-start">
+            {/* LEFT */}
             <div className="min-w-0">
-              <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-[color:var(--wb-border)] bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.28em] text-black/55">
-                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] text-white">
-                  <RiSparklingLine />
-                </span>
-                <span className="whitespace-normal break-words">ABOUT WESTBROOK HOMES</span>
-              </div>
+              <Kicker>ABOUT WESTBROOK</Kicker>
 
               <motion.h1
-                className="mt-4 text-3xl font-semibold tracking-tight text-[color:var(--wb-ink)] sm:text-5xl [text-wrap:balance]"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.28, ease: EASE }}
+                transition={{ duration: 0.3, ease: EASE }}
+                className="mt-4 text-3xl font-semibold tracking-tight text-[color:var(--wb-ink)] sm:text-5xl [text-wrap:balance]"
               >
                 Custom homes,
                 <br />
-                delivered{" "}
+                built with{" "}
                 <span className="bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] bg-clip-text text-transparent">
-                  with calm precision.
+                  calm precision
                 </span>
+                .
               </motion.h1>
 
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-black/60 whitespace-normal break-words">
-                Design intent, finish discipline, and clean delivery. Premium should feel smooth—not stressful.
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-black/60">
+                End-to-end builds — planning first, pricing clearly, and executing with discipline.
+                Premium should feel smooth.
               </p>
-
-              <div className="mt-4 flex flex-wrap gap-2">
-                {tags.map((t) => (
-                  <Tag key={t.label} icon={t.icon} label={t.label} />
-                ))}
-              </div>
 
               <div className="mt-6 flex flex-wrap gap-2">
                 <Link
@@ -442,216 +330,180 @@ export default function About() {
               </div>
 
               <div className="mt-7 grid gap-3 sm:grid-cols-3">
-                {heroStats.map((s) => (
-                  <Stat key={s.label} value={s.value} label={s.label} icon={s.icon} />
+                {stats.map((s) => (
+                  <Stat key={s.title} icon={s.icon} title={s.title} sub={s.sub} />
                 ))}
               </div>
             </div>
 
-            {/* RIGHT: TRUST PANEL */}
-            <div className="min-w-0 rounded-[30px] border border-[color:var(--wb-border)] bg-white/60 p-6 shadow-[0_18px_70px_rgba(11,18,32,0.10)]">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="text-sm font-extrabold text-[color:var(--wb-ink)] whitespace-normal break-words">
-                    What you’ll feel
-                  </div>
-                  <div className="mt-1 text-sm leading-6 text-black/55 whitespace-normal break-words">
-                    Clear. Controlled. Premium.
-                  </div>
-                </div>
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-[color:var(--wb-accent)]">
-                  <RiStarSmileLine className="text-xl" />
-                </div>
-              </div>
-
-              <div className="mt-5 grid gap-3">
-                {[
-                  { t: "Clear scope", d: "Defined early." },
-                  { t: "Clean checkpoints", d: "No guessing." },
-                  { t: "Finish discipline", d: "Details stay sharp." },
-                ].map((x) => (
-                  <div
-                    key={x.t}
-                    className="rounded-2xl border border-[color:var(--wb-border)] bg-white/65 p-4"
-                  >
-                    <div className="text-sm font-extrabold text-[color:var(--wb-ink)] whitespace-normal break-words">
-                      {x.t}
-                    </div>
-                    <div className="mt-1 text-sm text-black/55 whitespace-normal break-words">
-                      {x.d}
+            {/* RIGHT */}
+            <div className="min-w-0">
+              <div className="rounded-[28px] border border-[color:var(--wb-border)] bg-white/60 p-6">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="text-sm font-extrabold text-[color:var(--wb-ink)]">What you can expect</div>
+                    <div className="mt-1 text-sm leading-6 text-black/55">
+                      Clear decisions. Clean execution. A finished handover.
                     </div>
                   </div>
-                ))}
-              </div>
+                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-[color:var(--wb-accent)]">
+                    <RiShieldCheckLine className="text-xl" />
+                  </div>
+                </div>
 
-              <div className="mt-5 rounded-2xl bg-[linear-gradient(135deg,rgba(27,79,214,0.10),rgba(11,42,111,0.06))] p-4">
-                <div className="flex items-center gap-2 text-sm font-extrabold text-[color:var(--wb-ink)]">
-                  <RiShieldCheckLine className="shrink-0 text-[color:var(--wb-accent)]" />
-                  <span className="whitespace-normal break-words">Our standard</span>
+                {/* OUR RULE (highlight) */}
+                <div className="mt-5 rounded-[22px] border border-[color:var(--wb-border)] bg-white/70 p-4">
+                  <div className="text-[11px] font-extrabold tracking-[0.24em] text-black/45">OUR RULE</div>
+                  <p className="mt-2 text-sm leading-6 text-black/65">
+                    If scope, cost, or timeline isn’t clear — we pause and resolve it before moving.
+                  </p>
                 </div>
-                <div className="mt-1 text-sm text-black/55 whitespace-normal break-words">
-                  Premium, but predictable.
-                </div>
-              </div>
 
-              <div className="mt-5">
-                <div className="text-[12px] font-extrabold tracking-[0.24em] text-black/45">
-                  GOOD FIT
-                </div>
-                <div className="mt-3 grid gap-2">
-                  {fit.map((x) => (
-                    <div key={x} className="flex items-start gap-2 text-sm text-black/65">
-                      <span className="mt-0.5 shrink-0 text-[color:var(--wb-accent)]">
-                        <RiCheckLine />
-                      </span>
-                      <span className="whitespace-normal break-words">{x}</span>
+                <div className="mt-5 grid gap-2">
+                  {["One accountable team", "Simple update rhythm", "Quality checkpoints"].map((x) => (
+                    <div
+                      key={x}
+                      className="rounded-[18px] border border-[color:var(--wb-border)] bg-white/65 px-4 py-3 text-sm font-semibold text-black/65"
+                    >
+                      {x}
                     </div>
                   ))}
+                </div>
+
+                <div className="mt-5 rounded-[22px] border border-[color:var(--wb-border)] bg-white/65 p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-[color:var(--wb-accent)]">
+                      <RiChatSmile2Line className="text-xl" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-sm font-extrabold text-[color:var(--wb-ink)]">Good fit if</div>
+                      <div className="mt-1 text-sm leading-6 text-black/55">
+                        You want a truly custom home, clean finishes, and clarity — not chaos.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </GlassCard>
+        </Glass>
 
-        {/* SIGNATURE STRIP */}
-        <section className="mt-10">
-          <Reveal>
-            <SignatureStrip items={signatures} />
-          </Reveal>
-        </section>
-
-        {/* PRINCIPLES */}
+        {/* WHAT WE BELIEVE */}
         <section className="mt-12">
-          <SectionHead
-            kicker="OUR PRINCIPLES"
-            title="What makes WestBrook different"
-            sub="Small rules. Strong outcomes."
-          />
-          <div className="grid gap-4 md:grid-cols-2">
-            {principles.map((p) => (
-              <PrincipleCard
-                key={p.title}
-                icon={p.icon}
-                title={p.title}
-                desc={p.desc}
-                points={p.points}
-              />
+          <div className="mx-auto max-w-[72ch] text-center">
+            <Kicker>WHAT WE BELIEVE</Kicker>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[color:var(--wb-ink)] sm:text-3xl">
+              Simple principles. Strong outcomes.
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-black/55">
+              Clean work feels premium when the basics are consistent.
+            </p>
+          </div>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {beliefs.map((b, i) => (
+              <motion.div
+                key={b.title}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.25, ease: EASE, delay: i * 0.05 }}
+              >
+                <MiniCard icon={b.icon} title={b.title} desc={b.desc} />
+              </motion.div>
             ))}
           </div>
         </section>
 
-        {/* HOW WE WORK (premium, compact) */}
+        {/* WHAT WE DELIVER */}
         <section className="mt-12">
-          <GlassCard className="p-6 sm:p-8">
+          <Glass className="p-6 sm:p-8">
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
               <div className="min-w-0">
-                <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-[color:var(--wb-border)] bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.28em] text-black/55">
-                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--wb-accent)]" />
-                  <span className="whitespace-normal break-words">HOW WE WORK</span>
-                </div>
-
-                <div className="mt-3 text-2xl font-semibold tracking-tight text-[color:var(--wb-ink)] [text-wrap:balance]">
-                  Simple flow. Clean delivery.
-                </div>
-
-                <p className="mt-2 text-sm leading-6 text-black/55 whitespace-normal break-words">
-                  Enough structure to stay predictable—without feeling corporate.
+                <Kicker>WHAT WE DELIVER</Kicker>
+                <h3 className="mt-3 text-xl font-semibold text-[color:var(--wb-ink)] sm:text-2xl">
+                  A build that stays composed.
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-black/55">
+                  Less noise. More control. The experience matters too.
                 </p>
 
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {workSteps.map((s) => (
-                    <WorkStep key={s.n} n={s.n} title={s.title} desc={s.desc} />
+                <div className="mt-5 grid gap-2">
+                  {deliver.map((x) => (
+                    <BulletRow key={x} text={x} />
                   ))}
-                </div>
-
-                <div className="mt-5 rounded-2xl border border-[color:var(--wb-border)] bg-white/60 p-4">
-                  <div className="flex items-start gap-3">
-                    <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-[color:var(--wb-accent)]">
-                      <RiPulseLine className="text-xl" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-sm font-extrabold text-[color:var(--wb-ink)] whitespace-normal break-words">
-                        Update rhythm
-                      </div>
-                      <div className="mt-1 text-sm text-black/55 whitespace-normal break-words">
-                        Short, structured updates—so you always know what’s done and what’s next.
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
 
-              {/* ASK PANEL */}
-              <div className="min-w-0 rounded-[26px] border border-[color:var(--wb-border)] bg-white/60 p-6">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="text-sm font-extrabold text-[color:var(--wb-ink)] whitespace-normal break-words">
-                      What we’ll ask
-                    </div>
-                    <div className="mt-1 text-sm leading-6 text-black/55 whitespace-normal break-words">
-                      Just the essentials.
-                    </div>
-                  </div>
-                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-[color:var(--wb-accent)]">
-                    <RiFileTextLine className="text-xl" />
-                  </div>
-                </div>
-
-                <div className="mt-4 grid gap-2">
-                  {[
-                    "Location + plot size",
-                    "Timeline + constraints",
-                    "Style direction (2–3 references)",
-                    "Finish level expectations",
-                  ].map((x) => (
-                    <div
-                      key={x}
-                      className="flex items-start gap-2 rounded-2xl border border-[color:var(--wb-border)] bg-white/65 p-4"
-                    >
-                      <span className="mt-0.5 shrink-0 text-[color:var(--wb-accent)]">
-                        <RiCheckLine />
-                      </span>
-                      <div className="min-w-0 text-sm font-semibold text-black/70 whitespace-normal break-words">
-                        {x}
+              <div className="min-w-0">
+                <div className="rounded-[26px] border border-[color:var(--wb-border)] bg-white/60 p-6">
+                  <div className="text-sm font-extrabold text-[color:var(--wb-ink)]">Quick facts</div>
+                  <div className="mt-3 grid gap-2">
+                    {[
+                      { t: "Custom first", d: "Designed around your life and your plot." },
+                      { t: "Clear cost", d: "Trade-offs are transparent before work starts." },
+                      { t: "Finish discipline", d: "Details stay consistent, not improvised." },
+                    ].map((x) => (
+                      <div
+                        key={x.t}
+                        className="rounded-[18px] border border-[color:var(--wb-border)] bg-white/65 p-4"
+                      >
+                        <div className="text-sm font-extrabold text-[color:var(--wb-ink)]">{x.t}</div>
+                        <div className="mt-1 text-sm text-black/55">{x.d}</div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
 
-                <div className="mt-5 grid gap-2">
-                  <Link
-                    to="/#contact"
-                    className={cx(
-                      "inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3",
-                      "bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] text-white",
-                      "text-sm font-extrabold shadow-[0_14px_30px_rgba(27,79,214,0.18)]",
-                      "hover:brightness-110 transition"
-                    )}
-                  >
-                    Start a conversation <RiArrowRightUpLine />
-                  </Link>
-                  <Link
-                    to="/partnerships"
-                    className={cx(
-                      "inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3",
-                      "border border-[color:var(--wb-border)] bg-white/60",
-                      "text-sm font-extrabold text-black/70 hover:bg-white transition"
-                    )}
-                  >
-                    Land / partnerships <RiArrowRightUpLine />
-                  </Link>
-                </div>
-
-                <div className="mt-4 text-xs text-black/45 whitespace-normal break-words">
-                  Premium rule: clear scope + clear checkpoints = clean delivery.
+                  <div className="mt-5 grid gap-2">
+                    <Link
+                      to="/#contact"
+                      className={cx(
+                        "inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3",
+                        "bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] text-white",
+                        "text-sm font-extrabold shadow-[0_14px_30px_rgba(27,79,214,0.18)]",
+                        "hover:brightness-110 transition"
+                      )}
+                    >
+                      Talk to us <RiArrowRightUpLine />
+                    </Link>
+                    <Link
+                      to="/projects"
+                      className={cx(
+                        "inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3",
+                        "border border-[color:var(--wb-border)] bg-white/60",
+                        "text-sm font-extrabold text-black/70 hover:bg-white transition"
+                      )}
+                    >
+                      See builds <RiArrowRightUpLine />
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
-          </GlassCard>
+          </Glass>
+        </section>
+
+        {/* FAQ (only place with more text) */}
+        <section className="mt-12">
+          <div className="mx-auto max-w-[72ch] text-center">
+            <Kicker>FAQ</Kicker>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[color:var(--wb-ink)] sm:text-3xl">
+              Quick answers.
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-black/55">
+              The common questions people ask before starting.
+            </p>
+          </div>
+
+          <div className="mt-6 mx-auto max-w-3xl grid gap-3">
+            {faqs.map((f) => (
+              <FAQItem key={f.q} q={f.q} a={f.a} />
+            ))}
+          </div>
         </section>
 
         <div className="mt-12 h-px w-full bg-[linear-gradient(to_right,transparent,rgba(27,79,214,0.18),transparent)]" />
-        <div className="py-8 text-center text-xs text-black/45 whitespace-normal break-words">
+        <div className="py-8 text-center text-xs text-black/45">
           © {new Date().getFullYear()} WestBrook Homes • About
         </div>
       </div>
@@ -667,13 +519,13 @@ export default function About() {
         <div className="mx-auto max-w-[1120px] px-4 sm:px-5">
           <div className="mt-3 rounded-full border border-[color:var(--wb-border)] bg-white/65 backdrop-blur-xl px-4 py-2 shadow-[0_18px_50px_rgba(11,18,32,0.08)]">
             <div className="flex items-center justify-between gap-3 text-xs font-extrabold text-black/60">
-              <span className="inline-flex min-w-0 items-center gap-2">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--wb-accent)]" />
-                <span className="min-w-0 whitespace-normal break-words">WestBrook Homes</span>
+              <span className="inline-flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--wb-accent)]" />
+                WestBrook Homes
               </span>
-              <span className="inline-flex min-w-0 items-center gap-2">
-                <RiShieldCheckLine className="shrink-0 text-[color:var(--wb-accent)]" />
-                <span className="min-w-0 whitespace-normal break-words">Premium. Predictable.</span>
+              <span className="inline-flex items-center gap-2">
+                <RiShieldCheckLine className="text-[color:var(--wb-accent)]" />
+                Premium. Predictable.
               </span>
             </div>
           </div>

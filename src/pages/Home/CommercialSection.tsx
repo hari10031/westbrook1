@@ -21,6 +21,10 @@ type Card = {
   image: string;
 };
 
+/**
+ * ✅ keep your original data
+ * We'll simply display LESS of it in UI (less noise).
+ */
 const CARDS: Card[] = [
   {
     title: "Custom Design",
@@ -72,6 +76,12 @@ function UnderlineSoft({ children }: { children: React.ReactNode }) {
   );
 }
 
+/** ✅ ultra short, “quiet luxury” copy from existing fields */
+function compactLine(c: Card) {
+  // Use subtitle only (already short & structured)
+  return c.subtitle;
+}
+
 export default function CommercialSection() {
   const reduce = useReducedMotion();
 
@@ -106,11 +116,11 @@ export default function CommercialSection() {
     hover: reduce
       ? { transition: { duration: 0.25 } }
       : {
-        y: -8,
-        scale: 1.015,
-        rotate: -0.2,
-        transition: { duration: 0.45, ease: EASE },
-      },
+          y: -8,
+          scale: 1.015,
+          rotate: -0.2,
+          transition: { duration: 0.45, ease: EASE },
+        },
   };
 
   const img = {
@@ -122,19 +132,10 @@ export default function CommercialSection() {
     hover: reduce
       ? { transition: { duration: 0.25 } }
       : {
-        scale: 1.06,
-        y: -6,
-        transition: { duration: 0.7, ease: EASE },
-      },
-  };
-
-  const underline = {
-    rest: { width: "42px", opacity: 0.75 },
-    hover: {
-      width: "88px",
-      opacity: 1,
-      transition: { duration: 0.35, ease: EASE },
-    },
+          scale: 1.06,
+          y: -6,
+          transition: { duration: 0.7, ease: EASE },
+        },
   };
 
   const sheen = {
@@ -148,13 +149,13 @@ export default function CommercialSection() {
 
   return (
     <section className="relative">
-      {/* elevated background glow */}
+      {/* elevated background glow (kept) */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-1/2 -top-40 h-95 w-190 -translate-x-1/2 rounded-full bg-(--wb-ink)/12 blur-3xl" />
         <div className="absolute -right-35 top-30 h-80 w-80 rounded-full bg-(--wb-accent-2)/12 blur-3xl" />
       </div>
 
-      {/* header */}
+      {/* header (kept) */}
       <div className="mx-auto max-w-[84ch] text-center">
         <motion.p
           initial={{ opacity: 0, y: 8 }}
@@ -189,7 +190,7 @@ export default function CommercialSection() {
         </motion.p>
       </div>
 
-      {/* cards */}
+      {/* cards (same layout + motion) */}
       <motion.div
         variants={container}
         initial="hidden"
@@ -215,7 +216,7 @@ export default function CommercialSection() {
                 hover:shadow-[0_38px_130px_rgba(12,24,48,0.24)]
                 transition"
               >
-                {/* top image */}
+                {/* top image (kept) */}
                 <div className="relative h-55 sm:h-65">
                   <motion.img
                     variants={img}
@@ -225,10 +226,10 @@ export default function CommercialSection() {
                     className="h-full w-full object-cover"
                   />
 
-                  {/* readability overlay (stronger, premium) */}
+                  {/* readability overlay (kept) */}
                   <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(8,16,34,0.86),rgba(8,16,34,0.28),rgba(8,16,34,0.10))]" />
 
-                  {/* moving sheen */}
+                  {/* moving sheen (kept) */}
                   <motion.div
                     variants={sheen}
                     className="pointer-events-none absolute inset-y-0 left-0 w-[45%]
@@ -236,27 +237,21 @@ export default function CommercialSection() {
                       rotate-12"
                   />
 
-                  {/* top chip */}
+                  {/* top chip (kept) */}
                   <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-3 py-1 text-[11px] font-extrabold tracking-widest text-white/90 backdrop-blur-md shadow-lg">
                     <span className="text-[16px]">{c.icon}</span>
                     {c.title.toUpperCase()}
                   </div>
 
-                  {/* bottom overlay content */}
+                  {/* bottom overlay content (✅ simplified) */}
                   <div className="absolute inset-x-0 bottom-0 p-5">
                     <div className="flex items-end justify-between gap-3">
                       <div className="min-w-0">
                         <div className="wb-serif text-[20px] leading-tight text-white sm:text-[22px]">
                           <UnderlineSoft>{c.highlight}</UnderlineSoft>
                         </div>
-                        <div className="mt-1 text-[13px] font-semibold text-white/80">
-                          {c.subtitle}
-                        </div>
 
-                        <motion.div
-                          variants={underline}
-                          className="mt-3 h-0.5 bg-white/75"
-                        />
+                        {/* ✅ removed subtitle + animated underline here (less noise) */}
                       </div>
 
                       <motion.span
@@ -269,14 +264,14 @@ export default function CommercialSection() {
                     </div>
                   </div>
 
-                  {/* premium edge vignette */}
+                  {/* premium edge vignette (kept) */}
                   <div className="pointer-events-none absolute inset-0 opacity-70 [box-shadow:inset_0_-40px_80px_rgba(0,0,0,0.25)]" />
 
-                  {/* hover ring */}
+                  {/* hover ring (kept) */}
                   <div className="pointer-events-none absolute inset-0 rounded-[30px] ring-0 ring-(--wb-ink)/0 group-hover:ring-2 group-hover:ring-(--wb-ink)/10 transition" />
                 </div>
 
-                {/* BODY (make heading BIG + dominant) */}
+                {/* BODY (✅ simplified) */}
                 <div className="p-5">
                   <h3 className="wb-serif text-[22px] sm:text-[24px] leading-tight text-(--wb-ink)">
                     <span className="relative inline-block">
@@ -285,13 +280,14 @@ export default function CommercialSection() {
                     </span>
                   </h3>
 
-                  <p className="mt-1 text-[13px] font-semibold tracking-wide text-(--wb-ink)/65">
-                    {c.subtitle}
+                  {/* ✅ keep only ONE line (subtitle) */}
+                  <p className="mt-2 text-[13px] font-semibold tracking-wide text-(--wb-ink)/65">
+                    {compactLine(c)}
                   </p>
 
-                  <p className="mt-3 text-[13.5px] leading-relaxed text-(--wb-ink)/75">
-                    {c.desc}
-                  </p>
+                  {/* ✅ remove long desc paragraph entirely */}
+                  {/* If you still want a single micro-line, uncomment below: */}
+                  {/* <p className="mt-3 text-[13.5px] leading-relaxed text-(--wb-ink)/70 line-clamp-2">{c.desc}</p> */}
 
                   <div className="mt-4 inline-flex items-center gap-2 text-[13px] font-extrabold text-(--wb-ink)">
                     Explore details
@@ -302,7 +298,7 @@ export default function CommercialSection() {
                 </div>
               </Link>
 
-              {/* subtle floating glow under card */}
+              {/* subtle floating glow under card (kept) */}
               {!reduce && (
                 <motion.div
                   aria-hidden="true"
