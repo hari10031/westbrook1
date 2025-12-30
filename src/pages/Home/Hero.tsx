@@ -1,362 +1,178 @@
-import { useEffect, useMemo, useState } from "react";
-import type { CSSProperties } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-type ReelItem = {
-  title: string;
-  meta: string;
-  img: string;
-  tag?: string;
-};
-
-const REEL_A: ReelItem[] = [
-  {
-    title: "Signature Modern Residence",
-    meta: "Tailored layout • Clean lines • Warm light",
-    img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1400&q=80",
-    tag: "Signature",
-  },
-  {
-    title: "Hillside Glass Villa",
-    meta: "Open views • Calm palette • Detail-led",
-    img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80",
-    tag: "Bespoke",
-  },
-  {
-    title: "Courtyard Estate Home",
-    meta: "Private feel • Soft textures • Timeless",
-    img: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1400&q=80",
-    tag: "Curated",
-  },
-  {
-    title: "Urban Luxe Duplex",
-    meta: "Space-first • Strong elevation • Balanced",
-    img: "https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&w=1400&q=80",
-    tag: "Refined",
-  },
-  {
-    title: "Coastal Minimal Townhome",
-    meta: "Bright corners • Seamless flow • Modern",
-    img: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1400&q=80",
-    tag: "Prime",
-  },
+const HERO_STATS = [
+  { value: "150+", label: "Homes Built" },
+  { value: "12+", label: "Years Experience" },
+  { value: "98%", label: "Client Satisfaction" },
 ];
 
-const REEL_B: ReelItem[] = [
-  {
-    title: "Garden + Pool Residence",
-    meta: "Indoor–outdoor living • Easy elegance",
-    img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1400&q=80",
-    tag: "Featured",
-  },
-  {
-    title: "Warm Family Bungalow",
-    meta: "Comfort-first • Light-filled • Classic",
-    img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1400&q=80",
-    tag: "New",
-  },
-  {
-    title: "Lakefront Villa Build",
-    meta: "Views-first • Calm interiors • Clean finish",
-    img: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=80",
-    tag: "Bespoke",
-  },
-  {
-    title: "Designer Loft Home",
-    meta: "Compact • Quiet detail • High impact",
-    img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1400&q=80",
-    tag: "Curated",
-  },
-  {
-    title: "Plot-to-Home Concept",
-    meta: "Plan-ready • Elevation choices • Tailored",
-    img: "https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=1400&q=80",
-    tag: "Concept",
-  },
+const HERO_IMAGES = [
+  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=90",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=90",
+  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=2000&q=90",
 ];
 
-function cx(...classes: Array<string | false | null | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
-
-type MarqueeStyle = CSSProperties & { ["--wb-marquee-duration"]?: string };
-
-/** ✅ premium underline emphasis */
-function Em({ children }: { children: string }) {
-  return (
-    <span className="relative inline-block transform-gpu">
-      <span className="relative z-10">{children}</span>
-      <span className="absolute left-0 right-0 bottom-0.75 h-2 rounded-full bg-(--wb-accent-2)/22 transform-gpu" />
-    </span>
-  );
-}
-
-/** ✅ Writer effect (kept) */
-function CraftWriter() {
-  const WORDS = useMemo(
-    () => [
-      "homes around your life",
-      "designs that make sense",
-      "spaces built to last",
-      "clarity from plan to handover",
-      "details that feel intentional",
-    ],
-    []
-  );
-
-  const [index, setIndex] = useState(0);
-  const [phase, setPhase] = useState<"in" | "out">("in");
+export default function Hero() {
+  const [currentImage, setCurrentImage] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
-    const HOLD_MS = 1650;
-    const FADE_OUT_MS = 240;
-
-    const t1 = window.setTimeout(() => setPhase("out"), HOLD_MS);
-    const t2 = window.setTimeout(() => {
-      setIndex((i) => (i + 1) % WORDS.length);
-      setPhase("in");
-    }, HOLD_MS + FADE_OUT_MS);
-
-    return () => {
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
-    };
-  }, [index, WORDS.length]);
+    const interval = setInterval(() => {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentImage((prev) => (prev + 1) % HERO_IMAGES.length);
+        setIsTransitioning(false);
+      }, 500);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div className="relative">
-      <div className="pointer-events-none absolute -inset-x-6 -inset-y-4 rounded-[26px] bg-(--wb-accent-2)/12 blur-xl" />
-
-      <div className="relative inline-flex w-full items-center justify-center gap-2 rounded-[18px] border border-(--wb-border) bg-white/80 px-4 py-3 backdrop-blur shadow-[0_18px_55px_rgba(11,18,32,0.10)]">
-        <div className="text-[14.5px] sm:text-[16.5px] font-semibold text-black/65">
-          We craft{" "}
-          <span
-            className={cx(
-              "relative inline-flex items-baseline",
-              "transition-all duration-300 will-change-transform",
-              phase === "in"
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-0.5"
-            )}
-          >
-            <span className="font-extrabold text-(--wb-ink)">
-              <Em>{WORDS[index]}</Em>
-            </span>
-            <span className="ml-1.5 text-black/55">for you</span>
-          </span>
-          <span className="ml-2 inline-block h-4 w-0.5 translate-y-0.5 bg-(--wb-accent-2)/70 animate-pulse rounded-full" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ReelCard({ item }: { item: ReelItem }) {
-  return (
-    <div
-      className={cx(
-        "group relative shrink-0 overflow-hidden rounded-[22px]",
-        "border border-(--wb-border) bg-white/70 backdrop-blur",
-        "shadow-[0_18px_44px_rgba(11,18,32,0.10)]",
-        "h-35 w-50 sm:h-42.5 sm:w-62.5 lg:h-47.5 lg:w-72.5"
-      )}
-    >
+    <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden">
+      {/* Background Image with Overlay */}
       <div className="absolute inset-0">
         <div
-          className="h-full w-full scale-[1.02] transition-transform duration-500 group-hover:scale-[1.08]"
+          className={`absolute inset-0 transition-opacity duration-500 ${isTransitioning ? "opacity-0" : "opacity-100"
+            }`}
           style={{
-            backgroundImage: `linear-gradient(135deg, rgba(11,18,32,0.10), rgba(11,18,32,0.36)), url(${item.img})`,
+            backgroundImage: `url(${HERO_IMAGES[currentImage]})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         />
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(11,18,32,0.74),transparent_62%)]" />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
       </div>
 
-      {item.tag ? (
-        <div className="absolute left-3 top-3 rounded-full border border-white/20 bg-white/15 px-2.5 py-1 text-[11px] font-extrabold tracking-widest text-white/90 backdrop-blur">
-          {item.tag}
-        </div>
-      ) : null}
-
-      <div className="absolute inset-x-0 bottom-0 p-4">
-        <div className="min-w-0">
-          <div className="wb-serif truncate text-[15px] sm:text-[16px] lg:text-[18px] leading-tight text-white">
-            {item.title}
-          </div>
-          <div className="mt-1 truncate text-[12px] font-semibold text-white/75">
-            {item.meta}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ReelRow({
-  items,
-  direction = "left",
-  seconds = 28,
-}: {
-  items: ReelItem[];
-  direction?: "left" | "right";
-  seconds?: number;
-}) {
-  const loop = [...items, ...items, ...items];
-  const style: MarqueeStyle = { ["--wb-marquee-duration"]: `${seconds}s` };
-
-  return (
-    <div
-      className="wb-marquee relative overflow-hidden"
-      style={{
-        WebkitMaskImage:
-          "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
-        maskImage:
-          "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
-      }}
-    >
-      <div
-        className={cx(
-          "wb-marquee-track",
-          direction === "left" ? "wb-marquee-left" : "wb-marquee-right"
-        )}
-        style={style}
-      >
-        {loop.map((item, i) => (
-          <ReelCard key={`${item.title}-${i}`} item={item} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-export default function Hero() {
-  return (
-    <section className="relative overflow-hidden">
-      {/* glows */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-24 -left-35 h-105 w-105 rounded-full blur-3xl"
-        style={{
-          background:
-            "radial-gradient(circle at 30% 30%, rgba(27,79,214,0.26), transparent 60%)",
-        }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-28 -right-30 h-130 w-130 rounded-full blur-3xl"
-        style={{
-          background:
-            "radial-gradient(circle at 40% 40%, rgba(11,42,111,0.22), transparent 62%)",
-        }}
-      />
-
-      <div className="h-px w-full bg-[linear-gradient(to_right,transparent,rgba(27,79,214,0.18),transparent)]" />
-
-      <div className="wb-container">
-        <div className="grid items-center gap-7 py-7 sm:py-10 lg:grid-cols-2 lg:gap-12 lg:py-14">
-          {/* RIGHT (mobile first) */}
-          <div className="relative min-w-0 order-1 lg:order-2">
-            <div className="relative rounded-[26px] border border-(--wb-border) bg-white/55 p-4 backdrop-blur shadow-[0_26px_70px_rgba(11,18,32,0.12)]">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="text-[11px] font-extrabold tracking-[0.22em] text-black/45">
-                    SIGNATURE BUILDS
-                  </div>
-                  <div className="wb-serif mt-1 text-[20px] text-(--wb-ink) wrap-break-word">
-                    Crafted by WestBrook
-                  </div>
-                </div>
-
-                <Link
-                  to="/projects"
-                  className="inline-flex h-9 shrink-0 items-center rounded-full border border-(--wb-border)
-                             bg-white/70 px-3 text-[12px] font-extrabold text-(--wb-accent)
-                             hover:bg-white transition whitespace-nowrap"
-                >
-                  View →
-                </Link>
-              </div>
-
-              {/* marquee */}
-              <div className="mt-4 space-y-3 sm:space-y-4">
-                <ReelRow items={REEL_A} direction="left" seconds={26} />
-                <ReelRow items={REEL_B} direction="right" seconds={30} />
-              </div>
-
-              <div className="mt-3 text-[12px] font-semibold text-black/50 wrap-break-word">
-                From first discussion to final handover — we keep it clear,
-                structured, and on-track.
-              </div>
-            </div>
+      {/* Content */}
+      <div className="relative wb-container flex flex-col justify-center min-h-[90vh] lg:min-h-screen py-20 lg:py-0">
+        <div className="max-w-3xl">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 mb-6">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
+            </span>
+            <span className="text-[12px] font-semibold tracking-wide text-white/90 uppercase">
+              Now Accepting New Projects
+            </span>
           </div>
 
-          {/* LEFT */}
-          <div className="min-w-0 order-2 lg:order-1">
-            <div className="inline-flex items-center gap-2 rounded-full border border-(--wb-border) bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.20em] text-black/55 backdrop-blur">
-              <span className="h-1.5 w-1.5 rounded-full bg-(--wb-accent-2)/70" />
-              WESTBROOK HOMES
-            </div>
+          {/* Headline */}
+          <h1 className="wb-serif text-[36px] sm:text-[52px] lg:text-[68px] leading-[1.08] tracking-tight text-white mb-6">
+            Build Your
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-blue-200 to-white">
+              Dream Home
+            </span>
+          </h1>
 
-            <h1 className="wb-serif mt-4 text-[30px] leading-[1.12] tracking-tight text-(--wb-ink) sm:text-[44px] lg:text-[54px] max-w-[28ch] wrap-break-word transform-gpu">
-              Homes that <Em>feel right</Em> the moment you <Em>step in</Em>.
-            </h1>
+          {/* Subheadline */}
+          <p className="text-[16px] sm:text-[18px] lg:text-[20px] leading-relaxed text-white/80 max-w-xl mb-8">
+            Premium home construction with transparent pricing, expert
+            craftsmanship, and a commitment to bringing your vision to life —
+            on time and on budget.
+          </p>
 
-            <p className="mt-3 max-w-[54ch] text-[14px] leading-relaxed text-black/60 sm:text-[16px] wrap-break-word transform-gpu">
-              We work with you to finalize the design you actually want — then we
-              build it with discipline, finish, and a clean handover.
-            </p>
-
-            <div className="mt-5 flex flex-wrap items-center gap-2">
-              <Link
-                to="/contact"
-                className="inline-flex h-10 items-center justify-center rounded-full px-4 text-[13px] font-extrabold tracking-[0.02em] text-white
-                           bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))]
-                           shadow-[0_16px_34px_rgba(27,79,214,0.18)]
-                           hover:brightness-110 hover:-translate-y-px transition whitespace-nowrap"
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-12">
+            <Link
+              to="/contact"
+              className="group inline-flex h-14 items-center justify-center gap-2 rounded-full px-8 
+                         bg-white text-[15px] font-bold text-gray-900
+                         shadow-[0_20px_50px_rgba(255,255,255,0.15)]
+                         hover:bg-gray-100 hover:scale-[1.02] active:scale-[0.98]
+                         transition-all duration-200"
+            >
+              Get Free Consultation
+              <svg
+                className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                Start a Conversation
-              </Link>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+            </Link>
 
-              <Link
-                to="/projects"
-                className="inline-flex h-10 items-center justify-center rounded-full px-4 text-[13px] font-extrabold tracking-[0.02em]
-                           border border-(--wb-border) bg-white/70 text-black/70
-                           hover:bg-white hover:text-(--wb-ink)
-                           hover:-translate-y-px transition whitespace-nowrap"
+            <Link
+              to="/projects"
+              className="group inline-flex h-14 items-center justify-center gap-2 rounded-full px-8 
+                         bg-white/10 backdrop-blur-md border border-white/30 
+                         text-[15px] font-bold text-white
+                         hover:bg-white/20 hover:border-white/50
+                         transition-all duration-200"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                View Our Work
-              </Link>
-            </div>
-
-            {/* HOW WESTBROOK WORKS (icon removed) */}
-            <div className="mt-6 max-w-xl rounded-[22px] border border-(--wb-border) bg-white/60 p-4 backdrop-blur shadow-[0_18px_50px_rgba(11,18,32,0.10)]">
-              <div className="min-w-0">
-                <div className="text-[12px] font-extrabold tracking-[0.18em] text-black/45">
-                  HOW WESTBROOK WORKS
-                </div>
-
-                <div className="wb-serif mt-1 text-[15.5px] sm:text-[16.5px] text-(--wb-ink) wrap-break-word">
-                  We listen first. Then we design. Then we build.
-                </div>
-
-                <p className="mt-2 text-[13.5px] leading-relaxed text-black/60 wrap-break-word">
-                  We start with your requirements, refine layouts and elevations
-                  with you, lock budgets + timelines, and execute with clarity
-                  until handover.
-                </p>
-              </div>
-            </div>
-
-            {/* WRITER */}
-            <div className="mt-4 max-w-xl">
-              <CraftWriter />
-            </div>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              View Our Projects
+            </Link>
           </div>
+
+          {/* Stats */}
+          <div className="flex flex-wrap gap-8 lg:gap-12">
+            {HERO_STATS.map((stat, index) => (
+              <div key={index} className="text-center sm:text-left">
+                <div className="wb-serif text-[28px] sm:text-[36px] font-bold text-white">
+                  {stat.value}
+                </div>
+                <div className="text-[13px] sm:text-[14px] font-medium text-white/60 uppercase tracking-wider">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Image Indicators */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+          {HERO_IMAGES.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImage(index)}
+              className={`h-1.5 rounded-full transition-all duration-300 ${currentImage === index
+                  ? "w-8 bg-white"
+                  : "w-1.5 bg-white/40 hover:bg-white/60"
+                }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 right-8 hidden lg:flex flex-col items-center gap-2">
+          <span className="text-[11px] font-semibold text-white/50 uppercase tracking-widest rotate-90 origin-center translate-x-6">
+            Scroll
+          </span>
+          <div className="w-px h-16 bg-gradient-to-b from-white/50 to-transparent" />
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-[linear-gradient(to_bottom,transparent,var(--wb-bg))]" />
+      {/* Bottom Gradient Fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[var(--wb-bg)] to-transparent pointer-events-none" />
     </section>
   );
 }
