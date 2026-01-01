@@ -29,7 +29,7 @@ function useScrolled(threshold = 10) {
 
 /**
  * Transparent only while Hero is meaningfully visible (HOME route only)
- * ESLint safe (no sync setState in effect body)
+ * ESLint safe
  */
 function useHeroInView() {
   const location = useLocation();
@@ -57,11 +57,10 @@ function useHeroInView() {
         return;
       }
 
-      obs = new IntersectionObserver(
-        ([entry]) => update(!!entry?.isIntersecting),
-        // keep true while hero still "dominates" the viewport
-        { threshold: 0.12, rootMargin: "0px 0px -55% 0px" }
-      );
+      obs = new IntersectionObserver(([entry]) => update(!!entry?.isIntersecting), {
+        threshold: 0.12,
+        rootMargin: "0px 0px -55% 0px",
+      });
 
       obs.observe(hero);
     };
@@ -85,6 +84,7 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const navItems = useMemo(() => NAV, []);
+
   const [open, setOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
@@ -189,23 +189,22 @@ export default function Navbar() {
   }, [location.pathname, activeSection, moveIndicator]);
 
   /**
-   * ✅ FINAL BEHAVIOR
-   * - heroMode: true only on home AND hero visible AND not scrolled much
-   *   => navbar is TRANSPARENT and sits over the hero image (royal look)
-   * - else => glass navbar
+   * Hero mode: transparent only on Home while hero is visible and not scrolled much
    */
   const heroMode = location.pathname === "/" && onHero && !scrolled;
 
   return (
     <header className="sticky top-0 z-40">
-      {/* Ensure hero can cover under navbar (matches your Hero -mt/pt setup) */}
+      {/* ✅ Slim premium height */}
       <style>{`
-        :root { --wb-nav-h: 72px; } /* make navbar slightly taller = premium */
-        @media (min-width: 640px) { :root { --wb-nav-h: 76px; } }
-        @media (min-width: 1024px) { :root { --wb-nav-h: 80px; } }
+        :root { --wb-nav-h: 58px; }
+        @media (min-width: 640px) { :root { --wb-nav-h: 62px; } }
+        @media (min-width: 1024px) { :root { --wb-nav-h: 64px; } }
+
+        /* optional: if you use this class, lock scroll for mobile menu */
+        .wb-lock { overflow: hidden; }
       `}</style>
 
-      {/* ROYAL NAV WRAPPER */}
       <div
         className={cx(
           "relative transition-all duration-300",
@@ -217,11 +216,7 @@ export default function Navbar() {
         <div
           className={cx(
             "absolute inset-0 transition-all duration-300",
-            heroMode
-              ? "bg-transparent"
-              : scrolled
-              ? "bg-white/72"
-              : "bg-white/42"
+            heroMode ? "bg-transparent" : scrolled ? "bg-white/72" : "bg-white/42"
           )}
         />
 
@@ -253,23 +248,23 @@ export default function Navbar() {
             boxShadow: heroMode
               ? "none"
               : scrolled
-              ? "0 18px 44px rgba(11,18,32,0.10)"
-              : "0 12px 30px rgba(11,18,32,0.07)",
+              ? "0 14px 36px rgba(11,18,32,0.10)"
+              : "0 10px 24px rgba(11,18,32,0.07)",
           }}
         />
 
         {/* Content */}
         <div className="relative wb-container h-full">
           <div className="flex h-full items-center justify-between gap-3">
-            {/* Brand (more premium) */}
-            <Link to="/" className="group inline-flex items-center gap-3">
+            {/* Brand (slim) */}
+            <Link to="/" className="group inline-flex items-center gap-2.5">
               <span
                 className={cx(
                   "grid place-items-center overflow-hidden border",
-                  "h-11 w-11 rounded-2xl",
+                  "h-9 w-9 rounded-xl",
                   heroMode
-                    ? "border-white/18 bg-white/8 backdrop-blur shadow-[0_20px_50px_rgba(0,0,0,0.26)]"
-                    : "border-[color:var(--wb-border)] bg-white/70 backdrop-blur shadow-[0_14px_30px_rgba(11,18,32,0.10)]",
+                    ? "border-white/18 bg-white/8 backdrop-blur shadow-[0_18px_44px_rgba(0,0,0,0.26)]"
+                    : "border-[color:var(--wb-border)] bg-white/70 backdrop-blur shadow-[0_12px_24px_rgba(11,18,32,0.10)]",
                   "transition-transform duration-300 group-hover:scale-[1.02]"
                 )}
               >
@@ -279,15 +274,17 @@ export default function Navbar() {
               <span className="leading-tight">
                 <span
                   className={cx(
-                    "wb-serif block text-[20px] tracking-tight",
-                    heroMode ? "text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.25)]" : "text-[color:var(--wb-ink)]"
+                    "wb-serif block text-[18px] tracking-tight",
+                    heroMode
+                      ? "text-white drop-shadow-[0_10px_22px_rgba(0,0,0,0.22)]"
+                      : "text-[color:var(--wb-ink)]"
                   )}
                 >
                   WestBrook
                 </span>
                 <span
                   className={cx(
-                    "block text-[11px] font-extrabold tracking-[0.30em]",
+                    "block text-[10px] font-extrabold tracking-[0.30em]",
                     heroMode ? "text-white/70" : "text-black/45"
                   )}
                 >
@@ -296,15 +293,15 @@ export default function Navbar() {
               </span>
             </Link>
 
-            {/* Desktop Center Nav (royal pill) */}
+            {/* Desktop Center Nav */}
             <div className="hidden lg:flex flex-1 justify-center">
               <div
                 ref={navRef}
                 className={cx(
-                  "relative flex items-center gap-1 rounded-full border px-1 py-1",
+                  "relative flex items-center gap-1 rounded-full border px-1 py-[3px]",
                   heroMode
-                    ? "border-white/16 bg-white/10 backdrop-blur-xl shadow-[0_26px_70px_rgba(0,0,0,0.26)]"
-                    : "border-[color:var(--wb-border)] bg-white/60 backdrop-blur-xl shadow-[0_16px_38px_rgba(11,18,32,0.10)]"
+                    ? "border-white/16 bg-white/10 backdrop-blur-xl shadow-[0_22px_60px_rgba(0,0,0,0.26)]"
+                    : "border-[color:var(--wb-border)] bg-white/60 backdrop-blur-xl shadow-[0_14px_32px_rgba(11,18,32,0.10)]"
                 )}
               >
                 {/* moving indicator */}
@@ -312,10 +309,10 @@ export default function Navbar() {
                   ref={pillRef}
                   aria-hidden="true"
                   className={cx(
-                    "absolute top-1 bottom-1 left-1 rounded-full",
+                    "absolute top-[3px] bottom-[3px] left-1 rounded-full",
                     heroMode
-                      ? "bg-white/14 border border-white/18 shadow-[0_12px_26px_rgba(0,0,0,0.22)]"
-                      : "bg-[color:var(--wb-accent)]/12 border border-[color:var(--wb-accent)]/25 shadow-[0_6px_16px_rgba(27,79,214,0.14)]",
+                      ? "bg-white/14 border border-white/18 shadow-[0_10px_22px_rgba(0,0,0,0.20)]"
+                      : "bg-[color:var(--wb-accent)]/12 border border-[color:var(--wb-accent)]/25 shadow-[0_6px_14px_rgba(27,79,214,0.14)]",
                     "transition-all duration-300 ease-[cubic-bezier(.25,.8,.25,1)]"
                   )}
                   style={{ width: 0, opacity: 0 }}
@@ -323,7 +320,11 @@ export default function Navbar() {
 
                 {navItems.map((item) => {
                   const isSectionActive = item.isSection && activeSection === item.to;
-                  const isHomeActive = item.to === "/" && !item.isSection && location.pathname === "/" && !activeSection;
+                  const isHomeActive =
+                    item.to === "/" &&
+                    !item.isSection &&
+                    location.pathname === "/" &&
+                    !activeSection;
                   const isPageActive = !item.isSection && item.to !== "/" && location.pathname === item.to;
                   const isCurrentlyActive = isSectionActive || isHomeActive || isPageActive;
 
@@ -337,7 +338,7 @@ export default function Navbar() {
                       onMouseLeave={() => moveIndicator()}
                       className={() =>
                         cx(
-                          "relative z-10 rounded-full px-4 py-2",
+                          "relative z-10 rounded-full px-3 py-[7px]",
                           "text-[13px] font-extrabold tracking-[0.02em]",
                           "transition-all duration-200 hover:-translate-y-[1px]",
                           heroMode
@@ -358,12 +359,12 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Desktop Actions (clean + royal) */}
+            {/* Desktop Actions */}
             <div className="hidden lg:flex items-center gap-2">
               <Link
                 to="/explore-homes"
                 className={cx(
-                  "rounded-full px-3 py-2 text-[12px] font-extrabold tracking-[0.02em] border backdrop-blur transition-all duration-200 hover:-translate-y-[1px]",
+                  "rounded-full px-3 py-[7px] text-[12px] font-extrabold tracking-[0.02em] border backdrop-blur transition-all duration-200 hover:-translate-y-[1px]",
                   heroMode
                     ? "border-white/16 bg-white/10 text-white/80 hover:text-white hover:bg-white/14"
                     : "border-[color:var(--wb-border)] bg-white/55 text-black/60 hover:text-[color:var(--wb-ink)] hover:bg-white/75"
@@ -376,10 +377,10 @@ export default function Navbar() {
                 type="button"
                 onClick={() => goToHomeAndScroll("contact")}
                 className={cx(
-                  "rounded-full px-4 py-2 text-[12px] font-extrabold tracking-[0.02em] transition-all duration-200 hover:-translate-y-[1px]",
+                  "rounded-full px-4 py-[7px] text-[12px] font-extrabold tracking-[0.02em] transition-all duration-200 hover:-translate-y-[1px]",
                   heroMode
-                    ? "border border-white/16 bg-white/12 text-white hover:bg-white/16 shadow-[0_18px_44px_rgba(0,0,0,0.26)]"
-                    : "bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] text-white shadow-[0_14px_28px_rgba(27,79,214,0.18)] hover:brightness-110"
+                    ? "border border-white/16 bg-white/12 text-white hover:bg-white/16 shadow-[0_16px_38px_rgba(0,0,0,0.24)]"
+                    : "bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] text-white shadow-[0_12px_22px_rgba(27,79,214,0.18)] hover:brightness-110"
                 )}
               >
                 Get a Callback
@@ -392,10 +393,10 @@ export default function Navbar() {
                 type="button"
                 onClick={() => goToHomeAndScroll("contact")}
                 className={cx(
-                  "rounded-full px-3 py-2 text-[11px] font-extrabold tracking-[0.02em] transition-all duration-200",
+                  "rounded-full px-3 py-[7px] text-[11px] font-extrabold tracking-[0.02em] transition-all duration-200",
                   heroMode
-                    ? "border border-white/16 bg-white/12 text-white shadow-[0_16px_40px_rgba(0,0,0,0.26)] hover:bg-white/16"
-                    : "bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] text-white shadow-[0_10px_20px_rgba(27,79,214,0.18)] hover:brightness-110"
+                    ? "border border-white/16 bg-white/12 text-white shadow-[0_14px_34px_rgba(0,0,0,0.24)] hover:bg-white/16"
+                    : "bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] text-white shadow-[0_10px_18px_rgba(27,79,214,0.18)] hover:brightness-110"
                 )}
               >
                 Contact
@@ -404,7 +405,7 @@ export default function Navbar() {
               <button
                 type="button"
                 className={cx(
-                  "inline-flex h-11 w-11 items-center justify-center rounded-full border backdrop-blur transition",
+                  "inline-flex h-10 w-10 items-center justify-center rounded-full border backdrop-blur transition",
                   heroMode ? "border-white/16 bg-white/10 hover:bg-white/14" : "border-[color:var(--wb-border)] bg-white/60 hover:bg-white/75"
                 )}
                 aria-label={open ? "Close menu" : "Open menu"}
@@ -452,12 +453,12 @@ export default function Navbar() {
         >
           <div className="flex items-center justify-between px-5 pt-5">
             <Link to="/" className="inline-flex items-center gap-3" onClick={() => setOpen(false)}>
-              <span className="grid h-10 w-10 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white shadow-[0_12px_24px_rgba(11,18,32,0.08)]">
+              <span className="grid h-9 w-9 place-items-center rounded-xl border border-[color:var(--wb-border)] bg-white shadow-[0_12px_22px_rgba(11,18,32,0.08)]">
                 <span className="wb-serif text-[18px] leading-none text-[color:var(--wb-accent)]">W</span>
               </span>
               <div className="leading-tight">
                 <div className="wb-serif text-[18px] text-[color:var(--wb-ink)]">WestBrook</div>
-                <div className="text-[11px] font-extrabold tracking-[0.26em] text-black/45">HOMES</div>
+                <div className="text-[10px] font-extrabold tracking-[0.26em] text-black/45">HOMES</div>
               </div>
             </Link>
 
@@ -500,8 +501,10 @@ export default function Navbar() {
             <div className="mt-5 space-y-2">
               {navItems.map((item, idx) => {
                 const isSectionActive = item.isSection && activeSection === item.to;
-                const isHomeActive = item.to === "/" && !item.isSection && location.pathname === "/" && !activeSection;
-                const isPageActive = !item.isSection && item.to !== "/" && location.pathname === item.to;
+                const isHomeActive =
+                  item.to === "/" && !item.isSection && location.pathname === "/" && !activeSection;
+                const isPageActive =
+                  !item.isSection && item.to !== "/" && location.pathname === item.to;
                 const isCurrentlyActive = isSectionActive || isHomeActive || isPageActive;
 
                 return (
