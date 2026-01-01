@@ -1,536 +1,425 @@
 // src/pages/About.tsx
-import React, { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
   RiArrowRightUpLine,
-  RiShieldCheckLine,
-  RiDraftLine,
+  RiSparkling2Line,
   RiRuler2Line,
-  RiTeamLine,
+  RiShieldCheckLine,
   RiTimeLine,
-  RiCheckboxCircleLine,
-  RiChatSmile2Line,
-  RiFocus3Line,
   RiVerifiedBadgeLine,
 } from "react-icons/ri";
+
+const EASE: [number, number, number, number] = [0.18, 0.82, 0.22, 1];
 
 function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
-const EASE: [number, number, number, number] = [0.18, 0.82, 0.22, 1];
-
-function useScrolled(threshold = 10) {
-  const [scrolled, setScrolled] = React.useState(false);
-  useEffect(() => {
-    const on = () => setScrolled(window.scrollY > threshold);
-    on();
-    window.addEventListener("scroll", on, { passive: true });
-    return () => window.removeEventListener("scroll", on);
-  }, [threshold]);
-  return scrolled;
-}
-
-function SoftBg() {
+function BlueHighlight({ children }: { children: React.ReactNode }) {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="absolute -top-28 -left-36 h-[620px] w-[620px] rounded-full bg-[radial-gradient(circle_at_center,rgba(27,79,214,0.10),transparent_70%)]" />
-      <div className="absolute -top-36 -right-40 h-[720px] w-[720px] rounded-full bg-[radial-gradient(circle_at_center,rgba(11,42,111,0.08),transparent_72%)]" />
-      <div className="absolute -bottom-56 left-[10%] h-[760px] w-[760px] rounded-full bg-[radial-gradient(circle_at_center,rgba(27,79,214,0.07),transparent_72%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(1200px_520px_at_50%_0%,rgba(255,255,255,0.72),transparent_62%)]" />
-      <div className="absolute inset-0 opacity-[0.05] [background-image:radial-gradient(rgba(0,0,0,0.6)_1px,transparent_1px)] [background-size:18px_18px]" />
-    </div>
-  );
-}
-
-function Glass({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cx(
-        "relative rounded-[28px] border border-[color:var(--wb-border)] bg-white/60 backdrop-blur-xl",
-        "shadow-[0_18px_70px_rgba(11,18,32,0.10)]",
-        className
-      )}
-    >
+    <span className="bg-linear-to-r from-(--wb-accent-2) to-(--wb-accent) bg-clip-text text-transparent">
       {children}
-    </div>
+    </span>
   );
 }
 
-function Kicker({ children }: { children: string }) {
-  return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--wb-border)] bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.28em] text-black/55">
-      <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--wb-accent)]" />
-      {children}
-    </div>
-  );
-}
-
-function Stat({
-  icon,
-  title,
-  sub,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  sub: string;
-}) {
-  return (
-    <div className="rounded-[22px] border border-[color:var(--wb-border)] bg-white/60 p-4">
-      <div className="flex items-start gap-3">
-        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-[color:var(--wb-accent)]">
-          {icon}
-        </div>
-        <div className="min-w-0">
-          <div className="text-sm font-extrabold text-[color:var(--wb-ink)]">{title}</div>
-          <div className="mt-1 text-sm leading-6 text-black/55">{sub}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function MiniCard({
-  icon,
-  title,
-  desc,
-}: {
+type Value = {
   icon: React.ReactNode;
   title: string;
   desc: string;
-}) {
-  return (
-    <div className="rounded-[24px] border border-[color:var(--wb-border)] bg-white/60 p-5">
-      <div className="flex items-start gap-3">
-        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-[color:var(--wb-accent)]">
-          {icon}
-        </div>
-        <div className="min-w-0">
-          <div className="text-[15px] font-extrabold text-[color:var(--wb-ink)]">{title}</div>
-          <div className="mt-1 text-sm leading-6 text-black/55">{desc}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
+};
 
-function BulletRow({ text }: { text: string }) {
-  return (
-    <div className="flex items-start gap-2 rounded-[18px] border border-[color:var(--wb-border)] bg-white/60 px-4 py-3 text-sm text-black/65">
-      <RiCheckboxCircleLine className="mt-0.5 shrink-0 text-[color:var(--wb-accent)]" />
-      <span className="min-w-0 break-words">{text}</span>
-    </div>
-  );
-}
+type Slide = {
+  id: string;
+  kind: "EXTERIOR" | "INTERIOR" | "HOME";
+  title: string;
+  sub: string;
+  image: string;
+};
 
-function FAQItem({
-  q,
-  a,
-}: {
-  q: string;
-  a: string;
-}) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="rounded-[22px] border border-[color:var(--wb-border)] bg-white/60">
-      <button
-        type="button"
-        onClick={() => setOpen((s) => !s)}
-        className="flex w-full items-start justify-between gap-3 px-5 py-4 text-left"
-      >
-        <div className="min-w-0">
-          <div className="text-sm font-extrabold text-[color:var(--wb-ink)]">{q}</div>
-        </div>
-        <div
-          className={cx(
-            "mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-black/60 transition",
-            open ? "rotate-45" : "rotate-0"
-          )}
-          aria-hidden="true"
-        >
-          +
-        </div>
-      </button>
-
-      <motion.div
-        initial={false}
-        animate={open ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
-        transition={{ duration: 0.25, ease: EASE }}
-        className="overflow-hidden"
-      >
-        <div className="px-5 pb-4 text-sm leading-6 text-black/55">{a}</div>
-      </motion.div>
-
-      <div className="h-px w-full bg-[color:var(--wb-border)]/80" />
-    </div>
-  );
+function clampIndex(i: number, len: number) {
+  if (len <= 0) return 0;
+  return (i + len) % len;
 }
 
 export default function About() {
-  const scrolled = useScrolled(12);
+  const reduceMotion = useReducedMotion();
 
-  const stats = useMemo(
+  const values: Value[] = [
+    {
+      icon: <RiRuler2Line className="text-xl" />,
+      title: "Bespoke planning",
+      desc: "Your routine drives the layout — never templates.",
+    },
+    {
+      icon: <RiVerifiedBadgeLine className="text-xl" />,
+      title: "Material clarity",
+      desc: "Balanced palette, premium finishes, clean detailing.",
+    },
+    {
+      icon: <RiTimeLine className="text-xl" />,
+      title: "Trackable milestones",
+      desc: "Clear stages, realistic timelines, consistent updates.",
+    },
+    {
+      icon: <RiShieldCheckLine className="text-xl" />,
+      title: "Quality checks",
+      desc: "Craft reviewed from structure to final fit.",
+    },
+  ];
+
+  const slides = useMemo<Slide[]>(
     () => [
-      { icon: <RiDraftLine className="text-xl" />, title: "Design-led", sub: "We refine the plan until it feels right." },
-      { icon: <RiTimeLine className="text-xl" />, title: "Structured", sub: "Clear decisions, clean updates." },
-      { icon: <RiRuler2Line className="text-xl" />, title: "Detail discipline", sub: "Finishes stay sharp, end to end." },
+      {
+        id: "s1",
+        kind: "EXTERIOR",
+        title: "Signature exterior presence",
+        sub: "Proportion-led • Quiet confidence",
+        image:
+          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=90",
+      },
+      {
+        id: "s2",
+        kind: "HOME",
+        title: "Light-first planning",
+        sub: "Flow + daylight • Clean geometry",
+        image:
+          "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=90",
+      },
+      {
+        id: "s3",
+        kind: "INTERIOR",
+        title: "Calm interior finishes",
+        sub: "Warm textures • Refined detailing",
+        image:
+          "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=2400&q=90",
+      },
     ],
     []
   );
 
-  const beliefs = useMemo(
-    () => [
-      {
-        icon: <RiFocus3Line className="text-xl" />,
-        title: "Clarity wins",
-        desc: "We keep scope, choices, and next steps easy to follow.",
-      },
-      {
-        icon: <RiTeamLine className="text-xl" />,
-        title: "One accountable team",
-        desc: "One team, one standard, one outcome.",
-      },
-      {
-        icon: <RiVerifiedBadgeLine className="text-xl" />,
-        title: "Quality is controlled",
-        desc: "Premium comes from discipline and checks.",
-      },
-    ],
-    []
-  );
+  // Slider state
+  const [idx, setIdx] = useState(0);
+  const active = slides[idx];
 
-  const deliver = useMemo(
-    () => [
-      "Design that fits your lifestyle — not a template.",
-      "A clean estimate and honest trade-offs before work starts.",
-      "Simple updates, so you always know what’s next.",
-      "A final handover that feels finished — not rushed.",
-    ],
-    []
-  );
+  const next = useCallback(() => setIdx((i) => clampIndex(i + 1, slides.length)), [slides.length]);
+  const prev = useCallback(() => setIdx((i) => clampIndex(i - 1, slides.length)), [slides.length]);
 
-  // ✅ more general FAQs + detailed answers (only section with more text)
-  const faqs = useMemo(
-    () => [
-      {
-        q: "What exactly do you do — design, build, or both?",
-        a:
-          "We handle the full journey end-to-end: understanding your requirements, developing the design, planning the execution, and building with consistent quality checks. " +
-          "You don’t have to coordinate multiple vendors or chase updates — one accountable team owns the outcome.",
-      },
-      {
-        q: "How is a custom home different from a “ready plan” home?",
-        a:
-          "A custom home is designed around you and your plot. That means the layout, light, privacy, storage, and movement are planned for your daily life — not forced into a pre-set template. " +
-          "It also means decisions are made intentionally (not last minute), which helps the build feel cleaner and more predictable.",
-      },
-      {
-        q: "How do you keep the project on track?",
-        a:
-          "We keep it simple: clear scope, clear milestones, and checkpoints during execution. " +
-          "Before work moves, key choices are confirmed so the site doesn’t keep changing direction. " +
-          "During the build, updates are short and structured — what’s done, what’s next, and what needs your input.",
-      },
-      {
-        q: "Can I control the budget without compromising the outcome?",
-        a:
-          "Yes. We keep pricing transparent and show trade-offs clearly. If you want to save cost, we guide you toward changes that reduce budget without hurting the feel of the home (like smarter planning, simplified forms, or material swaps that still look premium). " +
-          "You’ll always know what changes cost before work starts — no surprise jumps later.",
-      },
-      {
-        q: "How do you manage quality on site?",
-        a:
-          "Quality is controlled through checks and finish discipline. We set standards for details that matter — edges, alignments, lighting points, surface finish, and joinery cleanliness. " +
-          "Then we verify those standards at key stages so the final result looks intentional, not patched together.",
-      },
-      {
-        q: "What do you need from me to get started?",
-        a:
-          "Just the essentials: your plot/location details, your timeline, your budget comfort range, and a simple style direction (even 2–3 reference images helps). " +
-          "From there, we guide the rest — layouts, priorities, and finish level choices — without overwhelming you.",
-      },
-      {
-        q: "Do you take up projects on any plot or constraints?",
-        a:
-          "We work with real constraints: setbacks, access, orientation, slope, and utilities. The plan is shaped around the site so it works naturally and avoids rework. " +
-          "If a constraint forces a compromise, we call it early and propose clean options — not late-stage fixes.",
-      },
-      {
-        q: "How involved do I have to be during the build?",
-        a:
-          "As involved as you want — but not forced. We keep approvals to key decisions, and we keep communication clean. " +
-          "You’ll get regular updates and check-in moments for important choices, without being pulled into daily site management.",
-      },
-    ],
-    []
-  );
+  // Auto-advance (subtle)
+  useEffect(() => {
+    if (reduceMotion) return;
+    const t = window.setInterval(() => next(), 5200);
+    return () => window.clearInterval(t);
+  }, [next, reduceMotion]);
 
   return (
-    <main className="relative overflow-x-hidden">
-      <SoftBg />
+    <main className={cx("min-h-screen", "bg-(--wb-bg) text-(--wb-ink)")}>
+      {/* HERO */}
+      <section className="relative overflow-hidden">
+        {/* ambient glows — same vibe as ExploreHomes */}
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute left-1/2 -top-44 h-[420px] w-[860px] -translate-x-1/2 rounded-full bg-(--wb-ink)/10 blur-3xl" />
+          <div className="absolute -right-44 top-20 h-[360px] w-[360px] rounded-full bg-(--wb-accent-2)/14 blur-3xl" />
+          <div className="absolute -left-44 bottom-10 h-[300px] w-[300px] rounded-full bg-(--wb-accent)/12 blur-3xl" />
+        </div>
 
-      <div className="relative mx-auto max-w-[1120px] px-4 py-10 sm:px-5">
-        {/* HERO */}
-        <Glass className="p-6 sm:p-10">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-start">
-            {/* LEFT */}
-            <div className="min-w-0">
-              <Kicker>ABOUT WESTBROOK</Kicker>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, ease: EASE }}
-                className="mt-4 text-3xl font-semibold tracking-tight text-[color:var(--wb-ink)] sm:text-5xl [text-wrap:balance]"
-              >
-                Custom homes,
-                <br />
-                built with{" "}
-                <span className="bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] bg-clip-text text-transparent">
-                  calm precision
-                </span>
-                .
-              </motion.h1>
-
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-black/60">
-                End-to-end builds — planning first, pricing clearly, and executing with discipline.
-                Premium should feel smooth.
-              </p>
-
-              <div className="mt-6 flex flex-wrap gap-2">
-                <Link
-                  to="/#contact"
-                  className={cx(
-                    "inline-flex items-center gap-2 rounded-full px-4 py-2",
-                    "bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] text-white",
-                    "text-sm font-extrabold shadow-[0_14px_30px_rgba(27,79,214,0.18)]",
-                    "hover:brightness-110 transition"
-                  )}
-                >
-                  Start a conversation <RiArrowRightUpLine />
-                </Link>
-
-                <Link
-                  to="/projects"
-                  className={cx(
-                    "inline-flex items-center gap-2 rounded-full px-4 py-2",
-                    "border border-[color:var(--wb-border)] bg-white/60",
-                    "text-sm font-extrabold text-black/70 hover:bg-white transition"
-                  )}
-                >
-                  View builds <RiArrowRightUpLine />
-                </Link>
-              </div>
-
-              <div className="mt-7 grid gap-3 sm:grid-cols-3">
-                {stats.map((s) => (
-                  <Stat key={s.title} icon={s.icon} title={s.title} sub={s.sub} />
-                ))}
-              </div>
+        <div className="wb-container pt-14 pb-10 sm:pt-20 sm:pb-14">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: reduceMotion ? 0 : 0.85, ease: EASE }}
+            className="mx-auto max-w-[92ch] text-center"
+          >
+            {/* BANGING CAPTION */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-(--wb-border) bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.22em] text-black/55 backdrop-blur">
+              <RiSparkling2Line className="text-(--wb-ink)/55" />
+              QUIET LUXURY • CUSTOM BUILT • CLEAN EXECUTION
             </div>
 
-            {/* RIGHT */}
-            <div className="min-w-0">
-              <div className="rounded-[28px] border border-[color:var(--wb-border)] bg-white/60 p-6">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="text-sm font-extrabold text-[color:var(--wb-ink)]">What you can expect</div>
-                    <div className="mt-1 text-sm leading-6 text-black/55">
-                      Clear decisions. Clean execution. A finished handover.
-                    </div>
-                  </div>
-                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-[color:var(--wb-accent)]">
-                    <RiShieldCheckLine className="text-xl" />
+            {/* Better headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.95, ease: EASE, delay: 0.05 }}
+              className="wb-serif mt-6 text-[34px] leading-[1.08] sm:text-[52px] lg:text-[64px]"
+            >
+              Designed to feel  <BlueHighlight>right</BlueHighlight>.
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.9, ease: EASE, delay: 0.12 }}
+              className="mx-auto mt-5 max-w-[74ch] text-[15px] sm:text-[18px] leading-relaxed text-(--wb-ink)/70"
+            >
+              WestBrook designs and builds custom homes around how you live — layout, flow, light and
+              materials — with a process that stays{" "}
+              <BlueHighlight>calm</BlueHighlight>,{" "}
+              <BlueHighlight>trackable</BlueHighlight>, and{" "}
+              <BlueHighlight>premium</BlueHighlight>.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.7, ease: EASE, delay: 0.18 }}
+              className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center"
+            >
+              <a
+                href="/#contact"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-(--wb-ink) px-6 py-3 text-[12px] font-extrabold tracking-[0.16em] text-white shadow-[0_18px_55px_rgba(12,24,48,0.22)] hover:shadow-[0_28px_85px_rgba(12,24,48,0.30)] transition"
+              >
+                START A CONVERSATION <RiArrowRightUpLine className="text-lg" />
+              </a>
+
+              <Link
+                to="/explore-homes"
+                className="inline-flex items-center justify-center rounded-2xl border border-(--wb-border) bg-white/60 px-6 py-3 text-[12px] font-extrabold tracking-[0.16em] text-(--wb-ink)/75 hover:text-(--wb-ink) hover:bg-white/80 transition backdrop-blur"
+              >
+                VIEW PORTFOLIO
+              </Link>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ORGANIZED GRID: SLIDER + CONTENT */}
+      <section className="wb-container pb-18 sm:pb-22">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
+          {/* SLIDER CARD (left) */}
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: reduceMotion ? 0 : 0.85, ease: EASE }}
+            className="lg:col-span-5"
+          >
+            <div
+              className={cx(
+                "relative overflow-hidden rounded-3xl",
+                "border border-(--wb-border) bg-white/40 backdrop-blur",
+                "shadow-[0_18px_60px_rgba(12,24,48,0.10)]"
+              )}
+            >
+              <div className="relative aspect-[4/5] sm:aspect-[16/12] lg:aspect-[10/12] overflow-hidden">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={active.id}
+                    src={active.image}
+                    alt={active.title}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
+                    transition={{ duration: reduceMotion ? 0 : 0.35, ease: EASE }}
+                    loading="lazy"
+                  />
+                </AnimatePresence>
+
+                {/* blue wash (NOT black) */}
+                <div className="absolute inset-0 bg-linear-to-t from-(--wb-ink)/35 via-(--wb-accent-2)/10 to-transparent opacity-70" />
+
+                {/* Kind pill */}
+                <div className="absolute left-5 top-5">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/10 px-3 py-2 text-[11px] font-extrabold tracking-[0.18em] text-white/90 backdrop-blur">
+                    <span className="h-1.5 w-1.5 rounded-full bg-(--wb-accent-2)/90" />
+                    {active.kind}
                   </div>
                 </div>
 
-                {/* OUR RULE (highlight) */}
-                <div className="mt-5 rounded-[22px] border border-[color:var(--wb-border)] bg-white/70 p-4">
-                  <div className="text-[11px] font-extrabold tracking-[0.24em] text-black/45">OUR RULE</div>
-                  <p className="mt-2 text-sm leading-6 text-black/65">
-                    If scope, cost, or timeline isn’t clear — we pause and resolve it before moving.
-                  </p>
-                </div>
+                {/* Arrows */}
+                <button
+                  type="button"
+                  onClick={prev}
+                  aria-label="Previous slide"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full border border-white/18 bg-white/10 p-2 text-white/90 backdrop-blur hover:bg-white/15 transition"
+                >
+                  <RiArrowLeftSLine className="text-2xl" />
+                </button>
+                <button
+                  type="button"
+                  onClick={next}
+                  aria-label="Next slide"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full border border-white/18 bg-white/10 p-2 text-white/90 backdrop-blur hover:bg-white/15 transition"
+                >
+                  <RiArrowRightSLine className="text-2xl" />
+                </button>
 
-                <div className="mt-5 grid gap-2">
-                  {["One accountable team", "Simple update rhythm", "Quality checkpoints"].map((x) => (
-                    <div
-                      key={x}
-                      className="rounded-[18px] border border-[color:var(--wb-border)] bg-white/65 px-4 py-3 text-sm font-semibold text-black/65"
+                {/* Bottom caption */}
+                <div className="absolute inset-x-0 bottom-0 p-5">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={active.id + "-cap"}
+                      initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 8 }}
+                      transition={{ duration: reduceMotion ? 0 : 0.35, ease: EASE }}
+                      className="inline-flex max-w-[92%] flex-col gap-1 rounded-2xl border border-white/16 bg-white/10 px-3.5 py-3 backdrop-blur"
                     >
-                      {x}
-                    </div>
-                  ))}
-                </div>
+                      <div className="wb-serif text-[20px] text-white leading-tight">{active.title}</div>
+                      <div className="text-[13px] text-white/80">{active.sub}</div>
+                    </motion.div>
+                  </AnimatePresence>
 
-                <div className="mt-5 rounded-[22px] border border-[color:var(--wb-border)] bg-white/65 p-4">
-                  <div className="flex items-start gap-3">
-                    <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl border border-[color:var(--wb-border)] bg-white/70 text-[color:var(--wb-accent)]">
-                      <RiChatSmile2Line className="text-xl" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-sm font-extrabold text-[color:var(--wb-ink)]">Good fit if</div>
-                      <div className="mt-1 text-sm leading-6 text-black/55">
-                        You want a truly custom home, clean finishes, and clarity — not chaos.
-                      </div>
-                    </div>
+                  {/* Dots */}
+                  <div className="mt-3 flex items-center gap-2">
+                    {slides.map((s, i) => {
+                      const on = i === idx;
+                      return (
+                        <button
+                          key={s.id}
+                          type="button"
+                          aria-label={`Go to slide ${i + 1}`}
+                          onClick={() => setIdx(i)}
+                          className={cx(
+                            "h-2.5 w-2.5 rounded-full border transition",
+                            on
+                              ? "border-white/40 bg-(--wb-accent-2)/90"
+                              : "border-white/25 bg-white/20 hover:bg-white/30"
+                          )}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
               </div>
+
+              <div className="h-[2px] w-full bg-linear-to-r from-(--wb-accent)/50 via-(--wb-accent-2)/45 to-transparent" />
             </div>
-          </div>
-        </Glass>
+          </motion.div>
 
-        {/* WHAT WE BELIEVE */}
-        <section className="mt-12">
-          <div className="mx-auto max-w-[72ch] text-center">
-            <Kicker>WHAT WE BELIEVE</Kicker>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[color:var(--wb-ink)] sm:text-3xl">
-              Simple principles. Strong outcomes.
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-black/55">
-              Clean work feels premium when the basics are consistent.
-            </p>
-          </div>
+          {/* CONTENT CARD (right) */}
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: reduceMotion ? 0 : 0.9, ease: EASE }}
+            className="lg:col-span-7"
+          >
+            <div className="rounded-3xl border border-(--wb-border) bg-white/55 backdrop-blur shadow-[0_18px_60px_rgba(12,24,48,0.10)] overflow-hidden">
+              <div className="p-6 sm:p-8 lg:p-10">
+                <div className="inline-flex items-center gap-2 rounded-full border border-(--wb-border) bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.22em] text-black/55 backdrop-blur">
+                  OUR APPROACH
+                </div>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {beliefs.map((b, i) => (
-              <motion.div
-                key={b.title}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ duration: 0.25, ease: EASE, delay: i * 0.05 }}
-              >
-                <MiniCard icon={b.icon} title={b.title} desc={b.desc} />
-              </motion.div>
-            ))}
-          </div>
-        </section>
+                <h2 className="wb-serif mt-4 text-[22px] sm:text-[28px]">
+                  Premium design, <BlueHighlight>without the noise</BlueHighlight>.
+                </h2>
 
-        {/* WHAT WE DELIVER */}
-        <section className="mt-12">
-          <Glass className="p-6 sm:p-8">
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
-              <div className="min-w-0">
-                <Kicker>WHAT WE DELIVER</Kicker>
-                <h3 className="mt-3 text-xl font-semibold text-[color:var(--wb-ink)] sm:text-2xl">
-                  A build that stays composed.
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-black/55">
-                  Less noise. More control. The experience matters too.
+                <p className="mt-3 text-[14px] sm:text-[15px] leading-relaxed text-(--wb-ink)/70">
+                  We keep decisions intentional — proportion, materials, and execution — so your home feels
+                  composed, not crowded. You’ll always know what’s happening, what’s next, and what matters.
                 </p>
 
-                <div className="mt-5 grid gap-2">
-                  {deliver.map((x) => (
-                    <BulletRow key={x} text={x} />
+                {/* Mini highlight chips */}
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {["Light-led layouts", "Balanced materials", "Clean detailing", "Transparent stages"].map(
+                    (t) => (
+                      <span
+                        key={t}
+                        className="rounded-full border border-(--wb-border) bg-white/60 px-3 py-1.5 text-[12px] font-semibold text-(--wb-ink)/70 backdrop-blur"
+                      >
+                        <span className="bg-linear-to-r from-(--wb-accent-2) to-(--wb-accent) bg-clip-text text-transparent font-extrabold">
+                          {t}
+                        </span>
+                      </span>
+                    )
+                  )}
+                </div>
+
+                {/* Value grid */}
+                <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {values.map((v) => (
+                    <div
+                      key={v.title}
+                      className="rounded-2xl border border-(--wb-border) bg-white/55 p-4 backdrop-blur"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="rounded-2xl border border-(--wb-border) bg-white/60 p-2 text-(--wb-ink)/75">
+                          {v.icon}
+                        </div>
+                        <div>
+                          <p className="text-[13px] font-extrabold tracking-[0.08em] text-(--wb-ink)">
+                            {v.title}
+                          </p>
+                          <p className="mt-1 text-[13px] leading-relaxed text-(--wb-ink)/65">
+                            {v.desc}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   ))}
                 </div>
-              </div>
 
-              <div className="min-w-0">
-                <div className="rounded-[26px] border border-[color:var(--wb-border)] bg-white/60 p-6">
-                  <div className="text-sm font-extrabold text-[color:var(--wb-ink)]">Quick facts</div>
-                  <div className="mt-3 grid gap-2">
-                    {[
-                      { t: "Custom first", d: "Designed around your life and your plot." },
-                      { t: "Clear cost", d: "Trade-offs are transparent before work starts." },
-                      { t: "Finish discipline", d: "Details stay consistent, not improvised." },
-                    ].map((x) => (
-                      <div
-                        key={x.t}
-                        className="rounded-[18px] border border-[color:var(--wb-border)] bg-white/65 p-4"
-                      >
-                        <div className="text-sm font-extrabold text-[color:var(--wb-ink)]">{x.t}</div>
-                        <div className="mt-1 text-sm text-black/55">{x.d}</div>
-                      </div>
-                    ))}
-                  </div>
+                <div className="mt-8 flex flex-wrap gap-2">
+                  <a
+                    href="/#contact"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-(--wb-ink) px-5 py-3 text-[12px] font-extrabold tracking-[0.16em] text-white shadow-[0_18px_55px_rgba(12,24,48,0.22)] hover:shadow-[0_28px_85px_rgba(12,24,48,0.30)] transition"
+                  >
+                    BOOK A CONSULTATION <RiArrowRightUpLine className="text-lg" />
+                  </a>
 
-                  <div className="mt-5 grid gap-2">
-                    <Link
-                      to="/#contact"
-                      className={cx(
-                        "inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3",
-                        "bg-[linear-gradient(135deg,var(--wb-accent),var(--wb-accent-2))] text-white",
-                        "text-sm font-extrabold shadow-[0_14px_30px_rgba(27,79,214,0.18)]",
-                        "hover:brightness-110 transition"
-                      )}
-                    >
-                      Talk to us <RiArrowRightUpLine />
-                    </Link>
-                    <Link
-                      to="/projects"
-                      className={cx(
-                        "inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3",
-                        "border border-[color:var(--wb-border)] bg-white/60",
-                        "text-sm font-extrabold text-black/70 hover:bg-white transition"
-                      )}
-                    >
-                      See builds <RiArrowRightUpLine />
-                    </Link>
-                  </div>
+                  <Link
+                    to="/process"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-(--wb-border) bg-white/60 px-5 py-3 text-[12px] font-extrabold tracking-[0.16em] text-(--wb-ink)/75 hover:text-(--wb-ink) hover:bg-white/80 transition backdrop-blur"
+                  >
+                    VIEW PROCESS
+                  </Link>
                 </div>
               </div>
+
+              <div className="h-[2px] w-full bg-linear-to-r from-(--wb-accent)/50 via-(--wb-accent-2)/40 to-transparent" />
             </div>
-          </Glass>
-        </section>
-
-        {/* FAQ (only place with more text) */}
-        <section className="mt-12">
-          <div className="mx-auto max-w-[72ch] text-center">
-            <Kicker>FAQ</Kicker>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[color:var(--wb-ink)] sm:text-3xl">
-              Quick answers.
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-black/55">
-              The common questions people ask before starting.
-            </p>
-          </div>
-
-          <div className="mt-6 mx-auto max-w-3xl grid gap-3">
-            {faqs.map((f) => (
-              <FAQItem key={f.q} q={f.q} a={f.a} />
-            ))}
-          </div>
-        </section>
-
-        <div className="mt-12 h-px w-full bg-[linear-gradient(to_right,transparent,rgba(27,79,214,0.18),transparent)]" />
-        <div className="py-8 text-center text-xs text-black/45">
-          © {new Date().getFullYear()} WestBrook Homes • About
+          </motion.div>
         </div>
-      </div>
+      </section>
 
-      {/* sticky micro header */}
-      <div
-        className={cx(
-          "pointer-events-none fixed left-0 right-0 top-0 z-30 transition-opacity duration-300",
-          scrolled ? "opacity-100" : "opacity-0"
-        )}
-        aria-hidden="true"
-      >
-        <div className="mx-auto max-w-[1120px] px-4 sm:px-5">
-          <div className="mt-3 rounded-full border border-[color:var(--wb-border)] bg-white/65 backdrop-blur-xl px-4 py-2 shadow-[0_18px_50px_rgba(11,18,32,0.08)]">
-            <div className="flex items-center justify-between gap-3 text-xs font-extrabold text-black/60">
-              <span className="inline-flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--wb-accent)]" />
-                WestBrook Homes
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <RiShieldCheckLine className="text-[color:var(--wb-accent)]" />
-                Premium. Predictable.
-              </span>
+      {/* CTA STRIP */}
+      <section className="wb-container pb-20 sm:pb-24">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: reduceMotion ? 0 : 0.8, ease: EASE }}
+          className="rounded-3xl border border-(--wb-border) bg-white/55 backdrop-blur shadow-[0_18px_60px_rgba(12,24,48,0.10)] overflow-hidden"
+        >
+          <div className="p-6 sm:p-8 lg:p-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-[76ch]">
+              <div className="inline-flex items-center gap-2 rounded-full border border-(--wb-border) bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.22em] text-black/55 backdrop-blur">
+                NEXT STEP
+              </div>
+              <h3 className="wb-serif mt-4 text-[22px] sm:text-[28px]">
+                Ready to build something <BlueHighlight>uniquely yours</BlueHighlight>?
+              </h3>
+              <p className="mt-2 text-(--wb-ink)/70 text-[14px] sm:text-[15px] leading-relaxed">
+                Tell us what you need — we’ll guide the plan, the look, and the execution with a calm,
+                premium process.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <a
+                href="/#contact"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-(--wb-ink) px-6 py-3 text-[12px] font-extrabold tracking-[0.16em] text-white shadow-[0_18px_55px_rgba(12,24,48,0.22)] hover:shadow-[0_28px_85px_rgba(12,24,48,0.30)] transition"
+              >
+                CONTACT <RiArrowRightUpLine className="text-lg" />
+              </a>
+              <Link
+                to="/explore-homes"
+                className="inline-flex items-center justify-center rounded-2xl border border-(--wb-border) bg-white/60 px-6 py-3 text-[12px] font-extrabold tracking-[0.16em] text-(--wb-ink)/75 hover:text-(--wb-ink) hover:bg-white/80 transition backdrop-blur"
+              >
+                EXPLORE HOMES
+              </Link>
             </div>
           </div>
-        </div>
-      </div>
+
+          <div className="h-[2px] w-full bg-linear-to-r from-(--wb-accent)/50 via-(--wb-accent-2)/40 to-transparent" />
+        </motion.div>
+      </section>
     </main>
   );
 }
