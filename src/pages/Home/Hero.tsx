@@ -2,15 +2,15 @@ import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 
 const HERO_STATS = [
-  { value: "150+", label: "Homes Built" },
-  { value: "12+", label: "Years Experience" },
-  { value: "98%", label: "Client Satisfaction" },
+  { value: "150+", label: "Homes Delivered" },
+  { value: "12+", label: "Years of Craft" },
+  { value: "98%", label: "Client Delight" },
 ];
 
 const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=90",
-  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=90",
-  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=2000&q=90",
+  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=90",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=90",
+  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=2400&q=90",
 ];
 
 export default function Hero() {
@@ -32,7 +32,7 @@ export default function Hero() {
       const timer = setTimeout(() => {
         setCurrentImage(nextImage);
         setIsTransitioning(false);
-      }, 800);
+      }, 850);
       return () => clearTimeout(timer);
     }
   }, [isTransitioning, nextImage]);
@@ -42,95 +42,108 @@ export default function Hero() {
       const next = (currentImage + 1) % HERO_IMAGES.length;
       setNextImage(next);
       setIsTransitioning(true);
-    }, 6000);
+    }, 6500);
     return () => clearInterval(interval);
   }, [currentImage]);
 
   return (
-    <section className="relative min-h-[100svh] overflow-hidden">
+    <section
+      id="hero"
+      className="relative min-h-[100svh] overflow-hidden -mt-[var(--wb-nav-h)] pt-[var(--wb-nav-h)]"
+      data-hero="true"
+    >
       {/* Background Images with Crossfade */}
       <div className="absolute inset-0">
+        {/* current */}
         <div
-          className="absolute inset-0 transition-transform duration-[1200ms] ease-out will-change-transform"
+          className="absolute inset-0 will-change-transform"
           style={{
             backgroundImage: `url(${HERO_IMAGES[currentImage]})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            transform: isTransitioning ? "scale(1.05)" : "scale(1)",
+            transform: isTransitioning ? "scale(1.06)" : "scale(1)",
+            transition: "transform 1200ms ease-out",
           }}
         />
+
+        {/* next */}
         <div
-          className="absolute inset-0 transition-opacity duration-800 ease-in-out will-change-opacity"
+          className="absolute inset-0 will-change-opacity"
           style={{
             backgroundImage: `url(${HERO_IMAGES[nextImage]})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             opacity: isTransitioning ? 1 : 0,
+            transition: "opacity 850ms ease-in-out",
           }}
         />
-        {/* Gradient Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/25" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/30" />
+
+        {/* Premium overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/25" />
+        <div className="absolute inset-0 [background:radial-gradient(900px_520px_at_70%_25%,rgba(255,255,255,0.09),transparent_55%)]" />
+
+        {/* Subtle grain */}
+        <div className="absolute inset-0 opacity-[0.10] mix-blend-overlay pointer-events-none hero-grain" />
       </div>
 
       {/* Content */}
-      <div className="relative wb-container flex flex-col justify-center min-h-[100svh] px-4 sm:px-6 lg:px-8 py-24 sm:py-20 lg:py-0">
+      <div className="relative wb-container flex flex-col justify-center min-h-[100svh] px-4 sm:px-6 lg:px-8 py-28 sm:py-24 lg:py-0">
         <div className="max-w-3xl w-full">
           {/* Badge */}
           <div
-            className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 
-                       px-3 py-1.5 sm:px-4 sm:py-2 mb-4 sm:mb-6
+            className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20
+                       px-3 py-1.5 sm:px-4 sm:py-2 mb-5 sm:mb-7
                        animate-[fadeInUp_0.6s_ease-out_forwards] opacity-0"
             style={{ animationDelay: "0.1s" }}
           >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-300" />
             </span>
             <span className="text-[10px] sm:text-[12px] font-semibold tracking-wide text-white/90 uppercase">
-              Now Accepting New Projects
+              Bespoke Homes • Crafted for Your Life
             </span>
           </div>
 
           {/* Headline */}
           <h1
-            className="wb-serif text-[32px] sm:text-[48px] md:text-[56px] lg:text-[64px] xl:text-[72px] 
-                       leading-[1.1] tracking-tight text-white mb-4 sm:mb-6
+            className="wb-serif text-[34px] sm:text-[52px] md:text-[60px] lg:text-[68px] xl:text-[74px]
+                       leading-[1.05] tracking-tight text-white mb-5 sm:mb-7
                        animate-[fadeInUp_0.6s_ease-out_forwards] opacity-0"
             style={{ animationDelay: "0.2s" }}
           >
-            Build Your
-            <span className="block mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-blue-200 to-white">
-              Dream Home
+            Design. Build.
+            <span className="block mt-1.5 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-blue-100 to-white">
+              Live Exceptionally.
             </span>
           </h1>
 
           {/* Subheadline */}
           <p
-            className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] leading-relaxed text-white/80 
-                       max-w-[90%] sm:max-w-xl mb-6 sm:mb-8
+            className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[19px] leading-relaxed text-white/80
+                       max-w-[40ch] sm:max-w-[52ch] mb-7 sm:mb-9
                        animate-[fadeInUp_0.6s_ease-out_forwards] opacity-0"
             style={{ animationDelay: "0.3s" }}
           >
-            Premium home construction with transparent pricing, expert
-            craftsmanship, and a commitment to bringing your vision to life —
-            on time and on budget.
+            WestBrook builds bespoke homes with calm execution, premium finishes,
+            and true cost clarity — from first sketch to handover.
           </p>
 
           {/* CTA Buttons */}
           <div
-            className="flex flex-wrap gap-3 mb-8 sm:mb-10
+            className="flex flex-wrap gap-3 sm:gap-4 mb-9 sm:mb-11
                        animate-[fadeInUp_0.6s_ease-out_forwards] opacity-0"
             style={{ animationDelay: "0.4s" }}
           >
             <Link
               to="/contact"
-              className="group inline-flex h-11 items-center justify-center gap-2 rounded-full 
-                         px-5 bg-white text-[13px] font-semibold text-gray-900
+              className="group inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-full
+                         px-5 sm:px-6 bg-white text-[13px] sm:text-[14px] font-semibold text-gray-900
                          hover:bg-white/90 active:scale-[0.98]
                          transition-all duration-200"
             >
-              Get Free Consultation
+              Book a Design Consultation
               <svg
                 className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200"
                 fill="none"
@@ -148,19 +161,19 @@ export default function Hero() {
 
             <Link
               to="/projects"
-              className="inline-flex h-11 items-center justify-center rounded-full 
-                         px-5 bg-white/10 backdrop-blur-sm border border-white/25 
-                         text-[13px] font-semibold text-white
+              className="inline-flex h-11 sm:h-12 items-center justify-center rounded-full
+                         px-5 sm:px-6 bg-white/10 backdrop-blur-sm border border-white/25
+                         text-[13px] sm:text-[14px] font-semibold text-white
                          hover:bg-white/15 hover:border-white/40
                          transition-all duration-200"
             >
-              View Our Projects
+              Explore Our Work
             </Link>
           </div>
 
           {/* Stats */}
           <div
-            className="grid grid-cols-3 gap-4 sm:flex sm:flex-wrap sm:gap-8 lg:gap-12
+            className="grid grid-cols-3 gap-4 sm:flex sm:flex-wrap sm:gap-10 lg:gap-14
                        animate-[fadeInUp_0.6s_ease-out_forwards] opacity-0"
             style={{ animationDelay: "0.5s" }}
           >
@@ -183,10 +196,11 @@ export default function Hero() {
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`h-1 sm:h-1.5 rounded-full transition-all duration-500 ease-out ${currentImage === index
+              className={`h-1 sm:h-1.5 rounded-full transition-all duration-500 ease-out ${
+                currentImage === index
                   ? "w-8 sm:w-10 bg-white"
                   : "w-1 sm:w-1.5 bg-white/40 hover:bg-white/60"
-                }`}
+              }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
@@ -204,17 +218,15 @@ export default function Hero() {
       {/* Bottom Gradient Fade */}
       <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-32 bg-gradient-to-t from-[var(--wb-bg)] to-transparent pointer-events-none" />
 
-      {/* CSS Animations */}
       <style>{`
         @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-grain {
+          background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+          background-size: 180px 180px;
         }
       `}</style>
     </section>
