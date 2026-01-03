@@ -130,7 +130,7 @@ export default function Hero() {
             style={{ animationDelay: "0.3s" }}
           >
             WestBrook builds bespoke homes with calm execution, premium finishes,
-            and true cost clarity — from first sketch to handover.
+            and true cost clarity  from first sketch to handover.
           </p>
 
           {/* CTA Buttons */}
@@ -140,7 +140,7 @@ export default function Hero() {
             style={{ animationDelay: "0.4s" }}
           >
             <Link
-              to="/contact"
+              to="/#contact"
               className="group inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-full
                          px-5 sm:px-6 bg-white text-[13px] sm:text-[14px] font-semibold text-gray-900
                          hover:bg-white/90 active:scale-[0.98]

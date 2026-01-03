@@ -82,7 +82,7 @@ export default function WhyWestBrookSection() {
             transition={{ duration: 0.55, ease: EASE, delay: 0.12 }}
             className="mt-5 mx-auto max-w-[60ch] text-[15.5px] leading-relaxed text-[color:var(--wb-ink)]/72"
           >
-            We build custom homes end-to-end — planned deliberately, priced clearly,
+            We build custom homes end-to-end  planned deliberately, priced clearly,
             and executed with discipline.
           </motion.p>
         </div>

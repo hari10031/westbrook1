@@ -77,12 +77,12 @@ export default function Footer() {
 
             <p className="mt-6 max-w-md text-[15px] leading-relaxed text-black/60">
               WestBrook Homes designs, builds, and delivers bespoke luxury
-              residences — from early concept and planning through construction
-              and final handover — with clarity, structure, and quiet precision.
+              residences from early concept and planning through construction
+              and final handover  with clarity, structure, and quiet precision.
             </p>
 
             <p className="mt-5 text-[13px] text-black/45">
-              Design • Build • Handover — Luxury Homes
+              Design • Build • Handover  Luxury Homes
             </p>
           </div>
 
@@ -139,7 +139,7 @@ export default function Footer() {
               </h3>
               <p className="mt-2 max-w-xl text-[15px] text-black/55">
                 Share your vision and timeline. We’ll outline a structured path
-                from design to build — with the decisions that matter most.
+                from design to build  with the decisions that matter most.
               </p>
             </div>
 
