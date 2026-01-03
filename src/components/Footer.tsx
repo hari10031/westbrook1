@@ -102,9 +102,9 @@ export default function Footer() {
               title="WestBrook"
               links={[
                 { label: "About", to: "/about" },
-                { label: "Partnerships", to: "/partnerships" },
+                // { label: "Partnerships", to: "/partnerships" },
                 { label: "Why WestBrook", to: "/#why-us", isSection: true },
-                { label: "Testimonials", to: "/#testimonials", isSection: true },
+                // { label: "Testimonials", to: "/#testimonials", isSection: true },
               ]}
               onSectionClick={handleSectionClick}
             />
@@ -135,7 +135,7 @@ export default function Footer() {
                 START WITH CLARITY
               </p>
               <h3 className="wb-serif mt-3 text-[26px] text-[color:var(--wb-ink)]">
-                Planning a luxury home — from concept to handover?
+                Planning a luxury home from concept to handover?
               </h3>
               <p className="mt-2 max-w-xl text-[15px] text-black/55">
                 Share your vision and timeline. We’ll outline a structured path
