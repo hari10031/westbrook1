@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 // const HERO_STATS = [
 //   { value: "150+", label: "Homes Delivered" },
@@ -13,13 +13,42 @@ const HERO_IMAGES = [
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2200&q=90",
   "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=2200&q=90",
   "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=2200&q=90",
-
 ];
 
 export default function Hero() {
   const [currentImage, setCurrentImage] = useState(0);
   const [nextImage, setNextImage] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const location = useLocation();
+
+  // ✅ Ensure /#contact actually scrolls (React Router doesn't always do this by default)
+  useEffect(() => {
+    if (!location.hash) return;
+
+    const id = location.hash.replace("#", "");
+    if (!id) return;
+
+    const attempt = () => {
+      const el = document.getElementById(id);
+      if (!el) return false;
+
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      return true;
+    };
+
+    // Try immediately, then retry for a short time (covers late-rendered sections)
+    if (attempt()) return;
+
+    let tries = 0;
+    const maxTries = 18; // ~900ms
+    const t = window.setInterval(() => {
+      tries += 1;
+      if (attempt() || tries >= maxTries) window.clearInterval(t);
+    }, 50);
+
+    return () => window.clearInterval(t);
+  }, [location.hash]);
 
   const goToSlide = useCallback(
     (index: number) => {
@@ -32,21 +61,21 @@ export default function Hero() {
 
   useEffect(() => {
     if (isTransitioning) {
-      const timer = setTimeout(() => {
+      const timer = window.setTimeout(() => {
         setCurrentImage(nextImage);
         setIsTransitioning(false);
       }, 850);
-      return () => clearTimeout(timer);
+      return () => window.clearTimeout(timer);
     }
   }, [isTransitioning, nextImage]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = window.setInterval(() => {
       const next = (currentImage + 1) % HERO_IMAGES.length;
       setNextImage(next);
       setIsTransitioning(true);
     }, 6500);
-    return () => clearInterval(interval);
+    return () => window.clearInterval(interval);
   }, [currentImage]);
 
   return (
@@ -130,7 +159,7 @@ export default function Hero() {
             style={{ animationDelay: "0.3s" }}
           >
             WestBrook builds bespoke homes with calm execution, premium finishes,
-            and true cost clarity  from first sketch to handover.
+            and true cost clarity from first sketch to handover.
           </p>
 
           {/* CTA Buttons */}
@@ -139,6 +168,7 @@ export default function Hero() {
                        animate-[fadeInUp_0.6s_ease-out_forwards] opacity-0"
             style={{ animationDelay: "0.4s" }}
           >
+            {/* ✅ Book -> /#contact (and scroll is ensured by the effect above) */}
             <Link
               to="/#contact"
               className="group inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-full
@@ -162,6 +192,7 @@ export default function Hero() {
               </svg>
             </Link>
 
+            {/* ✅ Our Work -> /explore-homes */}
             <Link
               to="/explore-homes"
               className="inline-flex h-11 sm:h-12 items-center justify-center rounded-full
@@ -174,23 +205,12 @@ export default function Hero() {
             </Link>
           </div>
 
-          {/* Stats */}
+          {/* Stats (kept empty intentionally) */}
           <div
             className="grid grid-cols-3 gap-4 sm:flex sm:flex-wrap sm:gap-10 lg:gap-14
                        animate-[fadeInUp_0.6s_ease-out_forwards] opacity-0"
             style={{ animationDelay: "0.5s" }}
-          >
-            {/* {HERO_STATS.map((stat, index) => (
-              <div key={index} className="text-center sm:text-left">
-                <div className="wb-serif text-[22px] sm:text-[32px] lg:text-[36px] font-bold text-white leading-none">
-                  {stat.value}
-                </div>
-                <div className="text-[10px] sm:text-[13px] lg:text-[14px] font-medium text-white/60 uppercase tracking-wider mt-1">
-                  {stat.label}
-                </div>
-              </div>
-            ))} */}
-          </div>
+          />
         </div>
 
         {/* Image Indicators */}
@@ -199,10 +219,11 @@ export default function Hero() {
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`h-1 sm:h-1.5 rounded-full transition-all duration-500 ease-out ${currentImage === index
-                ? "w-8 sm:w-10 bg-white"
-                : "w-1 sm:w-1.5 bg-white/40 hover:bg-white/60"
-                }`}
+              className={`h-1 sm:h-1.5 rounded-full transition-all duration-500 ease-out ${
+                currentImage === index
+                  ? "w-8 sm:w-10 bg-white"
+                  : "w-1 sm:w-1.5 bg-white/40 hover:bg-white/60"
+              }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
