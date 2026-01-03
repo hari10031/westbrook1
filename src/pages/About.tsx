@@ -53,7 +53,7 @@ export default function About() {
     {
       icon: <RiRuler2Line className="text-xl" />,
       title: "Bespoke planning",
-      desc: "Your routine drives the layout — never templates.",
+      desc: "Your routine drives the layout. No templates.",
     },
     {
       icon: <RiVerifiedBadgeLine className="text-xl" />,
@@ -94,17 +94,15 @@ export default function About() {
         id: "s3",
         kind: "INTERIOR",
         title: "Living Space",
-        sub: "Layered Comfort",
-        image:
-          "/img/interior-2.jpg",
+        sub: "Layered comfort",
+        image: "/img/interior-2.jpg",
       },
       {
         id: "s4",
         kind: "EXTERIOR",
-        title: "Jack Residence ",
+        title: "Jack Residence",
         sub: "Crisp lines • Quiet luxury",
-        image:
-          "/img/jack.jpg",
+        image: "/img/jack.jpg",
       },
     ],
     []
@@ -142,12 +140,6 @@ export default function About() {
             transition={{ duration: reduceMotion ? 0 : 0.85, ease: EASE }}
             className="mx-auto max-w-[92ch] text-center"
           >
-            {/* BANGING CAPTION */}
-            {/* <div className="inline-flex items-center gap-2 rounded-full border border-(--wb-border) bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.22em] text-black/55 backdrop-blur">
-              <RiSparkling2Line className="text-(--wb-ink)/55" />
-              QUIET LUXURY • CUSTOM BUILT • CLEAN EXECUTION
-            </div> */}
-
             {/* Better headline */}
             <motion.h1
               initial={{ opacity: 0, y: 14 }}
@@ -155,7 +147,7 @@ export default function About() {
               transition={{ duration: reduceMotion ? 0 : 0.95, ease: EASE, delay: 0.05 }}
               className="wb-serif mt-6 text-[34px] leading-[1.08] sm:text-[52px] lg:text-[64px]"
             >
-              Designed to feel  <BlueHighlight>right</BlueHighlight>.
+              Designed to feel <BlueHighlight>right</BlueHighlight>.
             </motion.h1>
 
             <motion.p
@@ -164,8 +156,8 @@ export default function About() {
               transition={{ duration: reduceMotion ? 0 : 0.9, ease: EASE, delay: 0.12 }}
               className="mx-auto mt-5 max-w-[74ch] text-[15px] sm:text-[18px] leading-relaxed text-(--wb-ink)/70"
             >
-              WestBrook designs and builds custom homes around how you live — layout, flow, light and
-              materials — with a process that stays{" "}
+              WestBrook designs and builds custom homes around how you live. We focus on layout, flow,
+              light, and materials, with a process that stays{" "}
               <BlueHighlight>calm</BlueHighlight>,{" "}
               <BlueHighlight>trackable</BlueHighlight>, and{" "}
               <BlueHighlight>premium</BlueHighlight>.
@@ -319,8 +311,9 @@ export default function About() {
                 </h2>
 
                 <p className="mt-3 text-[14px] sm:text-[15px] leading-relaxed text-(--wb-ink)/70">
-                  We keep decisions intentional — proportion, materials, and execution — so your home feels
-                  composed, not crowded. You’ll always know what’s happening, what’s next, and what matters.
+                  We keep decisions intentional. Proportion, materials, and execution are handled with care,
+                  so your home feels composed, not crowded. You’ll always know what’s happening, what’s next,
+                  and what matters.
                 </p>
 
                 {/* Mini highlight chips */}
@@ -362,22 +355,6 @@ export default function About() {
                     </div>
                   ))}
                 </div>
-
-                {/* <div className="mt-8 flex flex-wrap gap-2">
-                  <a
-                    href="/#contact"
-                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-(--wb-ink) px-5 py-3 text-[12px] font-extrabold tracking-[0.16em] text-white shadow-[0_18px_55px_rgba(12,24,48,0.22)] hover:shadow-[0_28px_85px_rgba(12,24,48,0.30)] transition"
-                  >
-                    BOOK A CONSULTATION <RiArrowRightUpLine className="text-lg" />
-                  </a>
-
-                  <Link
-                    to="/process"
-                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-(--wb-border) bg-white/60 px-5 py-3 text-[12px] font-extrabold tracking-[0.16em] text-(--wb-ink)/75 hover:text-(--wb-ink) hover:bg-white/80 transition backdrop-blur"
-                  >
-                    VIEW PROCESS
-                  </Link>
-                </div> */}
               </div>
 
               <div className="h-[2px] w-full bg-linear-to-r from-(--wb-accent)/50 via-(--wb-accent-2)/40 to-transparent" />
@@ -404,7 +381,7 @@ export default function About() {
                 Ready to build something <BlueHighlight>uniquely yours</BlueHighlight>?
               </h3>
               <p className="mt-2 text-(--wb-ink)/70 text-[14px] sm:text-[15px] leading-relaxed">
-                Tell us what you need — we’ll guide the plan, the look, and the execution with a calm,
+                Tell us what you need. We’ll guide the plan, the look, and the execution with a calm,
                 premium process.
               </p>
             </div>
