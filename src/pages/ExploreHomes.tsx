@@ -15,66 +15,65 @@ type Project = {
 
 const HOMES: Project[] = [
   {
-    id: "jack",
+    id: "jack-residence",
     title: "Jack Residence",
-    tag: "Signature",
-    blurb: "Crisp lines • Everyday luxury",
+    tag: "Signature Home",
+    blurb: "Crisp lines • Quiet luxury",
     image: "/img/jack.jpg",
   },
   {
-    id: "luxury-villa-1",
-    title: "Luxury Villa",
-    tag: "Estate",
-    blurb: "Resort calm • Statement silhouette",
+    id: "ridgeway-residence",
+    title: "Ridgeway Residence",
+    tag: "Luxury Home",
+    blurb: "Balanced massing • Refined presence",
     image:
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2200&q=90",
   },
   {
-    id: "modern-residence",
-    title: "Modern Residence",
-    tag: "Modern",
-    blurb: "Glass + stone • Clean geometry",
+    id: "stoneglass-home",
+    title: "Stone & Glass Home",
+    tag: "Modern Luxury",
+    blurb: "Natural materials • Clean geometry",
     image:
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2200&q=90",
   },
   {
-    id: "contemporary-home",
-    title: "Contemporary Home",
-    tag: "Bespoke",
-    blurb: "Bright, open • Quiet confidence",
+    id: "courtyard-residence",
+    title: "Courtyard Residence",
+    tag: "Bespoke Home",
+    blurb: "Private core • Light-driven design",
     image:
       "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=2200&q=90",
   },
   {
-    id: "courtyard-build",
-    title: "Courtyard Build",
-    tag: "Courtyard",
-    blurb: "Private green • Light-filled core",
+    id: "urban-luxury-home",
+    title: "Urban Luxury Home",
+    tag: "Custom Build",
+    blurb: "Strong form • Thoughtful detailing",
     image:
       "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=2200&q=90",
   },
 ];
-
 const INTERIORS: Project[] = [
   {
-    id: "interior-kitchen",
-    title: "Modern Kitchen",
+    id: "luxury-kitchen",
+    title: "Luxury Kitchen",
     tag: "Kitchen",
-    blurb: "Bright counters • Seamless storage",
+    blurb: "Minimal surfaces • Precision storage",
     image: "/img/interior-2.jpg",
   },
   {
-    id: "interior-living",
-    title: "Signature Living",
+    id: "signature-living",
+    title: "Signature Living Space",
     tag: "Living",
-    blurb: "Soft layers • Effortless comfort",
+    blurb: "Layered comfort • Calm proportions",
     image: "/img/living-room.jpg",
   },
   {
-    id: "interior-bedroom",
-    title: "Luxury Bedroom",
+    id: "master-bedroom",
+    title: "Master Bedroom",
     tag: "Bedroom",
-    blurb: "Hotel calm • Warm textures",
+    blurb: "Soft tones • Restful detailing",
     image: "/img/interior-3.jpg",
   },
 ];
