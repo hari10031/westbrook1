@@ -196,18 +196,10 @@ export default function Hero() {
             <button
               key={index}
               onClick={() => goToSlide(index)}
-<<<<<<< HEAD
               className={`h-1 sm:h-1.5 rounded-full transition-all duration-500 ease-out ${currentImage === index
                 ? "w-8 sm:w-10 bg-white"
                 : "w-1 sm:w-1.5 bg-white/40 hover:bg-white/60"
                 }`}
-=======
-              className={`h-1 sm:h-1.5 rounded-full transition-all duration-500 ease-out ${
-                currentImage === index
-                  ? "w-8 sm:w-10 bg-white"
-                  : "w-1 sm:w-1.5 bg-white/40 hover:bg-white/60"
-              }`}
->>>>>>> 004a4e0deeeb5e3e79322b17380a576fc22296fc
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
