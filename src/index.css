@@ -213,6 +213,9 @@ html.wb-lock,
   overflow: hidden;
 }
 
+:root { --wb-nav-h: 80px; } /* adjust to your navbar height */
+
+
 /* ================================
    HERO MARQUEE
    ================================ */
