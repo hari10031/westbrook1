@@ -27,22 +27,6 @@ function useScrolled(threshold = 10) {
   return scrolled;
 }
 
-<<<<<<< HEAD
-function useHeroVisible() {
-  const [isHeroVisible, setIsHeroVisible] = useState(true);
-  useEffect(() => {
-    const checkHeroVisibility = () => {
-      // Hero section is approximately viewport height, make navbar solid after scrolling 100px
-      // This ensures navbar becomes solid quickly after user starts scrolling
-      const heroThreshold = window.innerHeight - 100;
-      setIsHeroVisible(window.scrollY < heroThreshold);
-    };
-    checkHeroVisibility();
-    window.addEventListener("scroll", checkHeroVisibility, { passive: true });
-    return () => window.removeEventListener("scroll", checkHeroVisibility);
-  }, []);
-  return isHeroVisible;
-=======
 /**
  * Transparent only while Hero is meaningfully visible (HOME route only)
  * ESLint safe
@@ -91,17 +75,12 @@ function useHeroInView() {
   }, [location.pathname]);
 
   return onHero;
->>>>>>> 004a4e0deeeb5e3e79322b17380a576fc22296fc
 }
 
 export default function Navbar() {
   const scrolled = useScrolled(10);
-<<<<<<< HEAD
-  const isHeroVisible = useHeroVisible();
-=======
   const onHero = useHeroInView();
 
->>>>>>> 004a4e0deeeb5e3e79322b17380a576fc22296fc
   const location = useLocation();
   const navigate = useNavigate();
   const navItems = useMemo(() => NAV, []);
@@ -209,26 +188,6 @@ export default function Navbar() {
     return () => window.removeEventListener("resize", onResize);
   }, [location.pathname, activeSection, moveIndicator]);
 
-<<<<<<< HEAD
-  const isHomePage = location.pathname === "/";
-  const isTransparent = isHomePage && isHeroVisible;
-
-  return (
-    <header className="fixed top-0 left-0 right-0 z-[100]">
-      <div className={cx(
-        "h-px w-full transition-opacity duration-300",
-        isTransparent ? "opacity-0" : "bg-[linear-gradient(to_right,transparent,rgba(27,79,214,0.22),transparent)]"
-      )} />
-
-      <div
-        className={cx(
-          "transition-all duration-300",
-          isTransparent
-            ? "bg-transparent border-b border-transparent shadow-none"
-            : scrolled
-              ? "bg-white/70 backdrop-blur-xl border-b border-[color:var(--wb-border)] shadow-[0_14px_38px_rgba(11,18,32,0.10)]"
-              : "bg-white/35 backdrop-blur-xl border-b border-transparent shadow-[0_10px_28px_rgba(11,18,32,0.06)]"
-=======
   /**
    * Hero mode: transparent only on Home while hero is visible and not scrolled much
    */
@@ -250,7 +209,6 @@ export default function Navbar() {
         className={cx(
           "relative transition-all duration-300",
           "supports-[backdrop-filter]:backdrop-blur-xl"
->>>>>>> 004a4e0deeeb5e3e79322b17380a576fc22296fc
         )}
         style={{ height: "var(--wb-nav-h)" }}
       >
@@ -290,8 +248,8 @@ export default function Navbar() {
             boxShadow: heroMode
               ? "none"
               : scrolled
-              ? "0 14px 36px rgba(11,18,32,0.10)"
-              : "0 10px 24px rgba(11,18,32,0.07)",
+                ? "0 14px 36px rgba(11,18,32,0.10)"
+                : "0 10px 24px rgba(11,18,32,0.07)",
           }}
         />
 
@@ -302,38 +260,18 @@ export default function Navbar() {
             <Link to="/" className="group inline-flex items-center gap-2.5">
               <span
                 className={cx(
-<<<<<<< HEAD
-                  "grid h-10 w-10 place-items-center rounded-2xl border overflow-hidden",
-                  "transition-all duration-300 group-hover:scale-[1.02]",
-                  isTransparent
-                    ? "border-white/20 bg-transparent shadow-none"
-                    : "border-[color:var(--wb-border)] bg-white/70 backdrop-blur shadow-[0_14px_30px_rgba(11,18,32,0.08)]"
-=======
                   "grid place-items-center overflow-hidden border",
                   "h-9 w-9 rounded-xl",
                   heroMode
                     ? "border-white/18 bg-white/8 backdrop-blur shadow-[0_18px_44px_rgba(0,0,0,0.26)]"
                     : "border-[color:var(--wb-border)] bg-white/70 backdrop-blur shadow-[0_12px_24px_rgba(11,18,32,0.10)]",
                   "transition-transform duration-300 group-hover:scale-[1.02]"
->>>>>>> 004a4e0deeeb5e3e79322b17380a576fc22296fc
                 )}
               >
                 <img src="/img/logo.jfif" alt="WestBrook Logo" className="h-full w-full object-cover" />
               </span>
 
               <span className="leading-tight">
-<<<<<<< HEAD
-                <span className={cx(
-                  "wb-serif block text-[19px] tracking-tight transition-colors duration-300",
-                  isTransparent ? "text-white" : "text-[color:var(--wb-ink)]"
-                )}>
-                  WestBrook
-                </span>
-                <span className={cx(
-                  "block text-[11px] font-extrabold tracking-[0.26em] transition-colors duration-300",
-                  isTransparent ? "text-white/70" : "text-black/45"
-                )}>
-=======
                 <span
                   className={cx(
                     "wb-serif block text-[18px] tracking-tight",
@@ -350,7 +288,6 @@ export default function Navbar() {
                     heroMode ? "text-white/70" : "text-black/45"
                   )}
                 >
->>>>>>> 004a4e0deeeb5e3e79322b17380a576fc22296fc
                   HOMES
                 </span>
               </span>
@@ -361,19 +298,10 @@ export default function Navbar() {
               <div
                 ref={navRef}
                 className={cx(
-<<<<<<< HEAD
-                  "relative flex items-center gap-1",
-                  "rounded-full border transition-all duration-300",
-                  "px-1 py-1",
-                  isTransparent
-                    ? "border-transparent bg-transparent shadow-none"
-                    : "border-[color:var(--wb-border)] bg-white/55 backdrop-blur-xl shadow-[0_14px_32px_rgba(11,18,32,0.08)]"
-=======
                   "relative flex items-center gap-1 rounded-full border px-1 py-[3px]",
                   heroMode
                     ? "border-white/16 bg-white/10 backdrop-blur-xl shadow-[0_22px_60px_rgba(0,0,0,0.26)]"
                     : "border-[color:var(--wb-border)] bg-white/60 backdrop-blur-xl shadow-[0_14px_32px_rgba(11,18,32,0.10)]"
->>>>>>> 004a4e0deeeb5e3e79322b17380a576fc22296fc
                 )}
               >
                 {/* moving indicator */}
@@ -381,19 +309,11 @@ export default function Navbar() {
                   ref={pillRef}
                   aria-hidden="true"
                   className={cx(
-<<<<<<< HEAD
-                    "absolute top-1 bottom-1 left-1 rounded-full",
-                    "transition-all duration-300 ease-[cubic-bezier(.25,.8,.25,1)]",
-                    isTransparent
-                      ? "bg-white/20 border border-white/30 shadow-none"
-                      : "bg-[color:var(--wb-accent)]/12 border border-[color:var(--wb-accent)]/25 shadow-[0_4px_12px_rgba(27,79,214,0.15)]"
-=======
                     "absolute top-[3px] bottom-[3px] left-1 rounded-full",
                     heroMode
                       ? "bg-white/14 border border-white/18 shadow-[0_10px_22px_rgba(0,0,0,0.20)]"
                       : "bg-[color:var(--wb-accent)]/12 border border-[color:var(--wb-accent)]/25 shadow-[0_6px_14px_rgba(27,79,214,0.14)]",
                     "transition-all duration-300 ease-[cubic-bezier(.25,.8,.25,1)]"
->>>>>>> 004a4e0deeeb5e3e79322b17380a576fc22296fc
                   )}
                   style={{ width: 0, opacity: 0 }}
                 />
@@ -420,26 +340,14 @@ export default function Navbar() {
                         cx(
                           "relative z-10 rounded-full px-3 py-[7px]",
                           "text-[13px] font-extrabold tracking-[0.02em]",
-<<<<<<< HEAD
-                          "transition-all duration-200",
-                          isTransparent
-                            ? isCurrentlyActive
-                              ? "text-white"
-                              : "text-white/70 hover:text-white"
-                            : isCurrentlyActive
-                              ? "text-[color:var(--wb-ink)]"
-                              : "text-black/60 hover:text-[color:var(--wb-ink)]",
-                          "hover:-translate-y-[1px]"
-=======
                           "transition-all duration-200 hover:-translate-y-[1px]",
                           heroMode
                             ? isCurrentlyActive
                               ? "text-white"
                               : "text-white/78 hover:text-white"
                             : isCurrentlyActive
-                            ? "text-[color:var(--wb-ink)]"
-                            : "text-black/60 hover:text-[color:var(--wb-ink)]"
->>>>>>> 004a4e0deeeb5e3e79322b17380a576fc22296fc
+                              ? "text-[color:var(--wb-ink)]"
+                              : "text-black/60 hover:text-[color:var(--wb-ink)]"
                         )
                       }
                       aria-current={isCurrentlyActive ? "page" : undefined}
@@ -456,20 +364,10 @@ export default function Navbar() {
               <Link
                 to="/explore-homes"
                 className={cx(
-<<<<<<< HEAD
-                  "rounded-full px-3 py-1.5",
-                  "text-[12px] font-extrabold tracking-[0.02em]",
-                  "border transition-all duration-300",
-                  isTransparent
-                    ? "border-transparent bg-transparent text-white/80 hover:text-white"
-                    : "border-[color:var(--wb-border)] bg-white/45 backdrop-blur text-black/60 hover:text-[color:var(--wb-ink)] hover:bg-white/70",
-                  "hover:-translate-y-[1px]"
-=======
                   "rounded-full px-3 py-[7px] text-[12px] font-extrabold tracking-[0.02em] border backdrop-blur transition-all duration-200 hover:-translate-y-[1px]",
                   heroMode
                     ? "border-white/16 bg-white/10 text-white/80 hover:text-white hover:bg-white/14"
                     : "border-[color:var(--wb-border)] bg-white/55 text-black/60 hover:text-[color:var(--wb-ink)] hover:bg-white/75"
->>>>>>> 004a4e0deeeb5e3e79322b17380a576fc22296fc
                 )}
               >
                 Explore
@@ -507,40 +405,17 @@ export default function Navbar() {
               <button
                 type="button"
                 className={cx(
-<<<<<<< HEAD
-                  "inline-flex h-10 w-10 items-center justify-center rounded-full",
-                  "transition-all duration-300",
-                  isTransparent
-                    ? "border border-transparent bg-transparent"
-                    : "border border-[color:var(--wb-border)] bg-white/55 backdrop-blur hover:bg-white/70"
-=======
                   "inline-flex h-10 w-10 items-center justify-center rounded-full border backdrop-blur transition",
                   heroMode ? "border-white/16 bg-white/10 hover:bg-white/14" : "border-[color:var(--wb-border)] bg-white/60 hover:bg-white/75"
->>>>>>> 004a4e0deeeb5e3e79322b17380a576fc22296fc
                 )}
                 aria-label={open ? "Close menu" : "Open menu"}
                 aria-expanded={open}
                 onClick={() => setOpen((v) => !v)}
               >
                 <span className="relative block h-4 w-5">
-<<<<<<< HEAD
-                  <span className={cx(
-                    "absolute left-0 top-0 h-0.5 w-full rounded transition-colors duration-300",
-                    isTransparent ? "bg-white" : "bg-[color:var(--wb-ink)]/70"
-                  )} />
-                  <span className={cx(
-                    "absolute left-0 top-1/2 h-0.5 w-full -translate-y-1/2 rounded transition-colors duration-300",
-                    isTransparent ? "bg-white/80" : "bg-[color:var(--wb-ink)]/45"
-                  )} />
-                  <span className={cx(
-                    "absolute left-0 bottom-0 h-0.5 w-full rounded transition-colors duration-300",
-                    isTransparent ? "bg-white" : "bg-[color:var(--wb-ink)]/70"
-                  )} />
-=======
                   <span className={cx("absolute left-0 top-0 h-0.5 w-full rounded", heroMode ? "bg-white/90" : "bg-[color:var(--wb-ink)]/70")} />
                   <span className={cx("absolute left-0 top-1/2 h-0.5 w-full -translate-y-1/2 rounded", heroMode ? "bg-white/60" : "bg-[color:var(--wb-ink)]/45")} />
                   <span className={cx("absolute left-0 bottom-0 h-0.5 w-full rounded", heroMode ? "bg-white/90" : "bg-[color:var(--wb-ink)]/70")} />
->>>>>>> 004a4e0deeeb5e3e79322b17380a576fc22296fc
                 </span>
               </button>
             </div>
