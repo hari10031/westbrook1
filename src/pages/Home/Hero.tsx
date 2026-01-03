@@ -164,7 +164,7 @@ export default function Hero() {
                        animate-[fadeInUp_0.6s_ease-out_forwards] opacity-0"
             style={{ animationDelay: "0.5s" }}
           >
-            {HERO_STATS.map((stat, index) => (
+            {/* {HERO_STATS.map((stat, index) => (
               <div key={index} className="text-center sm:text-left">
                 <div className="wb-serif text-[22px] sm:text-[32px] lg:text-[36px] font-bold text-white leading-none">
                   {stat.value}
@@ -173,7 +173,7 @@ export default function Hero() {
                   {stat.label}
                 </div>
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
 
@@ -184,8 +184,8 @@ export default function Hero() {
               key={index}
               onClick={() => goToSlide(index)}
               className={`h-1 sm:h-1.5 rounded-full transition-all duration-500 ease-out ${currentImage === index
-                  ? "w-8 sm:w-10 bg-white"
-                  : "w-1 sm:w-1.5 bg-white/40 hover:bg-white/60"
+                ? "w-8 sm:w-10 bg-white"
+                : "w-1 sm:w-1.5 bg-white/40 hover:bg-white/60"
                 }`}
               aria-label={`Go to slide ${index + 1}`}
             />

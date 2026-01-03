@@ -28,8 +28,25 @@ function useScrolled(threshold = 10) {
   return scrolled;
 }
 
+function useHeroVisible() {
+  const [isHeroVisible, setIsHeroVisible] = useState(true);
+  useEffect(() => {
+    const checkHeroVisibility = () => {
+      // Hero section is approximately viewport height, make navbar solid after scrolling 100px
+      // This ensures navbar becomes solid quickly after user starts scrolling
+      const heroThreshold = window.innerHeight - 100;
+      setIsHeroVisible(window.scrollY < heroThreshold);
+    };
+    checkHeroVisibility();
+    window.addEventListener("scroll", checkHeroVisibility, { passive: true });
+    return () => window.removeEventListener("scroll", checkHeroVisibility);
+  }, []);
+  return isHeroVisible;
+}
+
 export default function Navbar() {
   const scrolled = useScrolled(10);
+  const isHeroVisible = useHeroVisible();
   const location = useLocation();
   const navigate = useNavigate();
   const navItems = useMemo(() => NAV, []);
@@ -146,25 +163,24 @@ export default function Navbar() {
     return () => window.removeEventListener("resize", onResize);
   }, [location.pathname, activeSection, moveIndicator]);
 
+  const isHomePage = location.pathname === "/";
+  const isTransparent = isHomePage && isHeroVisible;
+
   return (
-    <header className="sticky top-0 z-40">
-      <div className="h-px w-full bg-[linear-gradient(to_right,transparent,rgba(27,79,214,0.22),transparent)]" />
+    <header className="fixed top-0 left-0 right-0 z-[100]">
+      <div className={cx(
+        "h-px w-full transition-opacity duration-300",
+        isTransparent ? "opacity-0" : "bg-[linear-gradient(to_right,transparent,rgba(27,79,214,0.22),transparent)]"
+      )} />
 
       <div
         className={cx(
           "transition-all duration-300",
-          "supports-[backdrop-filter]:backdrop-blur-xl",
-          scrolled
-            ? [
-              "bg-white/70",
-              "border-b border-[color:var(--wb-border)]",
-              "shadow-[0_14px_38px_rgba(11,18,32,0.10)]",
-            ].join(" ")
-            : [
-              "bg-white/35",
-              "border-b border-transparent",
-              "shadow-[0_10px_28px_rgba(11,18,32,0.06)]",
-            ].join(" ")
+          isTransparent
+            ? "bg-transparent border-b border-transparent shadow-none"
+            : scrolled
+              ? "bg-white/70 backdrop-blur-xl border-b border-[color:var(--wb-border)] shadow-[0_14px_38px_rgba(11,18,32,0.10)]"
+              : "bg-white/35 backdrop-blur-xl border-b border-transparent shadow-[0_10px_28px_rgba(11,18,32,0.06)]"
         )}
       >
         <div className="wb-container">
@@ -174,9 +190,10 @@ export default function Navbar() {
               <span
                 className={cx(
                   "grid h-10 w-10 place-items-center rounded-2xl border overflow-hidden",
-                  "border-[color:var(--wb-border)] bg-white/70 backdrop-blur",
-                  "shadow-[0_14px_30px_rgba(11,18,32,0.08)]",
-                  "transition-transform duration-300 group-hover:scale-[1.02]"
+                  "transition-all duration-300 group-hover:scale-[1.02]",
+                  isTransparent
+                    ? "border-white/20 bg-transparent shadow-none"
+                    : "border-[color:var(--wb-border)] bg-white/70 backdrop-blur shadow-[0_14px_30px_rgba(11,18,32,0.08)]"
                 )}
               >
                 <img
@@ -187,10 +204,16 @@ export default function Navbar() {
               </span>
 
               <span className="leading-tight">
-                <span className="wb-serif block text-[19px] tracking-tight text-[color:var(--wb-ink)]">
+                <span className={cx(
+                  "wb-serif block text-[19px] tracking-tight transition-colors duration-300",
+                  isTransparent ? "text-white" : "text-[color:var(--wb-ink)]"
+                )}>
                   WestBrook
                 </span>
-                <span className="block text-[11px] font-extrabold tracking-[0.26em] text-black/45">
+                <span className={cx(
+                  "block text-[11px] font-extrabold tracking-[0.26em] transition-colors duration-300",
+                  isTransparent ? "text-white/70" : "text-black/45"
+                )}>
                   HOMES
                 </span>
               </span>
@@ -202,10 +225,11 @@ export default function Navbar() {
                 ref={navRef}
                 className={cx(
                   "relative flex items-center gap-1",
-                  "rounded-full border border-[color:var(--wb-border)]",
-                  "bg-white/55 backdrop-blur-xl",
+                  "rounded-full border transition-all duration-300",
                   "px-1 py-1",
-                  "shadow-[0_14px_32px_rgba(11,18,32,0.08)]"
+                  isTransparent
+                    ? "border-transparent bg-transparent shadow-none"
+                    : "border-[color:var(--wb-border)] bg-white/55 backdrop-blur-xl shadow-[0_14px_32px_rgba(11,18,32,0.08)]"
                 )}
               >
                 <span
@@ -213,10 +237,10 @@ export default function Navbar() {
                   aria-hidden="true"
                   className={cx(
                     "absolute top-1 bottom-1 left-1 rounded-full",
-                    "bg-[color:var(--wb-accent)]/12",
-                    "border border-[color:var(--wb-accent)]/25",
-                    "shadow-[0_4px_12px_rgba(27,79,214,0.15)]",
-                    "transition-all duration-300 ease-[cubic-bezier(.25,.8,.25,1)]"
+                    "transition-all duration-300 ease-[cubic-bezier(.25,.8,.25,1)]",
+                    isTransparent
+                      ? "bg-white/20 border border-white/30 shadow-none"
+                      : "bg-[color:var(--wb-accent)]/12 border border-[color:var(--wb-accent)]/25 shadow-[0_4px_12px_rgba(27,79,214,0.15)]"
                   )}
                   style={{ width: 0, opacity: 0 }}
                 />
@@ -246,9 +270,13 @@ export default function Navbar() {
                           "relative z-10 rounded-full px-4 py-2",
                           "text-[13px] font-extrabold tracking-[0.02em]",
                           "transition-all duration-200",
-                          isCurrentlyActive
-                            ? "text-[color:var(--wb-ink)]"
-                            : "text-black/60 hover:text-[color:var(--wb-ink)]",
+                          isTransparent
+                            ? isCurrentlyActive
+                              ? "text-white"
+                              : "text-white/70 hover:text-white"
+                            : isCurrentlyActive
+                              ? "text-[color:var(--wb-ink)]"
+                              : "text-black/60 hover:text-[color:var(--wb-ink)]",
                           "hover:-translate-y-[1px]"
                         )
                       }
@@ -268,10 +296,10 @@ export default function Navbar() {
                 className={cx(
                   "rounded-full px-3 py-1.5",
                   "text-[12px] font-extrabold tracking-[0.02em]",
-                  "border border-[color:var(--wb-border)]",
-                  "bg-white/45 backdrop-blur",
-                  "text-black/60 hover:text-[color:var(--wb-ink)]",
-                  "hover:bg-white/70 transition-all duration-200",
+                  "border transition-all duration-300",
+                  isTransparent
+                    ? "border-transparent bg-transparent text-white/80 hover:text-white"
+                    : "border-[color:var(--wb-border)] bg-white/45 backdrop-blur text-black/60 hover:text-[color:var(--wb-ink)] hover:bg-white/70",
                   "hover:-translate-y-[1px]"
                 )}
               >
@@ -315,17 +343,28 @@ export default function Navbar() {
                 type="button"
                 className={cx(
                   "inline-flex h-10 w-10 items-center justify-center rounded-full",
-                  "border border-[color:var(--wb-border)] bg-white/55 backdrop-blur hover:bg-white/70",
-                  "transition"
+                  "transition-all duration-300",
+                  isTransparent
+                    ? "border border-transparent bg-transparent"
+                    : "border border-[color:var(--wb-border)] bg-white/55 backdrop-blur hover:bg-white/70"
                 )}
                 aria-label={open ? "Close menu" : "Open menu"}
                 aria-expanded={open}
                 onClick={() => setOpen((v) => !v)}
               >
                 <span className="relative block h-4 w-5">
-                  <span className="absolute left-0 top-0 h-0.5 w-full rounded bg-[color:var(--wb-ink)]/70" />
-                  <span className="absolute left-0 top-1/2 h-0.5 w-full -translate-y-1/2 rounded bg-[color:var(--wb-ink)]/45" />
-                  <span className="absolute left-0 bottom-0 h-0.5 w-full rounded bg-[color:var(--wb-ink)]/70" />
+                  <span className={cx(
+                    "absolute left-0 top-0 h-0.5 w-full rounded transition-colors duration-300",
+                    isTransparent ? "bg-white" : "bg-[color:var(--wb-ink)]/70"
+                  )} />
+                  <span className={cx(
+                    "absolute left-0 top-1/2 h-0.5 w-full -translate-y-1/2 rounded transition-colors duration-300",
+                    isTransparent ? "bg-white/80" : "bg-[color:var(--wb-ink)]/45"
+                  )} />
+                  <span className={cx(
+                    "absolute left-0 bottom-0 h-0.5 w-full rounded transition-colors duration-300",
+                    isTransparent ? "bg-white" : "bg-[color:var(--wb-ink)]/70"
+                  )} />
                 </span>
               </button>
             </div>

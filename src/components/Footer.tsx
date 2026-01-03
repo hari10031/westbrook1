@@ -66,18 +66,16 @@ export default function Footer() {
 
               <div className="leading-tight">
                 <p className="wb-serif text-[21px] text-[color:var(--wb-ink)]">
-                  WestBrook
+                  WestBrook Homes
                 </p>
                 <p className="text-[11px] font-extrabold tracking-[0.32em] text-black/45">
-                  ESTATES
+                  Luxury residences, delivered with clarity.
                 </p>
               </div>
             </div>
 
             <p className="mt-6 max-w-md text-[15px] leading-relaxed text-black/60">
-              WestBrook is a real estate advisory focused on clarity.
-              We help clients navigate homes, commercial spaces, and land
-              with a document-first approach and calm decision-making.
+              WestBrook Homes designs, builds, and delivers bespoke luxury residences from concept to completion. We manage the entire journey—design, planning, construction, and final handover—through a disciplined, document-first approach that ensures precision, control, and calm decision-making at every stage.
             </p>
 
             <p className="mt-5 text-[13px] text-black/45">
@@ -164,7 +162,7 @@ export default function Footer() {
         <div className="mt-14 border-t border-[color:var(--wb-border)] py-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-[12px] text-black/45">
-              © {new Date().getFullYear()} WestBrook Estates. All rights reserved.
+              © {new Date().getFullYear()} WestBrook Homes. All rights reserved.
             </p>
 
             <div className="flex gap-6 text-[12px] text-black/45">

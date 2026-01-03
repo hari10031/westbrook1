@@ -23,6 +23,8 @@ function ScrollToTop() {
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   return (
     <>
@@ -31,7 +33,7 @@ export default function App() {
         <div className="min-h-screen">
           <ScrollToTop />
           <Navbar />
-          <main>
+          <main className={isHomePage ? "" : "pt-[68px]"}>
             <AppRouter />
           </main>
           <Footer />

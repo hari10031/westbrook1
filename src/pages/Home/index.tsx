@@ -3,7 +3,7 @@
 import WhyWestBrookSection from "./WhyWestBrookSection";
 import CommercialSection from "./CommercialSection";
 import UpcomingProjects from "./UpcomingProjects";
-import Testimonials from "./Testimonials";
+// import Testimonials from "./Testimonials";
 import ContactSection from "./ContactSection";
 import ProcessRoadmap from "./ProcessRoadmap";
 import Hero from "./Hero";
@@ -31,9 +31,9 @@ export default function HomePage() {
       </section>
 
 
-      <section id="testimonials" className="wb-container py-8">
+      {/* <section id="testimonials" className="wb-container py-8">
         <Testimonials />
-      </section>
+      </section> */}
 
 
 
