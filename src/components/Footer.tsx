@@ -1,5 +1,5 @@
+import React, { useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useCallback } from "react";
 
 function cx(...c: Array<string | false | null | undefined>) {
   return c.filter(Boolean).join(" ");
@@ -11,13 +11,13 @@ export default function Footer() {
 
   const scrollToSection = useCallback((sectionId: string) => {
     const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    if (element) element.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
-  const handleSectionClick = useCallback((to: string, e: React.MouseEvent) => {
-    if (to.startsWith("/#")) {
+  const handleSectionClick = useCallback(
+    (to: string, e: React.MouseEvent) => {
+      if (!to.startsWith("/#")) return;
+
       e.preventDefault();
       const sectionId = to.replace("/#", "");
 
@@ -25,10 +25,11 @@ export default function Footer() {
         scrollToSection(sectionId);
       } else {
         navigate("/");
-        setTimeout(() => scrollToSection(sectionId), 100);
+        setTimeout(() => scrollToSection(sectionId), 120);
       }
-    }
-  }, [location.pathname, navigate, scrollToSection]);
+    },
+    [location.pathname, navigate, scrollToSection]
+  );
 
   return (
     <footer
@@ -66,20 +67,22 @@ export default function Footer() {
 
               <div className="leading-tight">
                 <p className="wb-serif text-[21px] text-[color:var(--wb-ink)]">
-                  WestBrook Homes
+                  WestBrook
                 </p>
                 <p className="text-[11px] font-extrabold tracking-[0.32em] text-black/45">
-                  Luxury residences, delivered with clarity.
+                  HOMES
                 </p>
               </div>
             </div>
 
             <p className="mt-6 max-w-md text-[15px] leading-relaxed text-black/60">
-              WestBrook Homes designs, builds, and delivers bespoke luxury residences from concept to completion. We manage the entire journey—design, planning, construction, and final handover—through a disciplined, document-first approach that ensures precision, control, and calm decision-making at every stage.
+              WestBrook Homes designs, builds, and delivers bespoke luxury
+              residences — from early concept and planning through construction
+              and final handover — with clarity, structure, and quiet precision.
             </p>
 
             <p className="mt-5 text-[13px] text-black/45">
-              Residential • Commercial • Land Advisory
+              Design • Build • Handover — Luxury Homes
             </p>
           </div>
 
@@ -132,16 +135,17 @@ export default function Footer() {
                 START WITH CLARITY
               </p>
               <h3 className="wb-serif mt-3 text-[26px] text-[color:var(--wb-ink)]">
-                Looking for the right property — without the noise?
+                Planning a luxury home — from concept to handover?
               </h3>
               <p className="mt-2 max-w-xl text-[15px] text-black/55">
-                Tell us what you’re evaluating. We’ll share verified options,
-                realistic context, and the next steps that matter.
+                Share your vision and timeline. We’ll outline a structured path
+                from design to build — with the decisions that matter most.
               </p>
             </div>
 
             <Link
               to="/#contact"
+              onClick={(e) => handleSectionClick("/#contact", e)}
               className={cx(
                 "inline-flex items-center justify-center",
                 "rounded-full px-6 py-3",
@@ -201,7 +205,7 @@ function FooterColumn({
             <Link
               to={l.isSection ? "/" : l.to}
               onClick={(e) => l.isSection && onSectionClick(l.to, e)}
-              className="text-[14px] text-black/60 hover:text-(--wb-ink) transition"
+              className="text-[14px] text-black/60 hover:text-[color:var(--wb-ink)] transition"
             >
               {l.label}
             </Link>
