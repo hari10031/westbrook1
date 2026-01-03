@@ -93,10 +93,10 @@ export default function About() {
       {
         id: "s3",
         kind: "INTERIOR",
-        title: "Calm interior finishes",
-        sub: "Warm textures • Refined detailing",
+        title: "Living Space",
+        sub: "Layered Comfort",
         image:
-          "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=2400&q=90",
+          "/img/interior-2.jpg",
       },
       {
         id: "s4",
