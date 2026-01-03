@@ -163,7 +163,7 @@ export default function Hero() {
             </Link>
 
             <Link
-              to="/projects"
+              to="/explore-homes"
               className="inline-flex h-11 sm:h-12 items-center justify-center rounded-full
                          px-5 sm:px-6 bg-white/10 backdrop-blur-sm border border-white/25
                          text-[13px] sm:text-[14px] font-semibold text-white
