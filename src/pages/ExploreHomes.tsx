@@ -67,7 +67,7 @@ const INTERIORS: Project[] = [
     title: "Signature Living Space",
     tag: "Living",
     blurb: "Layered comfort • Calm proportions",
-    image: "/img/interior-1.jpg",
+    image: "/img/interior-2.jpg",
   },
   {
     id: "master-bedroom",
