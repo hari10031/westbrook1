@@ -98,6 +98,14 @@ export default function About() {
         image:
           "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=2400&q=90",
       },
+      {
+        id: "s4",
+        kind: "EXTERIOR",
+        title: "Jack Residence ",
+        sub: "Crisp lines • Quiet luxury",
+        image:
+          "/img/jack.jpg",
+      },
     ],
     []
   );
@@ -135,10 +143,10 @@ export default function About() {
             className="mx-auto max-w-[92ch] text-center"
           >
             {/* BANGING CAPTION */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-(--wb-border) bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.22em] text-black/55 backdrop-blur">
+            {/* <div className="inline-flex items-center gap-2 rounded-full border border-(--wb-border) bg-white/60 px-3 py-1 text-[11px] font-extrabold tracking-[0.22em] text-black/55 backdrop-blur">
               <RiSparkling2Line className="text-(--wb-ink)/55" />
               QUIET LUXURY • CUSTOM BUILT • CLEAN EXECUTION
-            </div>
+            </div> */}
 
             {/* Better headline */}
             <motion.h1
