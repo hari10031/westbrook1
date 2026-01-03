@@ -6,7 +6,7 @@ import {
   RiArrowLeftSLine,
   RiArrowRightSLine,
   RiArrowRightUpLine,
-  RiSparkling2Line,
+  // RiSparkling2Line,
   RiRuler2Line,
   RiShieldCheckLine,
   RiTimeLine,
