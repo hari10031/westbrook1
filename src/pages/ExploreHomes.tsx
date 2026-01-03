@@ -60,14 +60,14 @@ const INTERIORS: Project[] = [
     title: "Luxury Kitchen",
     tag: "Kitchen",
     blurb: "Minimal surfaces • Precision storage",
-    image: "/img/interior-2.jpg",
+    image: "/img/interior-1.jpg",
   },
   {
     id: "signature-living",
     title: "Signature Living Space",
     tag: "Living",
     blurb: "Layered comfort • Calm proportions",
-    image: "/img/living-room.jpg",
+    image: "/img/interior-1.jpg",
   },
   {
     id: "master-bedroom",
