@@ -1,11 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 
-const HERO_STATS = [
-  { value: "150+", label: "Homes Delivered" },
-  { value: "12+", label: "Years of Craft" },
-  { value: "98%", label: "Client Delight" },
-];
+// const HERO_STATS = [
+//   { value: "150+", label: "Homes Delivered" },
+//   { value: "12+", label: "Years of Craft" },
+//   { value: "98%", label: "Client Delight" },
+// ];
 
 const HERO_IMAGES = [
   "/img/jack.jpg",
