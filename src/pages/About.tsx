@@ -363,7 +363,7 @@ export default function About() {
                   ))}
                 </div>
 
-                <div className="mt-8 flex flex-wrap gap-2">
+                {/* <div className="mt-8 flex flex-wrap gap-2">
                   <a
                     href="/#contact"
                     className="inline-flex items-center justify-center gap-2 rounded-2xl bg-(--wb-ink) px-5 py-3 text-[12px] font-extrabold tracking-[0.16em] text-white shadow-[0_18px_55px_rgba(12,24,48,0.22)] hover:shadow-[0_28px_85px_rgba(12,24,48,0.30)] transition"
@@ -377,7 +377,7 @@ export default function About() {
                   >
                     VIEW PROCESS
                   </Link>
-                </div>
+                </div> */}
               </div>
 
               <div className="h-[2px] w-full bg-linear-to-r from-(--wb-accent)/50 via-(--wb-accent-2)/40 to-transparent" />
